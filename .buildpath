@@ -7,5 +7,5 @@
 	<buildpathentry external="true" kind="lib" path="C:/wamp/www/exface/exface/vendor/axenox/oauth2connector"/>
 	<buildpathentry external="true" kind="lib" path="c:/wamp/www/exface/exface/vendor/guzzlehttp/psr7/src"/>
 	<buildpathentry external="true" kind="lib" path="c:/wamp/www/exface/exface/vendor/league/oauth2-client/src"/>
-	<buildpathentry external="true" kind="lib" path="c:/wamp/www/exface/exface/vendor/league/oauth2-google/src"/>
+	<buildpathentry external="true" kind="lib" path="c:/wamp/www/exface/exface/vendor/thenetworg/oauth2-azure/src"/>
 </buildpath>
