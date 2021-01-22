@@ -1,0 +1,99 @@
+{
+    "object_alias": "exface.Core.DATASRC",
+    "columns": [
+        {
+            "name": "CREATED_ON",
+            "attribute_alias": "CREATED_ON"
+        },
+        {
+            "name": "MODIFIED_ON",
+            "attribute_alias": "MODIFIED_ON"
+        },
+        {
+            "name": "CREATED_BY_USER",
+            "attribute_alias": "CREATED_BY_USER"
+        },
+        {
+            "name": "MODIFIED_BY_USER",
+            "attribute_alias": "MODIFIED_BY_USER"
+        },
+        {
+            "name": "UID",
+            "attribute_alias": "UID"
+        },
+        {
+            "name": "APP",
+            "attribute_alias": "APP"
+        },
+        {
+            "name": "DEFAULT_CONNECTION",
+            "attribute_alias": "DEFAULT_CONNECTION"
+        },
+        {
+            "name": "DEFAULT_QUERY_BUILDER",
+            "attribute_alias": "DEFAULT_QUERY_BUILDER"
+        },
+        {
+            "name": "READABLE_FLAG",
+            "attribute_alias": "READABLE_FLAG"
+        },
+        {
+            "name": "WRITABLE_FLAG",
+            "attribute_alias": "WRITABLE_FLAG"
+        },
+        {
+            "name": "BASE_OBJECT",
+            "attribute_alias": "BASE_OBJECT"
+        },
+        {
+            "name": "LABEL",
+            "attribute_alias": "LABEL"
+        },
+        {
+            "name": "ALIAS",
+            "attribute_alias": "ALIAS"
+        }
+    ],
+    "rows": [
+        {
+            "CREATED_ON": "2021-01-22 18:04:46",
+            "MODIFIED_ON": "2021-01-22 18:13:44",
+            "CREATED_BY_USER": "0x31000000000000000000000000000000",
+            "MODIFIED_BY_USER": "0x31000000000000000000000000000000",
+            "UID": "0x11eb982eee23e0b8982e025041000001",
+            "APP": "0x11eb8233a3d3443c8233847beb4a5184",
+            "DEFAULT_CONNECTION": "0x11eb8a60df22c5a08a60847beb4a5184",
+            "DEFAULT_QUERY_BUILDER": "exface\/UrlDataConnector\/QueryBuilders\/JsonUrlBuilder.php",
+            "READABLE_FLAG": "1",
+            "WRITABLE_FLAG": "1",
+            "BASE_OBJECT": "",
+            "LABEL": "Microsoft Graph",
+            "ALIAS": "MICROSOFT_GRAPH"
+        }
+    ],
+    "totals_rows": [],
+    "filters": {
+        "operator": "AND",
+        "base_object_alias": "exface.Core.DATASRC",
+        "conditions": [
+            {
+                "expression": "APP",
+                "comparator": "=",
+                "value": "0x11eb8233a3d3443c8233847beb4a5184",
+                "object_alias": "exface.Core.DATASRC"
+            }
+        ]
+    },
+    "rows_limit": null,
+    "rows_offset": 0,
+    "sorters": [
+        {
+            "attribute_alias": "CREATED_ON",
+            "direction": "ASC"
+        },
+        {
+            "attribute_alias": "UID",
+            "direction": "ASC"
+        }
+    ]
+}

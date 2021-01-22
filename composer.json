@@ -2,7 +2,7 @@
     "name": "axenox/microsoft365connector",
     "require": {
         "exface/core": "^1.0",
-		"thenetworg/oauth2-azure": "^2.0"
+        "thenetworg/oauth2-azure": "^2.0"
     },
     "license": [
         "GPL-3.0+",
@@ -34,8 +34,8 @@
         "app": {
             "app_uid": "0x11eb8233a3d3443c8233847beb4a5184",
             "app_alias": "axenox.Microsoft365Connector",
-            "model_md5": "84d76fafc7bde21138aa253dac019b0b",
-            "model_timestamp": "2021-01-21 12:41:45"
+            "model_md5": "e8ecdc6a5501e72f9d525758241049f5",
+            "model_timestamp": "2021-01-22 18:13:44"
         }
     }
 }
