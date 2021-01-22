@@ -1,0 +1,41 @@
+{
+    "name": "axenox/microsoft365connector",
+    "require": {
+        "exface/core": "^1.0",
+		"thenetworg/oauth2-azure": "^2.0"
+    },
+    "license": [
+        "GPL-3.0+",
+        "proprietary"
+    ],
+    "authors": [
+        {
+            "name": "Andrej Kabachnik",
+            "email": "kabachnik@gmail.com",
+            "role": "Creator"
+        }
+    ],
+    "support": {
+        "source": "https://github.com/axenox/Microsoft365Connector",
+        "docs": "https://github.com/axenox/Microsoft365Connector/blob/master/Docs",
+        "issues": "https://github.com/axenox/Microsoft365Connector/issues"
+    },
+    "autoload": {
+        "psr-4": {
+            "\\axenox\\Microsoft365Connector\\": ""
+        },
+        "exclude-from-classmap": [
+            "/Config/",
+            "/Translations/",
+            "/Model/"
+        ]
+    },
+    "extra": {
+        "app": {
+            "app_uid": "0x11eb8233a3d3443c8233847beb4a5184",
+            "app_alias": "axenox.Microsoft365Connector",
+            "model_md5": "84d76fafc7bde21138aa253dac019b0b",
+            "model_timestamp": "2021-01-21 12:41:45"
+        }
+    }
+}
