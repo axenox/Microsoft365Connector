@@ -123,7 +123,7 @@ trait MicrosoftOAuth2Trait
         
         $scopes = $this->getScopes();
         if (! empty($scopes)) {
-            $options['scopes'] = implode(' ', $scopes);
+            $options['scopes'] = $scopes;
         }
         
         return new Azure($options);
