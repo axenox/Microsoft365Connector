@@ -9,7 +9,7 @@ use League\OAuth2\Client\Provider\AbstractProvider;
 use TheNetworg\OAuth2\Client\Provider\Azure;
 use exface\Core\Factories\WidgetFactory;
 use axenox\OAuth2Connector\CommonLogic\Security\Authenticators\OAuth2Trait;
-use axenox\OAuth2Connector\CommonLogic\Security\AuthenticationToken\OAuth2AccessToken;
+use axenox\OAuth2Connector\CommonLogic\Security\AuthenticationToken\OAuth2AuthenticatedToken;
 use axenox\OAuth2Connector\CommonLogic\Security\AuthenticationToken\OAuth2RequestToken;
 use axenox\OAuth2Connector\Exceptions\OAuthInvalidStateException;
 use exface\Core\Exceptions\Security\AuthenticationFailedError;
@@ -22,11 +22,9 @@ trait MicrosoftOAuth2Trait
     
     private $provider = null;
     
-    private $accessType = 'offline';
-    
-    protected function exchangeOAuthToken(AuthenticationTokenInterface $token): OAuth2AccessToken
+    protected function exchangeOAuthToken(AuthenticationTokenInterface $token): OAuth2AuthenticatedToken
     {
-        if ($token instanceof OAuth2AccessToken) {
+        if ($token instanceof OAuth2AuthenticatedToken) {
             if ($token->getAccessToken()->hasExpired()) {
                 throw new AuthenticationFailedError($this->getAuthProvider(), 'OAuth token expired: Please sign in again!');
             } else {
@@ -54,11 +52,11 @@ trait MicrosoftOAuth2Trait
                 if ($oauthToken) {
                     $expired = $oauthToken->hasExpired();
                     if ($expired) {
-                        if (! $this->getRefreshToken()) {
+                        if (! $this->getRefreshToken($oauthToken)) {
                             $authOptions = ['prompt' => 'consent'];
                         } else {
                             $oauthToken = $provider->getAccessToken('refresh_token', [
-                                'refresh_token' => $this->getRefreshToken()
+                                'refresh_token' => $this->getRefreshToken($oauthToken)
                             ]);
                         }
                     }
@@ -82,7 +80,8 @@ trait MicrosoftOAuth2Trait
                 // Got an error, probably user denied access
             case !empty($requestParams['error']):
                 $clientFacade->stopOAuthSession();
-                throw new AuthenticationFailedError($this, 'OAuth2 error: ' . htmlspecialchars($requestParams['error'], ENT_QUOTES, 'UTF-8'));
+                $err = $requestParams['error_description'] ?? $requestParams['error'];
+                throw new AuthenticationFailedError($this, 'OAuth2 error: ' . htmlspecialchars($err, ENT_QUOTES, 'UTF-8'));
                 
                 // If code is not empty and there is no error, process provider response here
             default:
@@ -96,6 +95,7 @@ trait MicrosoftOAuth2Trait
                 // Get an access token (using the authorization code grant)
                 try {
                     $oauthToken = $provider->getAccessToken('authorization_code', [
+                        'scope' => $provider->scope,
                         'code' => $requestParams['code']
                     ]);
                 } catch (\Throwable $e) {
@@ -106,7 +106,7 @@ trait MicrosoftOAuth2Trait
         
         $clientFacade->stopOAuthSession();
         if ($oauthToken) {
-            return new OAuth2AccessToken($this->getUsername($oauthToken, $provider), $oauthToken, $token->getFacade());
+            return new OAuth2AuthenticatedToken($this->getUsername($oauthToken, $provider), $oauthToken, $token->getFacade());
         }
         
         throw new AuthenticationFailedError($this->getConnection(), 'Please sign in first!');
@@ -118,26 +118,19 @@ trait MicrosoftOAuth2Trait
             'clientId'      => $this->getClientId(),
             'clientSecret'  => $this->getClientSecret(),
             'redirectUri'   => $this->getRedirectUri(),
-            'accessType'    => $this->getAccessType()
+            'defaultEndPointVersion' => Azure::ENDPOINT_VERSION_2_0
         ];
+        
+        $scopes = $this->getScopes();
+        if (! empty($scopes)) {
+            $options['scopes'] = implode(' ', $scopes);
+        }
+        
         return new Azure($options);
     }
     
-    public function getAccessType() : string
-    {
-        return $this->accessType;
-    }
-    
-    public function setAccessType(string $value) : AuthenticationProviderInterface
-    {
-        $this->accessType = $value;
-        return $this;
-    }
-    
     /**
-     *
-     * @param iContainOtherWidgets $container
-     * @return WidgetInterface
+     * @see \axenox\OAuth2Connector\CommonLogic\Security\Authenticators\OAuth2Trait::createButtonWidget()
      */
     protected function createButtonWidget(iContainOtherWidgets $container) : WidgetInterface
     {
@@ -147,9 +140,9 @@ trait MicrosoftOAuth2Trait
             'inline' => true,
             'html' => <<<HTML
             
-<a href="{$this->getOAuthClientFacade()->buildUrlForProvider($this)}" referrerpolicy="unsafe-url">
-    <span style="float: left">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 23 23">
+<a href="{$this->getOAuthClientFacade()->buildUrlForProvider($this)}" referrerpolicy="unsafe-url" style="background-color: rgb(0, 114, 198); display: inline-block; padding-top: 2px;">
+    <span style="float: left; margin: 3px;">
+        <svg width="34" height="34" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 23 23">
             <path fill="#f3f3f3" d="M0 0h23v23H0z"/>
             <path fill="#f35325" d="M1 1h10v10H1z"/>
             <path fill="#81bc06" d="M12 1h10v10H12z"/>
@@ -157,7 +150,7 @@ trait MicrosoftOAuth2Trait
             <path fill="#ffba08" d="M12 12h10v10H12z"/>
         </svg>
     </span>
-    <span style="line-height: 40px; display: inline-block; margin: 3px 3px 3px -4px; background-color: #f3f3f3; padding: 0 8px 0 8px; color: white; font-weight: bold;">
+    <span style="line-height: 34px; display: inline-block; margin: 3px 3px 3px 0; color: white; padding: 0 8px 0 8px; font-weight: bold;">
         Sign in with Microsoft
     </span>
 </a>
@@ -168,7 +161,7 @@ HTML
     
     /**
      * 
-     * @see axenox\OAuth2Connector\CommonLogic\Security\Authenticators\OAuth2Trait::setUrlAuthorize()
+     * @see \axenox\OAuth2Connector\CommonLogic\Security\Authenticators\OAuth2Trait::setUrlAuthorize()
      */
     protected function setUrlAuthorize(string $value) : AuthenticationProviderInterface
     {
@@ -177,7 +170,7 @@ HTML
     
     /**
      *
-     * @see axenox\OAuth2Connector\CommonLogic\Security\Authenticators\OAuth2Trait::getUrlAuthorize()
+     * @see \axenox\OAuth2Connector\CommonLogic\Security\Authenticators\OAuth2Trait::getUrlAuthorize()
      */
     protected function getUrlAuthorize() : string
     {
@@ -186,7 +179,7 @@ HTML
     
     /**
      * 
-     * @see axenox\OAuth2Connector\CommonLogic\Security\Authenticators\OAuth2Trait::setUrlAccessToken()
+     * @see \axenox\OAuth2Connector\CommonLogic\Security\Authenticators\OAuth2Trait::setUrlAccessToken()
      */
     protected function setUrlAccessToken(string $value) : AuthenticationProviderInterface
     {
@@ -195,7 +188,7 @@ HTML
     
     /**
      *
-     * @see axenox\OAuth2Connector\CommonLogic\Security\Authenticators\OAuth2Trait::getUrlAccessToken()
+     * @see \axenox\OAuth2Connector\CommonLogic\Security\Authenticators\OAuth2Trait::getUrlAccessToken()
      */
     protected function getUrlAccessToken() : string
     {
@@ -203,7 +196,7 @@ HTML
     }
     
     /**
-     * @see axenox\OAuth2Connector\CommonLogic\Security\Authenticators\OAuth2Trait::setUrlResourceOwnerDetails()
+     * @see \axenox\OAuth2Connector\CommonLogic\Security\Authenticators\OAuth2Trait::setUrlResourceOwnerDetails()
      */
     protected function setUrlResourceOwnerDetails(string $value) : AuthenticationProviderInterface
     {
@@ -211,7 +204,7 @@ HTML
     }
     
     /**
-     * @see axenox\OAuth2Connector\CommonLogic\Security\Authenticators\OAuth2Trait::getUrlResourceOwnerDetails()
+     * @see \axenox\OAuth2Connector\CommonLogic\Security\Authenticators\OAuth2Trait::getUrlResourceOwnerDetails()
      */
     protected function getUrlResourceOwnerDetails() : string
     {

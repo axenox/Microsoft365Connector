@@ -6,7 +6,7 @@ use exface\UrlDataConnector\Interfaces\UrlConnectionInterface;
 use exface\Core\CommonLogic\Traits\ImportUxonObjectTrait;
 use exface\Core\Interfaces\Security\AuthenticationTokenInterface;
 use exface\UrlDataConnector\Interfaces\HttpAuthenticationProviderInterface;
-use axenox\OAuth2Connector\CommonLogic\Security\AuthenticationToken\OAuth2AccessToken;
+use axenox\OAuth2Connector\CommonLogic\Security\AuthenticationToken\OAuth2AuthenticatedToken;
 use exface\Core\Exceptions\InvalidArgumentException;
 use League\OAuth2\Client\Token\AccessToken;
 use League\OAuth2\Client\Token\AccessTokenInterface;
@@ -19,7 +19,9 @@ use exface\UrlDataConnector\Interfaces\HttpConnectionInterface;
 class MicrosoftOAuth2 implements HttpAuthenticationProviderInterface
 {
     use ImportUxonObjectTrait;
-    use MicrosoftOAuth2Trait;
+    use MicrosoftOAuth2Trait {
+        getScopes as getScopesViaTrait;
+    }
     
     private $connection = null;
     
@@ -50,6 +52,18 @@ class MicrosoftOAuth2 implements HttpAuthenticationProviderInterface
         }
         
         return $this->exchangeOAuthToken($token);
+    }
+    
+    /**
+     * @see \axenox\OAuth2Connector\CommonLogic\Security\Authenticators\OAuth2Trait::getScopes()
+     */
+    protected function getScopes() : array
+    {
+        $scopes = $this->getScopesViaTrait();
+        if (empty($scopes)) {
+            $scopes = ['openid'];
+        }
+        return $scopes;
     }
     
     /**
@@ -93,8 +107,8 @@ class MicrosoftOAuth2 implements HttpAuthenticationProviderInterface
      */
     public function getCredentialsUxon(AuthenticationTokenInterface $authenticatedToken): UxonObject
     {
-        if (! $authenticatedToken instanceof OAuth2AccessToken) {
-            throw new InvalidArgumentException('Cannot store authentication token ' . get_class($authenticatedToken) . ' in OAuth2 credentials: only OAuth2AccessToken or derivatives supported!');
+        if (! $authenticatedToken instanceof OAuth2AuthenticatedToken) {
+            throw new InvalidArgumentException('Cannot store authentication token ' . get_class($authenticatedToken) . ' in OAuth2 credentials: only OAuth2AuthenticatedToken or derivatives supported!');
         }
         
         $accessToken = $authenticatedToken->getAccessToken();
@@ -125,7 +139,7 @@ class MicrosoftOAuth2 implements HttpAuthenticationProviderInterface
         return $this->originalUxon ?? new UxonObject();
     }
     
-    protected function getRefreshToken() : ?string
+    protected function getRefreshToken(AccessTokenInterface $authenticatedToken) : ?string
     {
         return $this->refreshToken;
     }
