@@ -116,7 +116,7 @@ class MicrosoftOAuth2 implements HttpAuthenticationProviderInterface
             'authentication' => [
                 'class' => '\\' . get_class($this),
                 'token' => $accessToken->jsonSerialize(),
-                'refresh_token' => $accessToken->getRefreshToken() ? $accessToken->getRefreshToken() : $this->getRefreshToken()
+                'refresh_token' => $accessToken->getRefreshToken() ? $accessToken->getRefreshToken() : $this->getRefreshToken($accessToken)
             ]
         ]);
         
