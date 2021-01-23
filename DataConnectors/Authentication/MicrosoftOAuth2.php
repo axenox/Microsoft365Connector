@@ -61,7 +61,7 @@ class MicrosoftOAuth2 implements HttpAuthenticationProviderInterface
     {
         $scopes = $this->getScopesViaTrait();
         if (empty($scopes)) {
-            $scopes = ['openid'];
+            $scopes = ['openid', 'email'];
         }
         return $scopes;
     }

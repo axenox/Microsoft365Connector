@@ -15,6 +15,7 @@ use axenox\OAuth2Connector\Exceptions\OAuthInvalidStateException;
 use exface\Core\Exceptions\Security\AuthenticationFailedError;
 use exface\Core\Exceptions\RuntimeException;
 use exface\Core\Interfaces\Security\AuthenticationTokenInterface;
+use League\OAuth2\Client\Token\AccessTokenInterface;
 
 trait MicrosoftOAuth2Trait
 {
@@ -110,6 +111,15 @@ trait MicrosoftOAuth2Trait
         }
         
         throw new AuthenticationFailedError($this->getConnection(), 'Please sign in first!');
+    }
+    
+    /**
+     * @see axenox\OAuth2Connector\CommonLogic\Security\Authenticators\OAuth2Trait::getUsername()
+     */
+    protected function getUsername(AccessTokenInterface $oauthToken, AbstractProvider $oauthProvider) : ?string
+    {
+        $ownerDetails = $oauthProvider->getResourceOwner($oauthToken);
+        return $ownerDetails->claim('email');
     }
     
     protected function getOAuthProvider() : AbstractProvider
