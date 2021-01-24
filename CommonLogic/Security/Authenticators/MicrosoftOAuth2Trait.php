@@ -68,6 +68,7 @@ trait MicrosoftOAuth2Trait
                     $redirectUrl = $request->getHeader('Referer')[0];
                     $clientFacade->startOAuthSession(
                         $this->getAuthProvider(),
+                        $this->getOAuthProviderHash(),
                         $redirectUrl,
                         [
                             'state' => $provider->getState()
@@ -150,7 +151,7 @@ trait MicrosoftOAuth2Trait
             'inline' => true,
             'html' => <<<HTML
             
-<a href="{$this->getOAuthClientFacade()->buildUrlForProvider($this)}" referrerpolicy="unsafe-url" style="background-color: rgb(0, 114, 198); display: inline-block; padding-top: 2px;">
+<a href="{$this->getOAuthClientFacade()->buildUrlForProvider($this, $this->getOAuthProviderHash())}" referrerpolicy="unsafe-url" style="background-color: rgb(0, 114, 198); display: inline-block; padding-top: 2px;">
     <span style="float: left; margin: 3px;">
         <svg width="34" height="34" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 23 23">
             <path fill="#f3f3f3" d="M0 0h23v23H0z"/>
