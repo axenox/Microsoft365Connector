@@ -57,7 +57,7 @@
     "rows": [
         {
             "CREATED_ON": "2021-01-25 14:26:44",
-            "MODIFIED_ON": "2021-01-25 14:28:10",
+            "MODIFIED_ON": "2021-01-25 15:48:46",
             "CREATED_BY_USER": "0x31000000000000000000000000000000",
             "MODIFIED_BY_USER": "0x31000000000000000000000000000000",
             "UID": "0x11eb829ff7737860829f025041000001",
@@ -66,7 +66,7 @@
             "DESCRIPTION": "1. Register an app in Azure Portal. \n2. Follow the integration assistant for application type \"Web app\" to create a secret.\n3. Copy your `client_id` (from the overview page) and `client_secret` into the config here\n4. Replace `<api_path>` in the `url` with the path to the desired api (e.g. `calendar\/v3`)\n5. Assign the required scopes in Azure Portal\n6. Add these scopes to the config here too",
             "PROTOTYPE": "exface\/UrlDataConnector\/DataConnectors\/OData4Connector.php",
             "UXON": {
-                "url": "https:\/\/graph.microsoft.com",
+                "url": "https:\/\/graph.microsoft.com\/v1.0\/",
                 "authentication": {
                     "class": "\\axenox\\Microsoft365Connector\\DataConnectors\\Authentication\\MicrosoftOAuth2",
                     "client_id": "",

@@ -119,6 +119,9 @@ trait MicrosoftOAuth2Trait
      */
     protected function getUsername(AccessTokenInterface $oauthToken) : ?string
     {
+        if ($oauthToken->getIdTokenClaims() === null) {
+            return '';
+        }
         /* @var $ownerDetails \TheNetworg\OAuth2\Client\Provider\AzureResourceOwner */
         $ownerDetails = $this->getOAuthProvider()->getResourceOwner($oauthToken);
         if (($field = $this->getUsernameResourceOwnerField()) !== null) {

@@ -81,7 +81,7 @@
     "rows": [
         {
             "CREATED_ON": "2021-01-25 09:34:52",
-            "MODIFIED_ON": "2021-01-25 09:39:52",
+            "MODIFIED_ON": "2021-01-25 15:48:00",
             "CREATED_BY_USER": "0x31000000000000000000000000000000",
             "MODIFIED_BY_USER": "0x31000000000000000000000000000000",
             "UID": "0x11eb86533243795a8653025041000001",
@@ -98,7 +98,7 @@
             "DATA_ADDRESS_PROPS": "{\"response_data_path\":\"value\"}",
             "DEFAULT_EDITOR_UXON": null,
             "ALIAS": "meCalendars",
-            "DATA_ADDRESS": "v1.0\/me\/calendars"
+            "DATA_ADDRESS": "me\/calendars"
         }
     ],
     "totals_rows": [],
