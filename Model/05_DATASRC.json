@@ -57,7 +57,7 @@
     "rows": [
         {
             "CREATED_ON": "2021-01-22 18:04:46",
-            "MODIFIED_ON": "2021-01-22 18:13:44",
+            "MODIFIED_ON": "2021-01-25 14:16:04",
             "CREATED_BY_USER": "0x31000000000000000000000000000000",
             "MODIFIED_BY_USER": "0x31000000000000000000000000000000",
             "UID": "0x11eb982eee23e0b8982e025041000001",
@@ -69,6 +69,21 @@
             "BASE_OBJECT": "",
             "LABEL": "Microsoft Graph",
             "ALIAS": "MICROSOFT_GRAPH"
+        },
+        {
+            "CREATED_ON": "2021-01-25 14:17:23",
+            "MODIFIED_ON": "2021-01-25 14:17:23",
+            "CREATED_BY_USER": "0x31000000000000000000000000000000",
+            "MODIFIED_BY_USER": "0x31000000000000000000000000000000",
+            "UID": "0x11eba852a99549f8a852025041000001",
+            "APP": "0x11eb8233a3d3443c8233847beb4a5184",
+            "DEFAULT_CONNECTION": "0x11eb8bf5cc97ff468bf5025041000001",
+            "DEFAULT_QUERY_BUILDER": "exface\/UrlDataConnector\/QueryBuilders\/JsonUrlBuilder.php",
+            "READABLE_FLAG": "1",
+            "WRITABLE_FLAG": "0",
+            "BASE_OBJECT": "",
+            "LABEL": "Microsoft OpenID",
+            "ALIAS": "MICROSOFT_OPENID"
         }
     ],
     "totals_rows": [],

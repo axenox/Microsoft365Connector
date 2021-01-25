@@ -53,23 +53,47 @@
     "rows": [
         {
             "CREATED_ON": "2021-01-22 15:55:30",
-            "MODIFIED_ON": "2021-01-23 21:45:15",
+            "MODIFIED_ON": "2021-01-25 14:15:06",
             "CREATED_BY_USER": "0x31000000000000000000000000000000",
             "MODIFIED_BY_USER": "0x31000000000000000000000000000000",
             "UID": "0x11eb8a60df22c5a08a60847beb4a5184",
             "APP": "0x11eb8233a3d3443c8233847beb4a5184",
             "LABEL": "Microsoft Graph",
+            "CONNECTOR": "exface\/UrlDataConnector\/DataConnectors\/OData4Connector.php",
+            "CONFIG": {
+                "url": "https:\/\/graph.microsoft.com",
+                "authentication": {
+                    "class": "\\axenox\\Microsoft365Connector\\DataConnectors\\Authentication\\MicrosoftOAuth2",
+                    "client_id": "",
+                    "client_secret": "",
+                    "scopes": [
+                        ""
+                    ]
+                }
+            },
+            "READONLY": "0",
+            "ALIAS": "MICROSOFT_GRAPH",
+            "FILTER_CONTEXT": null
+        },
+        {
+            "CREATED_ON": "2021-01-25 14:11:13",
+            "MODIFIED_ON": "2021-01-25 14:12:14",
+            "CREATED_BY_USER": "0x31000000000000000000000000000000",
+            "MODIFIED_BY_USER": "0x31000000000000000000000000000000",
+            "UID": "0x11eb8bf5cc97ff468bf5025041000001",
+            "APP": "0x11eb8233a3d3443c8233847beb4a5184",
+            "LABEL": "Microsoft OpenID",
             "CONNECTOR": "exface\/UrlDataConnector\/DataConnectors\/HttpConnector.php",
             "CONFIG": {
                 "url": "https:\/\/graph.microsoft.com",
                 "authentication": {
                     "class": "\\axenox\\Microsoft365Connector\\DataConnectors\\Authentication\\MicrosoftOAuth2",
-                    "client_id": "c68ca316-340a-402d-9c03-2a13aa7a8893",
-                    "client_secret": "~~dy0~MNUiTIOzbodV~IK~79DfQ5Hfmh0G"
+                    "client_id": "",
+                    "client_secret": ""
                 }
             },
             "READONLY": "1",
-            "ALIAS": "MICROSOFT_GRAPH",
+            "ALIAS": "MICROSOFT_OPENID",
             "FILTER_CONTEXT": null
         }
     ],

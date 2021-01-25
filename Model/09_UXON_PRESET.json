@@ -1,0 +1,109 @@
+{
+    "object_alias": "exface.Core.UXON_PRESET",
+    "columns": [
+        {
+            "name": "CREATED_ON",
+            "attribute_alias": "CREATED_ON"
+        },
+        {
+            "name": "MODIFIED_ON",
+            "attribute_alias": "MODIFIED_ON"
+        },
+        {
+            "name": "CREATED_BY_USER",
+            "attribute_alias": "CREATED_BY_USER"
+        },
+        {
+            "name": "MODIFIED_BY_USER",
+            "attribute_alias": "MODIFIED_BY_USER"
+        },
+        {
+            "name": "UID",
+            "attribute_alias": "UID"
+        },
+        {
+            "name": "APP",
+            "attribute_alias": "APP"
+        },
+        {
+            "name": "NAME",
+            "attribute_alias": "NAME"
+        },
+        {
+            "name": "DESCRIPTION",
+            "attribute_alias": "DESCRIPTION"
+        },
+        {
+            "name": "PROTOTYPE",
+            "attribute_alias": "PROTOTYPE"
+        },
+        {
+            "name": "UXON",
+            "attribute_alias": "UXON"
+        },
+        {
+            "name": "WRAP_PATH",
+            "attribute_alias": "WRAP_PATH"
+        },
+        {
+            "name": "UXON_SCHEMA",
+            "attribute_alias": "UXON_SCHEMA"
+        },
+        {
+            "name": "THUMBNAIL",
+            "attribute_alias": "THUMBNAIL"
+        }
+    ],
+    "rows": [
+        {
+            "CREATED_ON": "2021-01-25 14:26:44",
+            "MODIFIED_ON": "2021-01-25 14:28:10",
+            "CREATED_BY_USER": "0x31000000000000000000000000000000",
+            "MODIFIED_BY_USER": "0x31000000000000000000000000000000",
+            "UID": "0x11eb829ff7737860829f025041000001",
+            "APP": "0x11eb8233a3d3443c8233847beb4a5184",
+            "NAME": "Microsoft Graph",
+            "DESCRIPTION": "1. Register an app in Azure Portal. \n2. Follow the integration assistant for application type \"Web app\" to create a secret.\n3. Copy your `client_id` (from the overview page) and `client_secret` into the config here\n4. Replace `<api_path>` in the `url` with the path to the desired api (e.g. `calendar\/v3`)\n5. Assign the required scopes in Azure Portal\n6. Add these scopes to the config here too",
+            "PROTOTYPE": "exface\/UrlDataConnector\/DataConnectors\/OData4Connector.php",
+            "UXON": {
+                "url": "https:\/\/graph.microsoft.com",
+                "authentication": {
+                    "class": "\\axenox\\Microsoft365Connector\\DataConnectors\\Authentication\\MicrosoftOAuth2",
+                    "client_id": "",
+                    "client_secret": "",
+                    "scopes": [
+                        ""
+                    ]
+                }
+            },
+            "WRAP_PATH": "",
+            "UXON_SCHEMA": "connection",
+            "THUMBNAIL": ""
+        }
+    ],
+    "totals_rows": [],
+    "filters": {
+        "operator": "AND",
+        "base_object_alias": "exface.Core.UXON_PRESET",
+        "conditions": [
+            {
+                "expression": "APP",
+                "comparator": "=",
+                "value": "0x11eb8233a3d3443c8233847beb4a5184",
+                "object_alias": "exface.Core.UXON_PRESET"
+            }
+        ]
+    },
+    "rows_limit": null,
+    "rows_offset": 0,
+    "sorters": [
+        {
+            "attribute_alias": "CREATED_ON",
+            "direction": "ASC"
+        },
+        {
+            "attribute_alias": "UID",
+            "direction": "ASC"
+        }
+    ]
+}
