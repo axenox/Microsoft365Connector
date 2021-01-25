@@ -81,9 +81,9 @@
     "rows": [
         {
             "CREATED_ON": "2021-01-25 09:34:52",
-            "MODIFIED_ON": "2021-01-25 15:48:00",
+            "MODIFIED_ON": "2021-01-25 16:02:29",
             "CREATED_BY_USER": "0x31000000000000000000000000000000",
-            "MODIFIED_BY_USER": "0x31000000000000000000000000000000",
+            "MODIFIED_BY_USER": "0x11ea985377357cde9853005056bee7c0",
             "UID": "0x11eb86533243795a8653025041000001",
             "READABLE_FLAG": "1",
             "WRITABLE_FLAG": "1",
@@ -95,7 +95,7 @@
             "APP": "0x11eb8233a3d3443c8233847beb4a5184",
             "SHORT_DESCRIPTION": "",
             "PARENT_OBJECT": "",
-            "DATA_ADDRESS_PROPS": "{\"response_data_path\":\"value\"}",
+            "DATA_ADDRESS_PROPS": "{\"EntityType\":\"calendar\",\"Namespace\":\"graph\"}",
             "DEFAULT_EDITOR_UXON": null,
             "ALIAS": "meCalendars",
             "DATA_ADDRESS": "me\/calendars"
