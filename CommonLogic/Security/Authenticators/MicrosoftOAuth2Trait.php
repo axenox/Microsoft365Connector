@@ -108,7 +108,7 @@ trait MicrosoftOAuth2Trait
         
         $clientFacade->stopOAuthSession();
         if ($oauthToken) {
-            return new OAuth2AuthenticatedToken($this->getUsername($oauthToken, $provider), $oauthToken, $token->getFacade());
+            return new OAuth2AuthenticatedToken($this->getUsername($oauthToken), $oauthToken, $token->getFacade());
         }
         
         throw new AuthenticationFailedError($this->getConnection(), 'Please sign in first!');
@@ -117,9 +117,13 @@ trait MicrosoftOAuth2Trait
     /**
      * @see axenox\OAuth2Connector\CommonLogic\Security\Authenticators\OAuth2Trait::getUsername()
      */
-    protected function getUsername(AccessTokenInterface $oauthToken, AbstractProvider $oauthProvider) : ?string
+    protected function getUsername(AccessTokenInterface $oauthToken) : ?string
     {
-        $ownerDetails = $oauthProvider->getResourceOwner($oauthToken);
+        /* @var $ownerDetails \TheNetworg\OAuth2\Client\Provider\AzureResourceOwner */
+        $ownerDetails = $this->getOAuthProvider()->getResourceOwner($oauthToken);
+        if (($field = $this->getUsernameResourceOwnerField()) !== null) {
+            return $ownerDetails->toArray()[$field];
+        }
         return $ownerDetails->claim('email');
     }
     
@@ -162,7 +166,7 @@ trait MicrosoftOAuth2Trait
         </svg>
     </span>
     <span style="line-height: 34px; display: inline-block; margin: 3px 3px 3px 0; color: white; padding: 0 8px 0 8px; font-weight: bold;">
-        Sign in with Microsoft
+        {$this->getWorkbench()->getApp('axenox.OAuth2Connector')->getTranslator()->translate('SIGN_IN_WITH')} Microsoft 365
     </span>
 </a>
 
