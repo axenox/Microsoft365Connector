@@ -53,7 +53,7 @@
     "rows": [
         {
             "CREATED_ON": "2021-01-22 15:55:30",
-            "MODIFIED_ON": "2021-01-25 15:47:37",
+            "MODIFIED_ON": "2021-01-27 11:22:04",
             "CREATED_BY_USER": "0x31000000000000000000000000000000",
             "MODIFIED_BY_USER": "0x31000000000000000000000000000000",
             "UID": "0x11eb8a60df22c5a08a60847beb4a5184",
@@ -68,6 +68,9 @@
                     "client_secret": "",
                     "scopes": [
                         ""
+                    ],
+                    "exclude_urls": [
+                        "~.*\/\\$metadata~"
                     ]
                 }
             },
