@@ -168,7 +168,7 @@ trait MicrosoftOAuth2Trait
             <path fill="#ffba08" d="M12 12h10v10H12z"/>
         </svg>
     </span>
-    <span style="line-height: 34px; display: inline-block; margin: 3px 3px 3px 0; color: white; padding: 0 8px 0 8px; font-weight: bold;">
+    <span style="line-height: 34px; display: inline-block; margin: 3px 3px 3px 0; color: white; padding: 0 8px 0 8px; font-weight: bold; white-space: nowrap;">
         {$this->getWorkbench()->getApp('axenox.OAuth2Connector')->getTranslator()->translate('SIGN_IN_WITH')} Microsoft 365
     </span>
 </a>
