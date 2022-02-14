@@ -23,6 +23,8 @@ trait MicrosoftOAuth2Trait
     
     private $provider = null;
     
+    private $tenant = null;
+    
     protected function exchangeOAuthToken(AuthenticationTokenInterface $token): OAuth2AuthenticatedToken
     {
         if ($token instanceof OAuth2AuthenticatedToken) {
@@ -144,7 +146,11 @@ trait MicrosoftOAuth2Trait
             $options['scopes'] = $scopes;
         }
         
-        return new Azure($options);
+        $provider = new Azure($options);
+        if ($this->getTenant() !== null) {
+            $provider->tenant = $this->getTenant();
+        }
+        return $provider;
     }
     
     /**
@@ -227,5 +233,29 @@ HTML
     protected function getUrlResourceOwnerDetails() : string
     {
         return $this->getOAuthProvider()->getResourceOwnerDetailsUrl();
+    }
+    
+    /**
+     * 
+     * @return string|NULL
+     */
+    protected function getTenant() : ?string
+    {
+        return $this->tenant;
+    }
+    
+    /**
+     * A custom tenant to use (for applications, that are not multi-tenant)
+     * 
+     * @uxon-property tenant
+     * @uxon-type string
+     * 
+     * @param string $value
+     * @return AuthenticationProviderInterface
+     */
+    protected function setTenant(string $value)
+    {
+        $this->tenant = $value;
+        return $this;
     }
 }
