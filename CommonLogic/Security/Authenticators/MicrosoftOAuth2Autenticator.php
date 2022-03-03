@@ -9,18 +9,29 @@ use exface\Core\DataTypes\EncryptedDataType;
 /**
  * Authenticates users using Azure Active Directory via OAuth 2.0.
  * 
- * To enable Single-Sign-On with Microsoft Azure, you need to register every
- * required workbench installation (every URL) as an "Application" in the Azure 
- * portal: see https://docs.microsoft.com/en-us/azure/active-directory/develop/active-directory-v2-protocols.
+ * To enable Single-Sign-On with Microsoft Azure, you need to register the
+ * workbench installation (URL) as an "Application" in Azure Active Directory:
+ * 
+ * 1. Go to https://portal.azure.com/
+ * 2. Select Azure Active Directory
+ * 3. Proceed to "App registrations" in the menu
+ * 4. Create a new registration or select an existing one
  * 
  * You will need to provide a redirect URL: `https://yourdomain.com/path_to_workbench/api/oauth2client`.
- * Make sure you use a secure HTTPS URL with a valid SSL certificate!
+ * Make sure you use a secure HTTPS URL with a valid SSL certificate! For testing purposes you can
+ * use `http://localhost/path_to_workbench/api/oauth2client`.
  * 
  * You will also need to select required scopes: the default scopes are `openid`, `profile`, `email`
  * unless the `scopes` property of the authenticator is configured explicitly.
  * 
- * After the app registration is complete, you will get the `client_id` and the `client_secret`
- * needed to configure the authenticator.
+ * After the app registration is complete, you will get the following information required to configure
+ * the authenticator in `System.config.json`:
+ * 
+ * - `Application-ID (Client)` to put into the `client_id` in the authenticator config
+ * - `Secret key` (visible under "Certificates and secrets" in the menu inside the registration) to put 
+ * into `client_secret`
+ * 
+ * For more information see the official documentation at https://docs.microsoft.com/en-us/azure/active-directory/develop/active-directory-v2-protocols.
  * 
  * ## Example Configuration
  * 

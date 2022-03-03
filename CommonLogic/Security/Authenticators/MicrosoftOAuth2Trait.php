@@ -59,6 +59,7 @@ trait MicrosoftOAuth2Trait
                             $authOptions = ['prompt' => 'consent'];
                         } else {
                             $oauthToken = $provider->getAccessToken('refresh_token', [
+                                'scope' => $provider->scope,
                                 'refresh_token' => $this->getRefreshToken($oauthToken)
                             ]);
                         }
@@ -104,7 +105,7 @@ trait MicrosoftOAuth2Trait
                     ]);
                 } catch (\Throwable $e) {
                     $clientFacade->stopOAuthSession();
-                    throw new AuthenticationFailedError($this->getConnection(), $e->getMessage(), null, $e);
+                    throw new AuthenticationFailedError($this->getAuthProvider(), $e->getMessage(), null, $e);
                 }
         }
         
@@ -160,24 +161,25 @@ trait MicrosoftOAuth2Trait
     {
         return WidgetFactory::createFromUxonInParent($container, new UxonObject([
             'widget_type' => 'Html',
-            'hide_caption' => false,
+            'hide_caption' => true,
             'inline' => true,
             'html' => <<<HTML
-            
-<a href="{$this->getOAuthClientFacade()->buildUrlForProvider($this, $this->getOAuthProviderHash())}" referrerpolicy="unsafe-url" style="background-color: rgb(0, 114, 198); display: inline-block; padding-top: 2px;">
-    <span style="float: left; margin: 3px;">
-        <svg width="34" height="34" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 23 23">
-            <path fill="#f3f3f3" d="M0 0h23v23H0z"/>
-            <path fill="#f35325" d="M1 1h10v10H1z"/>
-            <path fill="#81bc06" d="M12 1h10v10H12z"/>
-            <path fill="#05a6f0" d="M1 12h10v10H1z"/>
-            <path fill="#ffba08" d="M12 12h10v10H12z"/>
-        </svg>
-    </span>
-    <span style="line-height: 34px; display: inline-block; margin: 3px 3px 3px 0; color: white; padding: 0 8px 0 8px; font-weight: bold; white-space: nowrap;">
-        {$this->getWorkbench()->getApp('axenox.OAuth2Connector')->getTranslator()->translate('SIGN_IN_WITH')} Microsoft 365
-    </span>
-</a>
+<div style="width: 100%; text-align: center;">            
+    <a href="{$this->getOAuthClientFacade()->buildUrlForProvider($this, $this->getOAuthProviderHash())}" referrerpolicy="unsafe-url" style="background-color: rgb(0, 114, 198); display: inline-block; padding-top: 2px; white-space: nowrap">
+        <span style="float: left; margin: 3px 3px 3px 5px;">
+            <svg width="34" height="34" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 23 23">
+                <path fill="#f3f3f3" d="M0 0h23v23H0z"/>
+                <path fill="#f35325" d="M1 1h10v10H1z"/>
+                <path fill="#81bc06" d="M12 1h10v10H12z"/>
+                <path fill="#05a6f0" d="M1 12h10v10H1z"/>
+                <path fill="#ffba08" d="M12 12h10v10H12z"/>
+            </svg>
+        </span>
+        <span style="line-height: 34px; display: inline-block; margin: 3px 3px 3px 0; color: white; padding: 0 8px 0 8px; font-weight: bold; white-space: nowrap;">
+            {$this->getWorkbench()->getApp('axenox.OAuth2Connector')->getTranslator()->translate('SIGN_IN_WITH')} Microsoft 365
+        </span>
+    </a>
+</div>
 
 HTML
         ]));
