@@ -25,6 +25,8 @@ trait MicrosoftOAuth2Trait
     
     private $tenant = null;
     
+    private $autoRefreshToken = true;
+    
     protected function exchangeOAuthToken(AuthenticationTokenInterface $token): OAuth2AuthenticatedToken
     {
         if ($token instanceof OAuth2AuthenticatedToken) {
@@ -143,6 +145,9 @@ trait MicrosoftOAuth2Trait
         ];
         
         $scopes = $this->getScopes();
+        if ($this->getAutoRefreshToken() && ! in_array('offline_access', $scopes)) {
+            $scopes[] = 'offline_access';
+        }
         if (! empty($scopes)) {
             $options['scopes'] = $scopes;
         }
@@ -258,6 +263,31 @@ HTML
     protected function setTenant(string $value)
     {
         $this->tenant = $value;
+        return $this;
+    }
+    
+    /**
+     * 
+     * @return bool
+     */
+    protected function getAutoRefreshToken() : bool
+    {
+        return $this->autoRefreshToken;
+    }
+    
+    /**
+     * Set to FALSE to disable refresh tokens and thus not to request the `offline_access` scope.
+     * 
+     * @uxon-property auto_refresh_token
+     * @uxon-type boolean
+     * @uxon-default true
+     * 
+     * @param bool $value
+     * @return MicrosoftOAuth2Trait
+     */
+    protected function setAutoRefreshToken(bool $value) : MicrosoftOAuth2Trait
+    {
+        $this->autoRefreshToken = $value;
         return $this;
     }
 }
