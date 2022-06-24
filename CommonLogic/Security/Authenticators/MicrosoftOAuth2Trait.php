@@ -11,11 +11,12 @@ use exface\Core\Factories\WidgetFactory;
 use axenox\OAuth2Connector\CommonLogic\Security\Authenticators\OAuth2Trait;
 use axenox\OAuth2Connector\CommonLogic\Security\AuthenticationToken\OAuth2AuthenticatedToken;
 use axenox\OAuth2Connector\CommonLogic\Security\AuthenticationToken\OAuth2RequestToken;
-use axenox\OAuth2Connector\Exceptions\OAuthInvalidStateException;
 use exface\Core\Exceptions\Security\AuthenticationFailedError;
-use exface\Core\Exceptions\RuntimeException;
+use exface\Core\Exceptions\Security\AuthenticationRuntimeError;
 use exface\Core\Interfaces\Security\AuthenticationTokenInterface;
 use League\OAuth2\Client\Token\AccessTokenInterface;
+use axenox\OAuth2Connector\Exceptions\OAuthHttpException;
+use exface\Core\Exceptions\Security\AuthenticatorConfigError;
 
 trait MicrosoftOAuth2Trait
 {
@@ -40,7 +41,7 @@ trait MicrosoftOAuth2Trait
         }
         
         if (! $token instanceof OAuth2RequestToken) {
-            throw new RuntimeException('Cannot use "' . get_class($token) . '" as OAuth token!');
+            throw new AuthenticationRuntimeError($this, 'Cannot use "' . get_class($token) . '" as OAuth token!');
         }
         
         $clientFacade = $this->getOAuthClientFacade();
@@ -100,7 +101,7 @@ trait MicrosoftOAuth2Trait
             case !empty($requestParams['error']):
                 $clientFacade->stopOAuthSession();
                 $err = $requestParams['error_description'] ?? $requestParams['error'];
-                throw new AuthenticationFailedError($this, 'OAuth2 error: ' . htmlspecialchars($err, ENT_QUOTES, 'UTF-8'));
+                throw new OAuthHttpException($this, 'OAuth2 error: ' . htmlspecialchars($err, ENT_QUOTES, 'UTF-8'), null, null, $request);
                 
                 // If code is not empty and there is no error, process provider response here
             default:
@@ -112,7 +113,7 @@ trait MicrosoftOAuth2Trait
                 
                 if (empty($requestParams['state']) || $requestParams['state'] !== $sessionVars['state']) {
                     $clientFacade->stopOAuthSession();
-                    throw new OAuthInvalidStateException($this, 'Invalid OAuth2 state!');
+                    throw new OAuthHttpException($this, 'Invalid OAuth2 state: expecting "' . $sessionVars['state'] . '", received from provider "' . $requestParams['state'] . '"!', null, null, $request);
                 }
                 
                 // Get an access token (using the authorization code grant)
@@ -123,7 +124,7 @@ trait MicrosoftOAuth2Trait
                     ]);
                 } catch (\Throwable $e) {
                     $clientFacade->stopOAuthSession();
-                    throw new AuthenticationFailedError($this->getAuthProvider(), $e->getMessage(), null, $e);
+                    throw new OAuthHttpException($this->getAuthProvider(), 'Cannot get OAuth2 access token from provider response: ' . $e->getMessage(), null, $e, $request);
                 }
                 
                 $this->getWorkbench()->getLogger()->debug('OAuth2 authenticator: response of provider processed for user "' . $this->getUsername($oauthToken) . '"', [
@@ -218,7 +219,7 @@ HTML
      */
     protected function setUrlAuthorize(string $value) : AuthenticationProviderInterface
     {
-        throw new RuntimeException('Cannot change the URLs for Microsoft OAuth connectors!');
+        throw new AuthenticatorConfigError($this, 'Cannot change the URLs for Microsoft OAuth connectors!');
     }
     
     /**
@@ -236,7 +237,7 @@ HTML
      */
     protected function setUrlAccessToken(string $value) : AuthenticationProviderInterface
     {
-        throw new RuntimeException('Cannot change the URLs for Microsoft OAuth connectors!');
+        throw new AuthenticatorConfigError($this, 'Cannot change the URLs for Microsoft OAuth connectors!');
     }
     
     /**
@@ -253,7 +254,7 @@ HTML
      */
     protected function setUrlResourceOwnerDetails(string $value) : AuthenticationProviderInterface
     {
-        throw new RuntimeException('Cannot change the URLs for Microsoft OAuth connectors!');
+        throw new AuthenticatorConfigError($this, 'Cannot change the URLs for Microsoft OAuth connectors!');
     }
     
     /**
