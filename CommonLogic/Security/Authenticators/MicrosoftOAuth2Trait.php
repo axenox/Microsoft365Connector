@@ -31,8 +31,10 @@ trait MicrosoftOAuth2Trait
     {
         if ($token instanceof OAuth2AuthenticatedToken) {
             if ($token->getAccessToken()->hasExpired()) {
+                $this->getWorkbench()->getLogger()->debug('OAuth2 authenticator: token of "' . $token->getUsername() . '" expired!');
                 throw new AuthenticationFailedError($this->getAuthProvider(), 'OAuth token expired: Please sign in again!');
             } else {
+                $this->getWorkbench()->getLogger()->debug('OAuth2 authenticator: token of "' . $token->getUsername() . '" still valid - nothing to do!');
                 return $token;
             }
         }
@@ -49,12 +51,15 @@ trait MicrosoftOAuth2Trait
         switch (true) {
             
             // If we are not processing a provider response, either use the stored token
-            // or redirect ot the provider to start authentication
+            // or redirect to the provider to start authentication
             case empty($requestParams['code']):
                 
                 $authOptions = [];
                 $oauthToken = $this->getTokenStored();
                 if ($oauthToken) {
+                    $this->getWorkbench()->getLogger()->debug('OAuth2 authenticator: authentication requested with stored token', [
+                        'oauth_token' => $oauthToken
+                    ]);
                     $expired = $oauthToken->hasExpired();
                     if ($expired) {
                         if (! $this->getRefreshToken($oauthToken)) {
@@ -66,6 +71,8 @@ trait MicrosoftOAuth2Trait
                             ]);
                         }
                     }
+                } else {
+                    $this->getWorkbench()->getLogger()->debug('OAuth2 authenticator: authentication requested without stored token');
                 }
                 if (! $oauthToken || ! empty($authOptions)) {
                     // If we don't have an authorization code then get one
@@ -78,6 +85,11 @@ trait MicrosoftOAuth2Trait
                         [
                             'state' => $provider->getState()
                         ]);
+                    $this->getWorkbench()->getLogger()->debug('OAuth2 authenticator: redirecting to provider', [
+                        'oauth_hash' => $this->getOAuthProviderHash(),
+                        'oauth_state' => $provider->getState(),
+                        'provider_url' => $authUrl
+                    ]);
                     $this->getWorkbench()->stop();
                     header('Location: ' . $authUrl);
                     exit;
@@ -94,6 +106,10 @@ trait MicrosoftOAuth2Trait
             default:
                 $sessionVars = $clientFacade->getOAuthSessionVars();
                 
+                $this->getWorkbench()->getLogger()->debug('OAuth2 authenticator: response of provider received', [
+                    'oauth_session' => $sessionVars
+                ]);
+                
                 if (empty($requestParams['state']) || $requestParams['state'] !== $sessionVars['state']) {
                     $clientFacade->stopOAuthSession();
                     throw new OAuthInvalidStateException($this, 'Invalid OAuth2 state!');
@@ -109,6 +125,12 @@ trait MicrosoftOAuth2Trait
                     $clientFacade->stopOAuthSession();
                     throw new AuthenticationFailedError($this->getAuthProvider(), $e->getMessage(), null, $e);
                 }
+                
+                $this->getWorkbench()->getLogger()->debug('OAuth2 authenticator: response of provider processed for user "' . $this->getUsername($oauthToken) . '"', [
+                    'username' => $this->getUsername($oauthToken),
+                    'oauth_session' => $sessionVars,
+                    'oauth_token' => $oauthToken
+                ]);
         }
         
         $clientFacade->stopOAuthSession();
