@@ -50,6 +50,11 @@ trait MicrosoftOAuth2Trait
         $provider = $this->getOAuthProvider();
         
         switch (true) {
+            // Got an error, probably user denied access
+            case !empty($requestParams['error']):
+                $clientFacade->stopOAuthSession();
+                $err = $requestParams['error_description'] ?? $requestParams['error'];
+                throw new OAuthHttpException($this, 'OAuth2 error: ' . htmlspecialchars($err, ENT_QUOTES, 'UTF-8'), null, null, $request);
             
             // If we are not processing a provider response, either use the stored token
             // or redirect to the provider to start authentication
@@ -97,13 +102,7 @@ trait MicrosoftOAuth2Trait
                 }
                 break;
                 
-                // Got an error, probably user denied access
-            case !empty($requestParams['error']):
-                $clientFacade->stopOAuthSession();
-                $err = $requestParams['error_description'] ?? $requestParams['error'];
-                throw new OAuthHttpException($this, 'OAuth2 error: ' . htmlspecialchars($err, ENT_QUOTES, 'UTF-8'), null, null, $request);
-                
-                // If code is not empty and there is no error, process provider response here
+            // If code is not empty and there is no error, process provider response here
             default:
                 $sessionVars = $clientFacade->getOAuthSessionVars();
                 
@@ -155,7 +154,13 @@ trait MicrosoftOAuth2Trait
         if (($field = $this->getUsernameResourceOwnerField()) !== null) {
             return $ownerDetails->toArray()[$field];
         }
-        return $ownerDetails->claim('email');
+        if (null !== $username = $ownerDetails->claim('preferred_username')) {
+            return $username;
+        }
+        if (null !== $username = $ownerDetails->claim('email')) {
+            return $username;
+        }
+        return $ownerDetails->claim('oid') ?? '';
     }
     
     protected function getOAuthProvider() : AbstractProvider
