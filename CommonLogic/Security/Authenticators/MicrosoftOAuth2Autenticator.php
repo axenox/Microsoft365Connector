@@ -114,8 +114,13 @@ class MicrosoftOAuth2Autenticator extends OAuth2Authenticator
         $firstName = $ownerDetails->getFirstName();
         $lastName = $ownerDetails->getLastName();
         
-        if (! $lastName && $fullName = $ownerDetails->claim('name')) {
-            list($firstName, $lastName) = $this->explodeName($fullName);
+        if (! $lastName || ! $firstName) {
+            $name = $ownerDetails->claim('name');
+            list($firstName, $lastName) = $this->explodeName($name);
+            if (! $firstName) {
+                $firstName = $lastName;
+                $lastName = $ownerDetails->claim('family_name');                
+            }
         }
         
         $data = [
