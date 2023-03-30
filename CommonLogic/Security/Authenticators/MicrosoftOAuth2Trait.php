@@ -32,10 +32,14 @@ trait MicrosoftOAuth2Trait
     {
         if ($token instanceof OAuth2AuthenticatedToken) {
             if ($token->getAccessToken()->hasExpired()) {
-                $this->getWorkbench()->getLogger()->debug('OAuth2 authenticator: token of "' . $token->getUsername() . '" expired!');
+                if ($this->isDebugMode()) {
+                    $this->getWorkbench()->getLogger()->debug('OAuth2 authenticator: token of "' . $token->getUsername() . '" expired!');
+                }
                 throw new AuthenticationFailedError($this->getAuthProvider(), 'OAuth token expired: Please sign in again!');
             } else {
-                $this->getWorkbench()->getLogger()->debug('OAuth2 authenticator: token of "' . $token->getUsername() . '" still valid - nothing to do!');
+                if ($this->isDebugMode()) {
+                    $this->getWorkbench()->getLogger()->debug('OAuth2 authenticator: token of "' . $token->getUsername() . '" still valid - nothing to do!');
+                }
                 return $token;
             }
         }
@@ -63,9 +67,9 @@ trait MicrosoftOAuth2Trait
                 $authOptions = [];
                 $oauthToken = $this->getTokenStored();
                 if ($oauthToken) {
-                    $this->getWorkbench()->getLogger()->debug('OAuth2 authenticator: authentication requested with stored token', [
-                        'oauth_token' => $oauthToken
-                    ]);
+                    if ($this->isDebugMode()) {
+                        $this->getWorkbench()->getLogger()->debug('OAuth2: authentication requested with stored token', $oauthToken->jsonSerialize());
+                    }
                     $expired = $oauthToken->hasExpired();
                     if ($expired) {
                         if (! $this->getRefreshToken($oauthToken)) {
@@ -78,7 +82,9 @@ trait MicrosoftOAuth2Trait
                         }
                     }
                 } else {
-                    $this->getWorkbench()->getLogger()->debug('OAuth2 authenticator: authentication requested without stored token');
+                    if ($this->isDebugMode()) {
+                        $this->getWorkbench()->getLogger()->debug('OAuth2: authentication requested without stored token');
+                    }
                 }
                 if (! $oauthToken || ! empty($authOptions)) {
                     // If we don't have an authorization code then get one
@@ -88,14 +94,15 @@ trait MicrosoftOAuth2Trait
                         $this->getAuthProvider(),
                         $this->getOAuthProviderHash(),
                         $redirectUrl,
-                        [
-                            'state' => $provider->getState()
+                        ['state' => $provider->getState()]
+                    );
+                    if ($this->isDebugMode()) {
+                        $this->getWorkbench()->getLogger()->debug('OAuth2: redirecting to provider', [
+                            'oauth_hash' => $this->getOAuthProviderHash(),
+                            'oauth_state' => $provider->getState(),
+                            'provider_url' => $authUrl
                         ]);
-                    $this->getWorkbench()->getLogger()->debug('OAuth2 authenticator: redirecting to provider', [
-                        'oauth_hash' => $this->getOAuthProviderHash(),
-                        'oauth_state' => $provider->getState(),
-                        'provider_url' => $authUrl
-                    ]);
+                    }
                     $this->getWorkbench()->stop();
                     header('Location: ' . $authUrl);
                     exit;
@@ -105,10 +112,6 @@ trait MicrosoftOAuth2Trait
             // If code is not empty and there is no error, process provider response here
             default:
                 $sessionVars = $clientFacade->getOAuthSessionVars();
-                
-                $this->getWorkbench()->getLogger()->debug('OAuth2 authenticator: response of provider received', [
-                    'oauth_session' => $sessionVars
-                ]);
                 
                 if (empty($requestParams['state']) || $requestParams['state'] !== $sessionVars['state']) {
                     $clientFacade->stopOAuthSession();
@@ -121,16 +124,24 @@ trait MicrosoftOAuth2Trait
                         'scope' => $provider->scope,
                         'code' => $requestParams['code']
                     ]);
+                    if ($this->isDebugMode()) {
+                        $this->getWorkbench()->getLogger()->debug('OAuth2: response of provider received', [
+                            'oauth_session' => $sessionVars,
+                            'oauth_access_token' => $oauthToken->jsonSerialize()
+                        ]);
+                    }
                 } catch (\Throwable $e) {
                     $clientFacade->stopOAuthSession();
                     throw new OAuthHttpException($this->getAuthProvider(), 'Cannot get OAuth2 access token from provider response: ' . $e->getMessage(), null, $e, $request);
                 }
                 
-                $this->getWorkbench()->getLogger()->debug('OAuth2 authenticator: response of provider processed for user "' . $this->getUsername($oauthToken) . '"', [
-                    'username' => $this->getUsername($oauthToken),
-                    'oauth_session' => $sessionVars,
-                    'oauth_token' => $oauthToken
-                ]);
+                if ($this->isDebugMode()) {
+                    $this->getWorkbench()->getLogger()->debug('OAuth2 authenticator: response of provider processed for user "' . $this->getUsername($oauthToken) . '"', [
+                        'username' => $this->getUsername($oauthToken),
+                        'oauth_session' => $sessionVars,
+                        'oauth_token' => $oauthToken
+                    ]);
+                }
         }
         
         $clientFacade->stopOAuthSession();
@@ -147,10 +158,19 @@ trait MicrosoftOAuth2Trait
     protected function getUsername(AccessTokenInterface $oauthToken) : ?string
     {
         if ($oauthToken->getIdTokenClaims() === null) {
+            if ($this->isDebugMode()) {
+                $this->getWorkbench()->getLogger()->debug('OAuth2: received token without owner details', $oauthToken->jsonSerialize());
+            }
             return '';
         }
         /* @var $ownerDetails \TheNetworg\OAuth2\Client\Provider\AzureResourceOwner */
         $ownerDetails = $this->getOAuthProvider()->getResourceOwner($oauthToken);
+        if ($this->isDebugMode()) {
+            $this->getWorkbench()->getLogger()->debug('OAuth2: received resource owner details', [
+                'resource_owner' => $ownerDetails->toArray(),
+                'id_token_claims' => $oauthToken->getIdTokenClaims()
+            ]);
+        }
         if (($field = $this->getUsernameResourceOwnerField()) !== null) {
             return $ownerDetails->toArray()[$field];
         }

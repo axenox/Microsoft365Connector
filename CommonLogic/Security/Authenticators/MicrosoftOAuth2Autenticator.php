@@ -50,6 +50,12 @@ use exface\Core\DataTypes\EncryptedDataType;
  * 
  * ```
  * 
+ * ## Debugging
+ * 
+ * Set `debug_log` to `true` in the configuration of the authenticator to get more detailed information
+ * in the log. Keep in mind, that this might include sensitive personal information depending on what the
+ * provider includes in its responses.
+ * 
  * @author Andrej Kabachnik
  *
  */
