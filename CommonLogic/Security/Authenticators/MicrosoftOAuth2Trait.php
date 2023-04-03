@@ -28,6 +28,14 @@ trait MicrosoftOAuth2Trait
     
     private $autoRefreshToken = true;
     
+    /**
+     * 
+     * @param AuthenticationTokenInterface $token
+     * @throws AuthenticationFailedError
+     * @throws AuthenticationRuntimeError
+     * @throws OAuthHttpException
+     * @return OAuth2AuthenticatedToken
+     */
     protected function exchangeOAuthToken(AuthenticationTokenInterface $token): OAuth2AuthenticatedToken
     {
         if ($token instanceof OAuth2AuthenticatedToken) {
@@ -183,6 +191,10 @@ trait MicrosoftOAuth2Trait
         return $ownerDetails->claim('oid') ?? '';
     }
     
+    /**
+     * 
+     * @return AbstractProvider
+     */
     protected function getOAuthProvider() : AbstractProvider
     {
         $options = [

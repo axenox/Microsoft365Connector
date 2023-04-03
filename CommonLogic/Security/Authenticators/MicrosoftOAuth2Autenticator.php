@@ -5,6 +5,9 @@ use axenox\OAuth2Connector\CommonLogic\Security\Authenticators\OAuth2Authenticat
 use TheNetworg\OAuth2\Client\Token\AccessToken;
 use League\OAuth2\Client\Token\AccessTokenInterface;
 use exface\Core\DataTypes\EncryptedDataType;
+use exface\Core\Interfaces\Security\AuthenticationTokenInterface;
+use axenox\OAuth2Connector\CommonLogic\Security\AuthenticationToken\OAuth2AuthenticatedToken;
+use exface\Core\Exceptions\UnexpectedValueException;
 
 /**
  * Authenticates users using Azure Active Directory via OAuth 2.0.
@@ -136,5 +139,19 @@ class MicrosoftOAuth2Autenticator extends OAuth2Authenticator
         ];
         
         return $data;
+    }
+    
+    /**
+     * 
+     * {@inheritDoc}
+     * @see \axenox\OAuth2Connector\CommonLogic\Security\Authenticators\OAuth2Authenticator::getExternalRolesFromToken()
+     */
+    protected function getExternalRolesFromToken(AuthenticationTokenInterface $token) : array
+    {
+        if (! $token instanceof OAuth2AuthenticatedToken) {
+            throw new UnexpectedValueException('Cannot get external roles from token "' . get_class($token) . '" - expecting AuthenticationTokenInterface');
+        }
+        $ownerDetails = $this->getOAuthProvider()->getResourceOwner($token->getAccessToken());
+        return $ownerDetails->claim('groups') ?? [];
     }
 }
