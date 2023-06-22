@@ -4,6 +4,7 @@ namespace axenox\Microsoft365Connector\CommonLogic\Security\Authenticators;
 use axenox\OAuth2Connector\CommonLogic\Security\Authenticators\OAuth2Authenticator;
 use TheNetworg\OAuth2\Client\Token\AccessToken;
 use League\OAuth2\Client\Token\AccessTokenInterface;
+use exface\Core\CommonLogic\Security\Authenticators\AbstractAuthenticator;
 use exface\Core\DataTypes\EncryptedDataType;
 use exface\Core\Interfaces\Security\AuthenticationTokenInterface;
 use axenox\OAuth2Connector\CommonLogic\Security\AuthenticationToken\OAuth2AuthenticatedToken;
@@ -126,6 +127,9 @@ use exface\Core\Exceptions\UnexpectedValueException;
  */
 class MicrosoftOAuth2Autenticator extends OAuth2Authenticator
 {
+    
+    private $SyncRolesWithDataSheet = null;
+    
     use MicrosoftOAuth2Trait {
         getScopes as getScopesViaTrait;
     }
@@ -202,7 +206,7 @@ class MicrosoftOAuth2Autenticator extends OAuth2Authenticator
         
         return $data;
     }
-    
+
     /**
      * 
      * {@inheritDoc}
@@ -213,6 +217,13 @@ class MicrosoftOAuth2Autenticator extends OAuth2Authenticator
         if (! $token instanceof OAuth2AuthenticatedToken) {
             throw new UnexpectedValueException('Cannot get external roles from token "' . get_class($token) . '" - expecting AuthenticationTokenInterface');
         }
+        
+        // returns array of readable group names if "sync_roles_with_data_sheet" is set in auth config
+        if(AbstractAuthenticator::hasSyncRolesWithDataSheet() === true) {
+            return AbstractAuthenticator::getExternalSyncRoles();
+        } 
+
+        // syncRoles method via tokenClaims in Azure AD AccessToken. Returns groupIDs but no readable group names
         $ownerDetails = $this->getOAuthProvider()->getResourceOwner($token->getAccessToken());
         return $ownerDetails->claim('groups') ?? [];
     }

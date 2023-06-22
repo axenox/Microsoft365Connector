@@ -26,6 +26,10 @@
             "attribute_alias": "APP"
         },
         {
+            "name": "TIME_ZONE",
+            "attribute_alias": "TIME_ZONE"
+        },
+        {
             "name": "LABEL",
             "attribute_alias": "LABEL"
         },
@@ -44,10 +48,6 @@
         {
             "name": "ALIAS",
             "attribute_alias": "ALIAS"
-        },
-        {
-            "name": "FILTER_CONTEXT",
-            "attribute_alias": "FILTER_CONTEXT"
         }
     ],
     "rows": [
@@ -58,25 +58,12 @@
             "MODIFIED_BY_USER": "0x31000000000000000000000000000000",
             "UID": "0x11eb8a60df22c5a08a60847beb4a5184",
             "APP": "0x11eb8233a3d3443c8233847beb4a5184",
+            "TIME_ZONE": null,
             "LABEL": "Microsoft Graph",
             "CONNECTOR": "exface\/UrlDataConnector\/DataConnectors\/OData4Connector.php",
-            "CONFIG": {
-                "url": "https:\/\/graph.microsoft.com\/v1.0\/",
-                "authentication": {
-                    "class": "\\axenox\\Microsoft365Connector\\DataConnectors\\Authentication\\MicrosoftOAuth2",
-                    "client_id": "",
-                    "client_secret": "",
-                    "scopes": [
-                        ""
-                    ],
-                    "exclude_urls": [
-                        "~.*\/\\$metadata~"
-                    ]
-                }
-            },
-            "READONLY": "0",
-            "ALIAS": "MICROSOFT_GRAPH",
-            "FILTER_CONTEXT": null
+            "CONFIG": "$$~~6ughHQNs7xY8UbkmUOapbT6k4toTx1rE49SYb5MgWBXNGCc6joIfdp6o4uUYk9G\/QOHDu9beym8acRdGJxS2DgLOWygicI3Dtd2EtI4zQevDasVvp31JeSwy6jSpquvZDhgaX9eD2\/jM9ziufE4qSROliE3hpaVUjXI2Plg4Sr1\/KyjZMrv3u3x6TJM7xXdAzgKvxNhgPpIzyfY1Vq\/b3\/5GNtY6+snKi4+ZnBwTUx3UwrN0oqUsynZXWNVysF2fcj\/KJCTP0XWmiYscYwAPCIpBMeSg9bLgRAre4g832W5dP\/qUvmODvg1WWdeJLZTJ8aJIAIyyomB4wnMdGANZi\/WdjnRVi+QTEEHE6IkKBZawzP+Lvg2K7voP",
+            "READONLY": 0,
+            "ALIAS": "MICROSOFT_GRAPH"
         },
         {
             "CREATED_ON": "2021-01-25 14:11:13",
@@ -85,19 +72,12 @@
             "MODIFIED_BY_USER": "0x31000000000000000000000000000000",
             "UID": "0x11eb8bf5cc97ff468bf5025041000001",
             "APP": "0x11eb8233a3d3443c8233847beb4a5184",
+            "TIME_ZONE": null,
             "LABEL": "Microsoft OpenID",
             "CONNECTOR": "exface\/UrlDataConnector\/DataConnectors\/HttpConnector.php",
-            "CONFIG": {
-                "url": "https:\/\/graph.microsoft.com",
-                "authentication": {
-                    "class": "\\axenox\\Microsoft365Connector\\DataConnectors\\Authentication\\MicrosoftOAuth2",
-                    "client_id": "",
-                    "client_secret": ""
-                }
-            },
-            "READONLY": "1",
-            "ALIAS": "MICROSOFT_OPENID",
-            "FILTER_CONTEXT": null
+            "CONFIG": "$$~~n0kZb0GV8KEGYU1J2ZEkbx5RNIFCsyZlJ4PCdiKqr5fQyvDeWlloQdnAYHUASycI9w08Qk9PHhc0VFIlwFfo\/uFT3zNVYy\/XRWf62qP5d3SfwKLnOU2Thz\/aCd3qphZzhnT76VEnavkC30qOD8UFTaIRI4VL2MZAkXHIGjpp8cY62UuNLg+uYiNhd0kPFYbCYCDe6dlzgL17LEtZCA3bvCPeCh4sM0\/pgc4LIqrpSupaDh7U2Ed3EP3aSxgV292FFidTPIDoDjzcTKRxrMn6CKLYPSMFsie8M4DV1FhedA==",
+            "READONLY": 1,
+            "ALIAS": "MICROSOFT_OPENID"
         }
     ],
     "totals_rows": [],
