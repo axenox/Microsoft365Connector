@@ -8,6 +8,8 @@ use exface\Core\DataTypes\EncryptedDataType;
 use exface\Core\Interfaces\Security\AuthenticationTokenInterface;
 use axenox\OAuth2Connector\CommonLogic\Security\AuthenticationToken\OAuth2AuthenticatedToken;
 use exface\Core\Exceptions\UnexpectedValueException;
+use exface\Core\CommonLogic\Security\Authenticators\AbstractAuthenticator;
+use exface\Core\Exceptions\Security\AuthenticationRuntimeError;
 
 /**
  * Authenticates users using Azure Active Directory via OAuth 2.0.
@@ -88,7 +90,7 @@ use exface\Core\Exceptions\UnexpectedValueException;
  *      "client_id": "552b11b2-586d-4154-a67b-c57af5a7ccce",
  *      "client_secret": "fx2NG7jjy0JK8_8l.G-0lXup_T9F7W_iWm",
  *      "create_new_users": true,
- *      "sync_roles": true
+ *      "sync_roles_with_token_claims": true
  *  }
  * 
  * ```
@@ -106,8 +108,14 @@ use exface\Core\Exceptions\UnexpectedValueException;
  *      "client_id": "552b11b2-586d-4154-a67b-c57af5a7ccce",
  *      "client_secret": "fx2NG7jjy0JK8_8l.G-0lXup_T9F7W_iWm",
  *      "create_new_users": true,
- *      "sync_roles": true,
- *      "sync_roles_via_ms_graph": true,
+ *      "sync_roles_with_data_sheet": {
+ *          "object_alias": "xxx.xxx.meGroups",
+ *          "columns": [
+ *              {
+ *                  "attribute_alias": "displayName"
+ *              }
+ *          ]
+ *      },
  *      "share_token_with_connections": [
  *          "my.App.ConnectionToMicrosoftGraph"
  *      ]
@@ -129,6 +137,8 @@ class MicrosoftOAuth2Autenticator extends OAuth2Authenticator
     use MicrosoftOAuth2Trait {
         getScopes as getScopesViaTrait;
     }
+    
+    private $syncRolesWithTokenClaims = false;
     
     /**
      *
@@ -205,6 +215,47 @@ class MicrosoftOAuth2Autenticator extends OAuth2Authenticator
     
     /**
      * 
+     * @return bool
+     */
+    protected function hasSyncRolesWithTokenClaims() : bool
+    {
+        return $this->syncRolesWithTokenClaims;
+    }
+    
+    /**
+     * Set to TRUE to sync user roles with OAuth token claims
+     * 
+     * @uxon-property sync_roles_with_token_claims
+     * @uxon-type boolean
+     * @uxon-default false
+     * 
+     * @param bool $value
+     * @return MicrosoftOAuth2Autenticator
+     */
+    protected function setSyncRolesWithTokenClaims(bool $value) : MicrosoftOAuth2Autenticator
+    {
+        $this->syncRolesWithTokenClaims = $value;
+        return $this;
+    }
+    
+    /**
+     * 
+     * {@inheritdoc}
+     * @see AbstractAuthenticator::getExternalRolesFromRemote()
+     */
+    protected function getExternalRolesFromRemote(AuthenticationTokenInterface $token) : array
+    {
+        if ($this->hasSyncRolesWithTokenClaims()) {
+            if ($this->hasSyncRolesWithDataSheet()) {
+                throw new AuthenticationRuntimeError($this, 'Cannot use `sync_roles_with_data_sheet` and `sync_roles_with_token_claims` at the same time!');
+            }
+            return $this->getExternalRolesFromToken($token);
+        }
+        return parent::getExternalRolesFromRemote($token);
+    }
+    
+    /**
+     * 
      * {@inheritDoc}
      * @see \axenox\OAuth2Connector\CommonLogic\Security\Authenticators\OAuth2Authenticator::getExternalRolesFromToken()
      */
@@ -213,6 +264,8 @@ class MicrosoftOAuth2Autenticator extends OAuth2Authenticator
         if (! $token instanceof OAuth2AuthenticatedToken) {
             throw new UnexpectedValueException('Cannot get external roles from token "' . get_class($token) . '" - expecting AuthenticationTokenInterface');
         }
+        
+        // syncRoles method via tokenClaims in Azure AD AccessToken. Returns groupIDs but no readable group names
         $ownerDetails = $this->getOAuthProvider()->getResourceOwner($token->getAccessToken());
         return $ownerDetails->claim('groups') ?? [];
     }
