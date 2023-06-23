@@ -220,7 +220,8 @@ class MicrosoftOAuth2Autenticator extends OAuth2Authenticator
         
         // returns array of readable group names if "sync_roles_with_data_sheet" is set in auth config
         if(AbstractAuthenticator::hasSyncRolesWithDataSheet() === true) {
-            return AbstractAuthenticator::getExternalSyncRoles();
+            $ownerDetails = $this->getOAuthProvider()->getResourceOwner($token->getAccessToken());
+            return AbstractAuthenticator::getExternalSyncRoles($ownerDetails->claim('name') ?? []);
         } 
 
         // syncRoles method via tokenClaims in Azure AD AccessToken. Returns groupIDs but no readable group names
