@@ -98,7 +98,11 @@ use exface\Core\Interfaces\UserInterface;
  * 
  * ### SSO with role sync via Microsoft Graph
  * 
- * **IMPORTANT:** the configuration of the data connection for Microsoft Graph (client_id, secret, tenant, etc.)
+ * In this case, the Azure groups will be read via Microsoft Graph using the OAuth token provided by Azure during
+ * initial authentication. To make this work, you need to tell the authenticator to share the token with the
+ * connection to Microsoft Graph via `share_token_with_connections`.
+ * 
+ * **IMPORTANT:** the configuration of the data connection for Microsoft Graph (client_id, secret, tenant, claims etc.)
  * MUST be identical with that of the authenticator!
  * 
  * ```
@@ -108,9 +112,17 @@ use exface\Core\Interfaces\UserInterface;
  *      "name": "Azure AD",
  *      "client_id": "552b11b2-586d-4154-a67b-c57af5a7ccce",
  *      "client_secret": "fx2NG7jjy0JK8_8l.G-0lXup_T9F7W_iWm",
+ *      "tenant": "d79fb5c8-cd79-4b9e-857e-7c571213458",
+ *      "claims": [
+ *          "openid", 
+ *          "profile", 
+ *          "email",
+ *          "User.Read",
+ *          "Directory.Read.All"
+ *      ],
  *      "create_new_users": true,
  *      "sync_roles_with_data_sheet": {
- *          "object_alias": "xxx.xxx.meGroups",
+ *          "object_alias": "axenox.Microsoft365Connector.meGroups",
  *          "columns": [
  *              {
  *                  "attribute_alias": "displayName"
@@ -122,6 +134,29 @@ use exface\Core\Interfaces\UserInterface;
  *      ]
  *  }
  * 
+ * ```
+ * 
+ * Here is an example of a corresponding connection configuration. Copy the built-in MS Graph connection
+ * and modify its configuration to match that of the authenticator
+ * 
+ * ```
+ *  {
+ *      "url": "https://graph.microsoft.com/v1.0/",
+ *      "authentication": {
+ *          "class": "\\axenox\\Microsoft365Connector\\DataConnectors\\Authentication\\MicrosoftOAuth2",
+ *          "client_id": "552b11b2-586d-4154-a67b-c57af5a7ccce",
+ *          "client_secret": "fx2NG7jjy0JK8_8l.G-0lXup_T9F7W_iWm",
+ *          "tenant": "d79fb5c8-cd79-4b9e-857e-7c571213458",
+ *          "scopes": [
+ *              "openid",
+ *              "profile",
+ *              "email",
+ *              "User.Read",
+ *              "Directory.Read.All"
+ *          ]
+ *      }
+ *  }
+ *
  * ```
  * 
  * ## Debugging
