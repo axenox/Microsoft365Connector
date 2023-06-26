@@ -10,6 +10,7 @@ use axenox\OAuth2Connector\CommonLogic\Security\AuthenticationToken\OAuth2Authen
 use exface\Core\Exceptions\UnexpectedValueException;
 use exface\Core\CommonLogic\Security\Authenticators\AbstractAuthenticator;
 use exface\Core\Exceptions\Security\AuthenticationRuntimeError;
+use exface\Core\Interfaces\UserInterface;
 
 /**
  * Authenticates users using Azure Active Directory via OAuth 2.0.
@@ -70,12 +71,12 @@ use exface\Core\Exceptions\Security\AuthenticationRuntimeError;
  * Here is how to make Azure send groups inside the token
  * 
  * - Navigate to "Token configuration" and click on "add groups claim".
- * - Select "Security groups" and "Group ID" on "Customize token properties by type" (Screenshot 6)
+ * - Select "Security groups" and "Group ID" on "Customize token properties by type"
  * - Optionally make sure the complete name of the user is included in the token: Create another 
  * claim via "Add optional claim" and choose "Token type: ID". Select the claim "family_name" to 
  * make sure that the last name of the user is sent via IDToken to the application.
  * 
- * This will allow Azure to send the group ID via an IDToken when logging in to the application (Screenshot 7). 
+ * This will allow Azure to send the group ID via an IDToken when logging in to the application. 
  * This ID can be matched with the roles created in the application. The users will then be logged in with the 
  * same roles and permittions that they have be assigned to in Azure.
  * 
@@ -122,6 +123,38 @@ use exface\Core\Exceptions\Security\AuthenticationRuntimeError;
  *  }
  * 
  * ```
+ * 
+ * ### SSO with role sync via external database (example for LogBase)
+ * 
+ * ```
+ * {
+ *     "class": "\\exface\\Core\\CommonLogic\\Security\\Authenticators\\MetamodelAuthenticator",
+ *     "id": "LOGBASE_TEST",
+ *     "sync_roles_with_data_sheet": {
+ *         "object_alias": "xxx.xxx.Rolle",
+ *		   "columns": [
+ *	           {
+ *				  "attribute_alias": "Name"
+ *			   }
+ *			],
+ *			"filters": {
+ *				"operator": "AND",
+ *				"conditions": [
+ *					{
+ *						"expression": "BenutzerZuRolle__Benutzer__Name",
+ *						"comparator": "==",
+ *						"value": "[#USERNAME#]"
+ *					},
+ *					{
+ *						"expression": "Active",
+ *						"comparator": "==",
+ *						"value": "1"
+ *					}
+ *				]
+ *			}
+ *		}
+ *  },
+ * 
  * 
  * ## Debugging
  * 
@@ -243,7 +276,7 @@ class MicrosoftOAuth2Autenticator extends OAuth2Authenticator
      * {@inheritdoc}
      * @see AbstractAuthenticator::getExternalRolesFromRemote()
      */
-    protected function getExternalRolesFromRemote(AuthenticationTokenInterface $token) : array
+    protected function getExternalRolesFromRemote(UserInterface $user, AuthenticationTokenInterface $token) : array
     {
         if ($this->hasSyncRolesWithTokenClaims()) {
             if ($this->hasSyncRolesWithDataSheet()) {
@@ -251,11 +284,11 @@ class MicrosoftOAuth2Autenticator extends OAuth2Authenticator
             }
             return $this->getExternalRolesFromToken($token);
         }
-        return parent::getExternalRolesFromRemote($token);
+        return parent::getExternalRolesFromRemote($user, $token);
     }
     
     /**
-     * 
+     * syncRoles method via tokenClaims in Azure AD AccessToken. Returns groupIDs but no readable group names
      * {@inheritDoc}
      * @see \axenox\OAuth2Connector\CommonLogic\Security\Authenticators\OAuth2Authenticator::getExternalRolesFromToken()
      */
@@ -265,8 +298,16 @@ class MicrosoftOAuth2Autenticator extends OAuth2Authenticator
             throw new UnexpectedValueException('Cannot get external roles from token "' . get_class($token) . '" - expecting AuthenticationTokenInterface');
         }
         
-        // syncRoles method via tokenClaims in Azure AD AccessToken. Returns groupIDs but no readable group names
         $ownerDetails = $this->getOAuthProvider()->getResourceOwner($token->getAccessToken());
         return $ownerDetails->claim('groups') ?? [];
+    }
+    
+    /**
+     *
+     * @return bool
+     */
+    protected function hasSyncRoles() : bool
+    {
+        return $this->hasSyncRolesWithTokenClaims() || parent::hasSyncRoles();
     }
 }
