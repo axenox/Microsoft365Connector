@@ -124,38 +124,6 @@ use exface\Core\Interfaces\UserInterface;
  * 
  * ```
  * 
- * ### SSO with role sync via external database (example for LogBase)
- * 
- * ```
- * {
- *     "class": "\\exface\\Core\\CommonLogic\\Security\\Authenticators\\MetamodelAuthenticator",
- *     "id": "LOGBASE_TEST",
- *     "sync_roles_with_data_sheet": {
- *         "object_alias": "xxx.xxx.Rolle",
- *		   "columns": [
- *	           {
- *				  "attribute_alias": "Name"
- *			   }
- *			],
- *			"filters": {
- *				"operator": "AND",
- *				"conditions": [
- *					{
- *						"expression": "BenutzerZuRolle__Benutzer__Name",
- *						"comparator": "==",
- *						"value": "[#USERNAME#]"
- *					},
- *					{
- *						"expression": "Active",
- *						"comparator": "==",
- *						"value": "1"
- *					}
- *				]
- *			}
- *		}
- *  },
- * 
- * 
  * ## Debugging
  * 
  * Set `debug_log` to `true` in the configuration of the authenticator to get more detailed information
@@ -272,6 +240,8 @@ class MicrosoftOAuth2Autenticator extends OAuth2Authenticator
     }
     
     /**
+     * In addition to the default role sync options available for all authenticators, this authenticator
+     * can sync roles with special "claims" sent along with the token from Azure AD.
      * 
      * {@inheritdoc}
      * @see AbstractAuthenticator::getExternalRolesFromRemote()
@@ -288,9 +258,13 @@ class MicrosoftOAuth2Autenticator extends OAuth2Authenticator
     }
     
     /**
-     * syncRoles method via tokenClaims in Azure AD AccessToken. Returns groupIDs but no readable group names
-     * {@inheritDoc}
-     * @see \axenox\OAuth2Connector\CommonLogic\Security\Authenticators\OAuth2Authenticator::getExternalRolesFromToken()
+     * Reads the group information from an OAuth2 token received from Azure.
+     * 
+     * If `sync_roles_with_token_claims` is set to `true`, this method will return the GUIDs
+     * of all Azure groups the user is member of - not the visible names of the groups.
+     * 
+     * @param OAuth2AuthenticatedToken $token
+     * @return string[]
      */
     protected function getExternalRolesFromToken(AuthenticationTokenInterface $token) : array
     {
@@ -303,8 +277,9 @@ class MicrosoftOAuth2Autenticator extends OAuth2Authenticator
     }
     
     /**
-     *
-     * @return bool
+     * 
+     * {@inheritdoc}
+     * @see AbstractAuthenticator::hasSyncRoles()
      */
     protected function hasSyncRoles() : bool
     {
