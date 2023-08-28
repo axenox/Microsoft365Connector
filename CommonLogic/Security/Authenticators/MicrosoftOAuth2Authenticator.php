@@ -33,9 +33,14 @@ use exface\Core\Interfaces\UserInterface;
  * After the app registration is complete, you will get the following information required to configure
  * the authenticator in `System.config.json`:
  * 
- * - `Application-ID (Client)` to put into the `client_id` in the authenticator config
- * - `Secret key` (visible under "Certificates and secrets" in the menu inside the registration) to put 
- * into `client_secret`
+ * - `Application (client) ID` in Azure is your `client_id` in the config. It is visible in the "Essentials" 
+ * section right at the top of the page if you click on the Azure app.
+ * - `Directory (tenant) ID` in Azure is your `tenant` in the config. This can also be found in the "Essentials".
+ * It may not be needed - this depends on the configuration of Azure AD. 
+ * - `Secret key value` in Azure corresponds to `client_secret` in the config. Go to "Certificates and secrets" 
+ * in the main menu inside the app registration and press `Add secret`. Once created, the secret will appear in
+ * the table. You will need the value from the `Value` column. It will only be visible once, right after creation.
+ * If you navigate away, you will need to create a new secret.
  * 
  * For more information see the official documentation at https://docs.microsoft.com/en-us/azure/active-directory/develop/active-directory-v2-protocols.
  * 
