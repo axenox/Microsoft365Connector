@@ -15,22 +15,11 @@ use exface\Core\Interfaces\UserInterface;
 /**
  * Authenticates users using Azure Active Directory via OAuth 2.0.
  * 
- * To enable Single-Sign-On with Microsoft Azure, you need to register the
- * workbench installation (URL) as an "Application" in Azure Active Directory:
+ * To enable Single-Sign-On with Microsoft Azure, you need to register the 
+ * workbench installation (URL) as an "Application" in Azure Active Directory -
+ * see detailed documentation in `Administration > Documentation > App docs > Microsoft365Connector > Single-Sign-On`. 
  * 
- * 1. Go to https://portal.azure.com/
- * 2. Select Azure Active Directory
- * 3. Proceed to "App registrations" in the menu
- * 4. Create a new registration or select an existing one
- * 
- * You will need to provide a redirect URL: `https://yourdomain.com/path_to_workbench/api/oauth2client`.
- * Make sure you use a secure HTTPS URL with a valid SSL certificate! For testing purposes you can
- * use `http://localhost/path_to_workbench/api/oauth2client`.
- * 
- * You will also need to select required scopes: the default scopes are `openid`, `profile`, `email`
- * unless the `scopes` property of the authenticator is configured explicitly.
- * 
- * After the app registration is complete, you will get the following information required to configure
+ * After the app registration is complete, you will need the following information required to configure
  * the authenticator in `System.config.json`:
  * 
  * - `Application (client) ID` in Azure is your `client_id` in the config. It is visible in the "Essentials" 
@@ -41,8 +30,6 @@ use exface\Core\Interfaces\UserInterface;
  * in the main menu inside the app registration and press `Add secret`. Once created, the secret will appear in
  * the table. You will need the value from the `Value` column. It will only be visible once, right after creation.
  * If you navigate away, you will need to create a new secret.
- * 
- * For more information see the official documentation at https://docs.microsoft.com/en-us/azure/active-directory/develop/active-directory-v2-protocols.
  * 
  * ## Example Configuration
  * 
@@ -67,23 +54,8 @@ use exface\Core\Interfaces\UserInterface;
  * 
  * Azure AD can be configured to send the list of Azure groups assigned to the user inside the OAuth token.
  * If you set up external roles in the workbench with the UIDs of ceratin Azure groups, you can "remote control"
- * user roles by assigning the corresponding groups in Azure.
- * 
- * **NOTE:** this only works for "internal" Azure groups assigned within azure. This does not work for groups
- * uploaded to azure from external sources like an on-premise AD instance, an IAM tool, or similar. These
- * external groups will simply be missing in the list. To read them too, use Microsoft Graph as described below.
- * 
- * Here is how to make Azure send groups inside the token
- * 
- * - Navigate to "Token configuration" and click on "add groups claim".
- * - Select "Security groups" and "Group ID" on "Customize token properties by type"
- * - Optionally make sure the complete name of the user is included in the token: Create another 
- * claim via "Add optional claim" and choose "Token type: ID". Select the claim "family_name" to 
- * make sure that the last name of the user is sent via IDToken to the application.
- * 
- * This will allow Azure to send the group ID via an IDToken when logging in to the application. 
- * This ID can be matched with the roles created in the application. The users will then be logged in with the 
- * same roles and permittions that they have be assigned to in Azure.
+ * user roles by assigning the corresponding groups in Azure. See detailed documentation in 
+ * `Administration > Documentation > App docs > Microsoft365Connector > Single-Sign-On`.
  * 
  * Notice that the group IDs will only be sent via the IDToken for users created directly within Azure. The 
  * token will not include group IDs if an external user is trying to sign in to the application.
@@ -105,7 +77,8 @@ use exface\Core\Interfaces\UserInterface;
  * 
  * In this case, the Azure groups will be read via Microsoft Graph using the OAuth token provided by Azure during
  * initial authentication. To make this work, you need to tell the authenticator to share the token with the
- * connection to Microsoft Graph via `share_token_with_connections`.
+ * connection to Microsoft Graph via `share_token_with_connections`. See detailed documentation in 
+ * `Administration > Documentation > App docs > Microsoft365Connector > Single-Sign-On`.
  * 
  * **IMPORTANT:** the configuration of the data connection for Microsoft Graph (client_id, secret, tenant, claims etc.)
  * MUST be identical with that of the authenticator!
@@ -139,29 +112,6 @@ use exface\Core\Interfaces\UserInterface;
  *      ]
  *  }
  * 
- * ```
- * 
- * Here is an example of a corresponding connection configuration. Copy the built-in MS Graph connection
- * and modify its configuration to match that of the authenticator
- * 
- * ```
- *  {
- *      "url": "https://graph.microsoft.com/v1.0/",
- *      "authentication": {
- *          "class": "\\axenox\\Microsoft365Connector\\DataConnectors\\Authentication\\MicrosoftOAuth2",
- *          "client_id": "552b11b2-586d-4154-a67b-c57af5a7ccce",
- *          "client_secret": "fx2NG7jjy0JK8_8l.G-0lXup_T9F7W_iWm",
- *          "tenant": "d79fb5c8-cd79-4b9e-857e-7c571213458",
- *          "scopes": [
- *              "openid",
- *              "profile",
- *              "email",
- *              "User.Read",
- *              "Directory.Read.All"
- *          ]
- *      }
- *  }
- *
  * ```
  * 
  * ## Debugging
