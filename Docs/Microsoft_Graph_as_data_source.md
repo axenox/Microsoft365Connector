@@ -2,7 +2,7 @@
 
 This app contains a template for a data connection to Microsoft Graph. DO NOT use it directly! Copy it and fill in your data as shown below.
 
-You will nee a so-called app registration to access Graph API. The setup is the same as for [single-sign-on via OAuth 2.0](Single-Sign-On_with_Azure_via_OAuth.md). 
+You will need a so-called app registration to access Graph API. The setup is the same as for [single-sign-on via OAuth 2.0](Single-Sign-On_with_Azure_via_OAuth.md). 
 
 **NOTE:** If you are using single-sign-on with Azure, it is probably a good idea to use the option `share_token_with_connections` in your authenticator config as [described here](Synchronizing_roles_via_Graph_API.md) even if you do not plan to synchronize user roles. Otherwise users will need to log in to Azure twice: to access the workbench and to interact with Graph data.
 
