@@ -66,7 +66,15 @@ trait MicrosoftOAuth2Trait
             case !empty($requestParams['error']):
                 $clientFacade->stopOAuthSession();
                 $err = $requestParams['error_description'] ?? $requestParams['error'];
-                throw new OAuthHttpException($this, 'OAuth2 error: ' . htmlspecialchars($err, ENT_QUOTES, 'UTF-8'), null, null, $request);
+                // Wrap the OAuth exception in an ordinary AuthenticationFailedError to ensure they are
+                // handled similarly to other types of password-mismatch errors. In particular, they
+                // will produce propper 401 HTTP error codes.
+                throw new AuthenticationFailedError(
+                    $this, 
+                    'Failed to sign in with Microsoft account', 
+                    null, 
+                    new OAuthHttpException($this, 'OAuth2 error: ' . htmlspecialchars($err, ENT_QUOTES, 'UTF-8'), null, null, $request)
+                );
             
             // If we are not processing a provider response, either use the stored token
             // or redirect to the provider to start authentication
