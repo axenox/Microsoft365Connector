@@ -45,6 +45,10 @@ For more information see the [official Azure documentation](https://docs.microso
  }
 ```
 
+## Troubleshooting
+
+See [Troubleshooting](Troubleshooting.md).
+
 ## Synchronizing user roles with Azure groups
 
 Single-sign-on basically means, that users are managed by Azure completely. The roles of these users are still defined within the workbench though. This means, that every new user will need some configuration in Azure (to be able to log in) and in the workbench administration too (to get specific roles for the apps).

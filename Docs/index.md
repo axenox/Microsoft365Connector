@@ -9,3 +9,4 @@ This app provides tools to connect to Microsoft Azure.
 	- [User role sync via OAuth token claims](Synchronizing_roles_via_OAuth2_token.md)
 	- [User role sync via Microsoft Graph API](Synchronizing_roles_via_Graph_API.md)
 - [Access Azure data via Microsoft Graph API](Microsoft_Graph_as_data_source.md)
+- [Troubleshooting](Troubleshooting.md)
