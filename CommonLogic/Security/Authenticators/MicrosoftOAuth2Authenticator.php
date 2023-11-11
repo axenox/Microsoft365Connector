@@ -96,7 +96,7 @@ use exface\Core\Interfaces\UserInterface;
  *          "profile", 
  *          "email",
  *          "User.Read",
- *          "Directory.Read.All"
+ *          "Group.Read.All"
  *      ],
  *      "create_new_users": true,
  *      "sync_roles_with_data_sheet": {
