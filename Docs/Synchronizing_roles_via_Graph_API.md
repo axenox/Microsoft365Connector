@@ -55,7 +55,7 @@ The column name you enter into
          ]
 ```
 
-will be the value that you need to add to 'Ext. role ID' when configuring the role synchronisation.
+will be the value that you need to add to 'Ext. role ID' when configuring the role synchronisation. In this case the Azure AD Group name will be used.
 
 Here is an example of a corresponding connection configuration. Copy the built-in MS Graph connection
 and modify its configuration to match that of the authenticator. See [Graph data connection docs](Microsoft_Graph_as_data_source.md) for more details.
