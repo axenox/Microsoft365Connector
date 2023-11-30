@@ -12,6 +12,17 @@ To make this work, the Azure app registration must have the permission to read g
 
 In the workbench it is neccessary to configure the authenticator and a data connection for Microsoft Graph. The required meta objects for users and roles are already part of this app and do not need to be changed.
 
+The meta object with objectAlias "meGroups" needs to have 4 data source settings for it it work:
+
+```
+odata_entitytype: group
+odata_namespace: microsoft.graph
+request_remote_pagination: true
+request_offset_parameter:
+```
+
+Notice that the "request_offset_parameter" has an empty value so that it overrides the default value inside of the OData4 connector (Microsoft Graph does not accept that default value).
+
 **IMPORTANT:** the configuration of the data connection for Microsoft Graph (client_id, secret, tenant, claims etc.)
 MUST be identical with that of the authenticator!
 
@@ -37,13 +48,16 @@ MUST be identical with that of the authenticator!
              {
                  "attribute_alias": "displayName"
              }
-         ]
+         ],
+         "rows_limit": "998"
      },
      "share_token_with_connections": [
          "my.App.ConnectionToMicrosoftGraph"
      ]
  }
 ```
+
+The "rows_limit" set to 998 is the highest possible value for Microsoft Graph.
 
 The column name you enter into 
 

@@ -4,7 +4,7 @@ In order to outsource the entire user management to Azure, user roles can be "re
 
 This is common technique used to cerntralize user rights management for different systems. Regardless of the meaning of a user role, an user group is created in Azure Active Directory for every role in each system. User-group-assignments are then retrieved from Azure AD every time the user logs in via singe-sign-on, and transformed to role-assignments in the respective system.
 
-Certralizing user rights management allows IT departments to keep an overview of roles of a specific user in different systems. It also simplifies roll-on and roll-off processes greatly.
+Centralizing user rights management allows IT departments to keep an overview of roles of a specific user in different systems. It also simplifies roll-on and roll-off processes greatly.
 
 Depending on configuration of the specific workbench and Azure AD, there are multiple techniques to synchronize roles possible:
 
