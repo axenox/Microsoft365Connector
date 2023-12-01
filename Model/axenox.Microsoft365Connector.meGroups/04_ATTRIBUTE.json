@@ -210,7 +210,9 @@
             "SORTERDIR": null,
             "RELATED_OBJ_ATTR": "",
             "SHORT_DESCRIPTION": null,
-            "DATA_ADDRESS_PROPS": "{\"odata_type\":\"Edm.String\"}",
+            "DATA_ADDRESS_PROPS": {
+                "odata_type": "Edm.String"
+            },
             "DEFAULT_VALUE": null,
             "FIXED_VALUE": null,
             "CUSTOM_DATA_TYPE": null
@@ -254,7 +256,9 @@
             "SORTERDIR": null,
             "RELATED_OBJ_ATTR": "",
             "SHORT_DESCRIPTION": null,
-            "DATA_ADDRESS_PROPS": "{\"odata_type\":\"Edm.DateTimeOffset\"}",
+            "DATA_ADDRESS_PROPS": {
+                "odata_type": "Edm.DateTimeOffset"
+            },
             "DEFAULT_VALUE": null,
             "FIXED_VALUE": null,
             "CUSTOM_DATA_TYPE": null
@@ -298,7 +302,9 @@
             "SORTERDIR": null,
             "RELATED_OBJ_ATTR": "",
             "SHORT_DESCRIPTION": null,
-            "DATA_ADDRESS_PROPS": "{\"odata_type\":\"Edm.Boolean\"}",
+            "DATA_ADDRESS_PROPS": {
+                "odata_type": "Edm.Boolean"
+            },
             "DEFAULT_VALUE": null,
             "FIXED_VALUE": null,
             "CUSTOM_DATA_TYPE": null
@@ -342,7 +348,9 @@
             "SORTERDIR": null,
             "RELATED_OBJ_ATTR": "",
             "SHORT_DESCRIPTION": null,
-            "DATA_ADDRESS_PROPS": "{\"odata_type\":\"Edm.Boolean\"}",
+            "DATA_ADDRESS_PROPS": {
+                "odata_type": "Edm.Boolean"
+            },
             "DEFAULT_VALUE": null,
             "FIXED_VALUE": null,
             "CUSTOM_DATA_TYPE": null
@@ -386,7 +394,9 @@
             "SORTERDIR": null,
             "RELATED_OBJ_ATTR": "",
             "SHORT_DESCRIPTION": null,
-            "DATA_ADDRESS_PROPS": "{\"odata_type\":\"Edm.String\"}",
+            "DATA_ADDRESS_PROPS": {
+                "odata_type": "Edm.String"
+            },
             "DEFAULT_VALUE": null,
             "FIXED_VALUE": null,
             "CUSTOM_DATA_TYPE": null
@@ -430,7 +440,9 @@
             "SORTERDIR": null,
             "RELATED_OBJ_ATTR": "",
             "SHORT_DESCRIPTION": null,
-            "DATA_ADDRESS_PROPS": "{\"odata_type\":\"Edm.String\"}",
+            "DATA_ADDRESS_PROPS": {
+                "odata_type": "Edm.String"
+            },
             "DEFAULT_VALUE": null,
             "FIXED_VALUE": null,
             "CUSTOM_DATA_TYPE": null
@@ -474,7 +486,9 @@
             "SORTERDIR": null,
             "RELATED_OBJ_ATTR": "",
             "SHORT_DESCRIPTION": null,
-            "DATA_ADDRESS_PROPS": "{\"odata_type\":\"Edm.String\"}",
+            "DATA_ADDRESS_PROPS": {
+                "odata_type": "Edm.String"
+            },
             "DEFAULT_VALUE": null,
             "FIXED_VALUE": null,
             "CUSTOM_DATA_TYPE": null
@@ -518,7 +532,9 @@
             "SORTERDIR": null,
             "RELATED_OBJ_ATTR": "",
             "SHORT_DESCRIPTION": null,
-            "DATA_ADDRESS_PROPS": "{\"odata_type\":\"microsoft.graph.termStore.termGroupScope\"}",
+            "DATA_ADDRESS_PROPS": {
+                "odata_type": "microsoft.graph.termStore.termGroupScope"
+            },
             "DEFAULT_VALUE": null,
             "FIXED_VALUE": null,
             "CUSTOM_DATA_TYPE": null
@@ -562,7 +578,9 @@
             "SORTERDIR": null,
             "RELATED_OBJ_ATTR": "",
             "SHORT_DESCRIPTION": null,
-            "DATA_ADDRESS_PROPS": "{\"odata_type\":\"Collection(Edm.String)\"}",
+            "DATA_ADDRESS_PROPS": {
+                "odata_type": "Collection(Edm.String)"
+            },
             "DEFAULT_VALUE": null,
             "FIXED_VALUE": null,
             "CUSTOM_DATA_TYPE": null
@@ -606,7 +624,9 @@
             "SORTERDIR": null,
             "RELATED_OBJ_ATTR": "",
             "SHORT_DESCRIPTION": null,
-            "DATA_ADDRESS_PROPS": "{\"odata_type\":\"Edm.String\"}",
+            "DATA_ADDRESS_PROPS": {
+                "odata_type": "Edm.String"
+            },
             "DEFAULT_VALUE": null,
             "FIXED_VALUE": null,
             "CUSTOM_DATA_TYPE": null
@@ -650,7 +670,9 @@
             "SORTERDIR": null,
             "RELATED_OBJ_ATTR": "",
             "SHORT_DESCRIPTION": null,
-            "DATA_ADDRESS_PROPS": "{\"odata_type\":\"Edm.Boolean\"}",
+            "DATA_ADDRESS_PROPS": {
+                "odata_type": "Edm.Boolean"
+            },
             "DEFAULT_VALUE": null,
             "FIXED_VALUE": null,
             "CUSTOM_DATA_TYPE": null
@@ -694,7 +716,9 @@
             "SORTERDIR": null,
             "RELATED_OBJ_ATTR": "",
             "SHORT_DESCRIPTION": null,
-            "DATA_ADDRESS_PROPS": "{\"odata_type\":\"Edm.Boolean\"}",
+            "DATA_ADDRESS_PROPS": {
+                "odata_type": "Edm.Boolean"
+            },
             "DEFAULT_VALUE": null,
             "FIXED_VALUE": null,
             "CUSTOM_DATA_TYPE": null
@@ -738,7 +762,9 @@
             "SORTERDIR": null,
             "RELATED_OBJ_ATTR": "",
             "SHORT_DESCRIPTION": null,
-            "DATA_ADDRESS_PROPS": "{\"odata_type\":\"Edm.String\"}",
+            "DATA_ADDRESS_PROPS": {
+                "odata_type": "Edm.String"
+            },
             "DEFAULT_VALUE": null,
             "FIXED_VALUE": null,
             "CUSTOM_DATA_TYPE": null
@@ -782,7 +808,9 @@
             "SORTERDIR": null,
             "RELATED_OBJ_ATTR": "",
             "SHORT_DESCRIPTION": null,
-            "DATA_ADDRESS_PROPS": "{\"odata_type\":\"Edm.String\"}",
+            "DATA_ADDRESS_PROPS": {
+                "odata_type": "Edm.String"
+            },
             "DEFAULT_VALUE": null,
             "FIXED_VALUE": null,
             "CUSTOM_DATA_TYPE": null
@@ -826,7 +854,9 @@
             "SORTERDIR": null,
             "RELATED_OBJ_ATTR": "",
             "SHORT_DESCRIPTION": null,
-            "DATA_ADDRESS_PROPS": "{\"odata_type\":\"Edm.String\"}",
+            "DATA_ADDRESS_PROPS": {
+                "odata_type": "Edm.String"
+            },
             "DEFAULT_VALUE": null,
             "FIXED_VALUE": null,
             "CUSTOM_DATA_TYPE": null
@@ -870,7 +900,9 @@
             "SORTERDIR": null,
             "RELATED_OBJ_ATTR": "",
             "SHORT_DESCRIPTION": null,
-            "DATA_ADDRESS_PROPS": "{\"odata_type\":\"Edm.Boolean\"}",
+            "DATA_ADDRESS_PROPS": {
+                "odata_type": "Edm.Boolean"
+            },
             "DEFAULT_VALUE": null,
             "FIXED_VALUE": null,
             "CUSTOM_DATA_TYPE": null
@@ -914,7 +946,9 @@
             "SORTERDIR": null,
             "RELATED_OBJ_ATTR": "",
             "SHORT_DESCRIPTION": null,
-            "DATA_ADDRESS_PROPS": "{\"odata_type\":\"Collection(graph.assignedLicense)\"}",
+            "DATA_ADDRESS_PROPS": {
+                "odata_type": "Collection(graph.assignedLicense)"
+            },
             "DEFAULT_VALUE": null,
             "FIXED_VALUE": null,
             "CUSTOM_DATA_TYPE": null
@@ -958,7 +992,9 @@
             "SORTERDIR": null,
             "RELATED_OBJ_ATTR": "",
             "SHORT_DESCRIPTION": null,
-            "DATA_ADDRESS_PROPS": "{\"odata_type\":\"Edm.String\"}",
+            "DATA_ADDRESS_PROPS": {
+                "odata_type": "Edm.String"
+            },
             "DEFAULT_VALUE": null,
             "FIXED_VALUE": null,
             "CUSTOM_DATA_TYPE": null
@@ -1002,7 +1038,9 @@
             "SORTERDIR": null,
             "RELATED_OBJ_ATTR": "",
             "SHORT_DESCRIPTION": null,
-            "DATA_ADDRESS_PROPS": "{\"odata_type\":\"Edm.Boolean\"}",
+            "DATA_ADDRESS_PROPS": {
+                "odata_type": "Edm.Boolean"
+            },
             "DEFAULT_VALUE": null,
             "FIXED_VALUE": null,
             "CUSTOM_DATA_TYPE": null
@@ -1046,7 +1084,9 @@
             "SORTERDIR": null,
             "RELATED_OBJ_ATTR": "",
             "SHORT_DESCRIPTION": null,
-            "DATA_ADDRESS_PROPS": "{\"odata_type\":\"Edm.String\"}",
+            "DATA_ADDRESS_PROPS": {
+                "odata_type": "Edm.String"
+            },
             "DEFAULT_VALUE": null,
             "FIXED_VALUE": null,
             "CUSTOM_DATA_TYPE": null
@@ -1090,7 +1130,9 @@
             "SORTERDIR": null,
             "RELATED_OBJ_ATTR": "",
             "SHORT_DESCRIPTION": null,
-            "DATA_ADDRESS_PROPS": "{\"odata_type\":\"Edm.Int32\"}",
+            "DATA_ADDRESS_PROPS": {
+                "odata_type": "Edm.Int32"
+            },
             "DEFAULT_VALUE": null,
             "FIXED_VALUE": null,
             "CUSTOM_DATA_TYPE": null
@@ -1134,7 +1176,9 @@
             "SORTERDIR": null,
             "RELATED_OBJ_ATTR": "",
             "SHORT_DESCRIPTION": null,
-            "DATA_ADDRESS_PROPS": "{\"odata_type\":\"Edm.String\"}",
+            "DATA_ADDRESS_PROPS": {
+                "odata_type": "Edm.String"
+            },
             "DEFAULT_VALUE": null,
             "FIXED_VALUE": null,
             "CUSTOM_DATA_TYPE": null
@@ -1178,7 +1222,9 @@
             "SORTERDIR": null,
             "RELATED_OBJ_ATTR": "",
             "SHORT_DESCRIPTION": null,
-            "DATA_ADDRESS_PROPS": "{\"odata_type\":\"Edm.DateTimeOffset\"}",
+            "DATA_ADDRESS_PROPS": {
+                "odata_type": "Edm.DateTimeOffset"
+            },
             "DEFAULT_VALUE": null,
             "FIXED_VALUE": null,
             "CUSTOM_DATA_TYPE": null
@@ -1222,7 +1268,9 @@
             "SORTERDIR": null,
             "RELATED_OBJ_ATTR": "",
             "SHORT_DESCRIPTION": null,
-            "DATA_ADDRESS_PROPS": "{\"odata_type\":\"Edm.Boolean\"}",
+            "DATA_ADDRESS_PROPS": {
+                "odata_type": "Edm.Boolean"
+            },
             "DEFAULT_VALUE": null,
             "FIXED_VALUE": null,
             "CUSTOM_DATA_TYPE": null
@@ -1266,7 +1314,9 @@
             "SORTERDIR": null,
             "RELATED_OBJ_ATTR": "",
             "SHORT_DESCRIPTION": null,
-            "DATA_ADDRESS_PROPS": "{\"odata_type\":\"Collection(graph.assignedLabel)\"}",
+            "DATA_ADDRESS_PROPS": {
+                "odata_type": "Collection(graph.assignedLabel)"
+            },
             "DEFAULT_VALUE": null,
             "FIXED_VALUE": null,
             "CUSTOM_DATA_TYPE": null
@@ -1310,7 +1360,9 @@
             "SORTERDIR": null,
             "RELATED_OBJ_ATTR": "",
             "SHORT_DESCRIPTION": null,
-            "DATA_ADDRESS_PROPS": "{\"odata_type\":\"Edm.DateTimeOffset\"}",
+            "DATA_ADDRESS_PROPS": {
+                "odata_type": "Edm.DateTimeOffset"
+            },
             "DEFAULT_VALUE": null,
             "FIXED_VALUE": null,
             "CUSTOM_DATA_TYPE": null
@@ -1354,7 +1406,9 @@
             "SORTERDIR": null,
             "RELATED_OBJ_ATTR": "",
             "SHORT_DESCRIPTION": null,
-            "DATA_ADDRESS_PROPS": "{\"odata_type\":\"Edm.String\"}",
+            "DATA_ADDRESS_PROPS": {
+                "odata_type": "Edm.String"
+            },
             "DEFAULT_VALUE": null,
             "FIXED_VALUE": null,
             "CUSTOM_DATA_TYPE": null
@@ -1398,7 +1452,9 @@
             "SORTERDIR": null,
             "RELATED_OBJ_ATTR": "",
             "SHORT_DESCRIPTION": null,
-            "DATA_ADDRESS_PROPS": "{\"odata_type\":\"Collection(Edm.String)\"}",
+            "DATA_ADDRESS_PROPS": {
+                "odata_type": "Collection(Edm.String)"
+            },
             "DEFAULT_VALUE": null,
             "FIXED_VALUE": null,
             "CUSTOM_DATA_TYPE": null
@@ -1442,7 +1498,9 @@
             "SORTERDIR": null,
             "RELATED_OBJ_ATTR": "",
             "SHORT_DESCRIPTION": null,
-            "DATA_ADDRESS_PROPS": "{\"odata_type\":\"Edm.Boolean\"}",
+            "DATA_ADDRESS_PROPS": {
+                "odata_type": "Edm.Boolean"
+            },
             "DEFAULT_VALUE": null,
             "FIXED_VALUE": null,
             "CUSTOM_DATA_TYPE": null
@@ -1486,7 +1544,9 @@
             "SORTERDIR": null,
             "RELATED_OBJ_ATTR": "",
             "SHORT_DESCRIPTION": null,
-            "DATA_ADDRESS_PROPS": "{\"odata_type\":\"Edm.Boolean\"}",
+            "DATA_ADDRESS_PROPS": {
+                "odata_type": "Edm.Boolean"
+            },
             "DEFAULT_VALUE": null,
             "FIXED_VALUE": null,
             "CUSTOM_DATA_TYPE": null
@@ -1530,7 +1590,9 @@
             "SORTERDIR": null,
             "RELATED_OBJ_ATTR": "",
             "SHORT_DESCRIPTION": null,
-            "DATA_ADDRESS_PROPS": "{\"odata_type\":\"graph.licenseProcessingState\"}",
+            "DATA_ADDRESS_PROPS": {
+                "odata_type": "graph.licenseProcessingState"
+            },
             "DEFAULT_VALUE": null,
             "FIXED_VALUE": null,
             "CUSTOM_DATA_TYPE": null
@@ -1574,7 +1636,9 @@
             "SORTERDIR": null,
             "RELATED_OBJ_ATTR": "",
             "SHORT_DESCRIPTION": null,
-            "DATA_ADDRESS_PROPS": "{\"odata_type\":\"Edm.String\"}",
+            "DATA_ADDRESS_PROPS": {
+                "odata_type": "Edm.String"
+            },
             "DEFAULT_VALUE": null,
             "FIXED_VALUE": null,
             "CUSTOM_DATA_TYPE": null
@@ -1618,7 +1682,9 @@
             "SORTERDIR": null,
             "RELATED_OBJ_ATTR": "",
             "SHORT_DESCRIPTION": null,
-            "DATA_ADDRESS_PROPS": "{\"odata_type\":\"Edm.Boolean\"}",
+            "DATA_ADDRESS_PROPS": {
+                "odata_type": "Edm.Boolean"
+            },
             "DEFAULT_VALUE": null,
             "FIXED_VALUE": null,
             "CUSTOM_DATA_TYPE": null
@@ -1662,7 +1728,9 @@
             "SORTERDIR": null,
             "RELATED_OBJ_ATTR": "",
             "SHORT_DESCRIPTION": null,
-            "DATA_ADDRESS_PROPS": "{\"odata_type\":\"Edm.String\"}",
+            "DATA_ADDRESS_PROPS": {
+                "odata_type": "Edm.String"
+            },
             "DEFAULT_VALUE": null,
             "FIXED_VALUE": null,
             "CUSTOM_DATA_TYPE": null
@@ -1706,7 +1774,9 @@
             "SORTERDIR": null,
             "RELATED_OBJ_ATTR": "",
             "SHORT_DESCRIPTION": null,
-            "DATA_ADDRESS_PROPS": "{\"odata_type\":\"Edm.String\"}",
+            "DATA_ADDRESS_PROPS": {
+                "odata_type": "Edm.String"
+            },
             "DEFAULT_VALUE": null,
             "FIXED_VALUE": null,
             "CUSTOM_DATA_TYPE": null
@@ -1750,7 +1820,9 @@
             "SORTERDIR": null,
             "RELATED_OBJ_ATTR": "",
             "SHORT_DESCRIPTION": null,
-            "DATA_ADDRESS_PROPS": "{\"odata_type\":\"Edm.DateTimeOffset\"}",
+            "DATA_ADDRESS_PROPS": {
+                "odata_type": "Edm.DateTimeOffset"
+            },
             "DEFAULT_VALUE": null,
             "FIXED_VALUE": null,
             "CUSTOM_DATA_TYPE": null
@@ -1794,7 +1866,9 @@
             "SORTERDIR": null,
             "RELATED_OBJ_ATTR": "",
             "SHORT_DESCRIPTION": null,
-            "DATA_ADDRESS_PROPS": "{\"odata_type\":\"Edm.Boolean\"}",
+            "DATA_ADDRESS_PROPS": {
+                "odata_type": "Edm.Boolean"
+            },
             "DEFAULT_VALUE": null,
             "FIXED_VALUE": null,
             "CUSTOM_DATA_TYPE": null
@@ -1838,7 +1912,9 @@
             "SORTERDIR": null,
             "RELATED_OBJ_ATTR": "",
             "SHORT_DESCRIPTION": null,
-            "DATA_ADDRESS_PROPS": "{\"odata_type\":\"Edm.String\"}",
+            "DATA_ADDRESS_PROPS": {
+                "odata_type": "Edm.String"
+            },
             "DEFAULT_VALUE": null,
             "FIXED_VALUE": null,
             "CUSTOM_DATA_TYPE": null
@@ -1882,7 +1958,9 @@
             "SORTERDIR": null,
             "RELATED_OBJ_ATTR": "",
             "SHORT_DESCRIPTION": null,
-            "DATA_ADDRESS_PROPS": "{\"odata_type\":\"Collection(graph.onPremisesProvisioningError)\"}",
+            "DATA_ADDRESS_PROPS": {
+                "odata_type": "Collection(graph.onPremisesProvisioningError)"
+            },
             "DEFAULT_VALUE": null,
             "FIXED_VALUE": null,
             "CUSTOM_DATA_TYPE": null
@@ -1926,7 +2004,9 @@
             "SORTERDIR": null,
             "RELATED_OBJ_ATTR": "",
             "SHORT_DESCRIPTION": null,
-            "DATA_ADDRESS_PROPS": "{\"odata_type\":\"Edm.String\"}",
+            "DATA_ADDRESS_PROPS": {
+                "odata_type": "Edm.String"
+            },
             "DEFAULT_VALUE": null,
             "FIXED_VALUE": null,
             "CUSTOM_DATA_TYPE": null

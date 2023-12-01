@@ -26,6 +26,10 @@
             "attribute_alias": "APP"
         },
         {
+            "name": "TIME_ZONE",
+            "attribute_alias": "TIME_ZONE"
+        },
+        {
             "name": "LABEL",
             "attribute_alias": "LABEL"
         },
@@ -44,10 +48,6 @@
         {
             "name": "ALIAS",
             "attribute_alias": "ALIAS"
-        },
-        {
-            "name": "FILTER_CONTEXT",
-            "attribute_alias": "FILTER_CONTEXT"
         }
     ],
     "rows": [
@@ -58,6 +58,7 @@
             "MODIFIED_BY_USER": "0x31000000000000000000000000000000",
             "UID": "0x11eb8a60df22c5a08a60847beb4a5184",
             "APP": "0x11eb8233a3d3443c8233847beb4a5184",
+            "TIME_ZONE": null,
             "LABEL": "Microsoft Graph",
             "CONNECTOR": "exface\/UrlDataConnector\/DataConnectors\/OData4Connector.php",
             "CONFIG": {
@@ -75,8 +76,7 @@
                 }
             },
             "READONLY": "0",
-            "ALIAS": "MICROSOFT_GRAPH",
-            "FILTER_CONTEXT": null
+            "ALIAS": "MICROSOFT_GRAPH"
         },
         {
             "CREATED_ON": "2021-01-25 14:11:13",
@@ -85,6 +85,7 @@
             "MODIFIED_BY_USER": "0x31000000000000000000000000000000",
             "UID": "0x11eb8bf5cc97ff468bf5025041000001",
             "APP": "0x11eb8233a3d3443c8233847beb4a5184",
+            "TIME_ZONE": null,
             "LABEL": "Microsoft OpenID",
             "CONNECTOR": "exface\/UrlDataConnector\/DataConnectors\/HttpConnector.php",
             "CONFIG": {
@@ -96,8 +97,7 @@
                 }
             },
             "READONLY": "1",
-            "ALIAS": "MICROSOFT_OPENID",
-            "FILTER_CONTEXT": null
+            "ALIAS": "MICROSOFT_OPENID"
         }
     ],
     "totals_rows": [],
