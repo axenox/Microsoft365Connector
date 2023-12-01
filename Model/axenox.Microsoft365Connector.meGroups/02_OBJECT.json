@@ -81,9 +81,9 @@
     "rows": [
         {
             "CREATED_ON": "2023-06-14 14:04:35",
-            "MODIFIED_ON": "2023-06-14 14:16:09",
+            "MODIFIED_ON": "2023-11-30 14:28:37",
             "CREATED_BY_USER": "0x31000000000000000000000000000000",
-            "MODIFIED_BY_USER": "0x31000000000000000000000000000000",
+            "MODIFIED_BY_USER": "0x11edb424effd2980b424025041000001",
             "UID": "0x11eeb55aa17a7ba4b55a025041000001",
             "READABLE_FLAG": 1,
             "WRITABLE_FLAG": 1,
@@ -95,7 +95,12 @@
             "APP": "0x11eb8233a3d3443c8233847beb4a5184",
             "SHORT_DESCRIPTION": "",
             "PARENT_OBJECT": "",
-            "DATA_ADDRESS_PROPS": "{\"odata_entitytype\":\"group\",\"odata_namespace\":\"microsoft.graph\",\"request_remote_pagination\":false}",
+            "DATA_ADDRESS_PROPS": {
+                "odata_entitytype": "group",
+                "odata_namespace": "microsoft.graph",
+                "request_remote_pagination": true,
+                "request_offset_parameter": ""
+            },
             "DEFAULT_EDITOR_UXON": null,
             "ALIAS": "meGroups",
             "DATA_ADDRESS": "me\/memberOf"
