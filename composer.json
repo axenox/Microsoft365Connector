@@ -2,8 +2,7 @@
     "name": "axenox/microsoft365connector",
     "require": {
         "exface/core": "^1.0",
-        "thenetworg/oauth2-azure": "^2.0",
-        "firebase/php-jwt": "6.5.0"
+        "thenetworg/oauth2-azure": "^2.0"
     },
     "license": [
         "GPL-3.0+",
