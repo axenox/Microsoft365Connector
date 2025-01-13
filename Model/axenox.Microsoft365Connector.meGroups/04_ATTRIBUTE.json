@@ -2,6 +2,11 @@
     "object_alias": "exface.Core.ATTRIBUTE",
     "columns": [
         {
+            "name": "_EXPORT_SUMMARY",
+            "hidden": true,
+            "attribute_alias": "LABEL"
+        },
+        {
             "name": "CREATED_ON",
             "attribute_alias": "CREATED_ON"
         },
@@ -172,6 +177,7 @@
     ],
     "rows": [
         {
+            "_EXPORT_SUMMARY": "Parent Site Id [parentSiteId]",
             "CREATED_ON": "2023-06-14 14:21:28",
             "MODIFIED_ON": "2023-06-14 14:21:28",
             "CREATED_BY_USER": "0x31000000000000000000000000000000",
@@ -205,10 +211,10 @@
             "HIDDENFLAG": 0,
             "EDITABLEFLAG": 1,
             "REQUIREDFLAG": 0,
-            "RELATED_OBJ": "",
+            "RELATED_OBJ": null,
             "SORTERPOS": null,
             "SORTERDIR": null,
-            "RELATED_OBJ_ATTR": "",
+            "RELATED_OBJ_ATTR": null,
             "SHORT_DESCRIPTION": null,
             "DATA_ADDRESS_PROPS": {
                 "odata_type": "Edm.String"
@@ -218,6 +224,7 @@
             "CUSTOM_DATA_TYPE": null
         },
         {
+            "_EXPORT_SUMMARY": "Created Date Time [createdDateTime]",
             "CREATED_ON": "2023-06-14 14:21:28",
             "MODIFIED_ON": "2023-06-14 14:21:28",
             "CREATED_BY_USER": "0x31000000000000000000000000000000",
@@ -251,10 +258,10 @@
             "HIDDENFLAG": 0,
             "EDITABLEFLAG": 1,
             "REQUIREDFLAG": 0,
-            "RELATED_OBJ": "",
+            "RELATED_OBJ": null,
             "SORTERPOS": null,
             "SORTERDIR": null,
-            "RELATED_OBJ_ATTR": "",
+            "RELATED_OBJ_ATTR": null,
             "SHORT_DESCRIPTION": null,
             "DATA_ADDRESS_PROPS": {
                 "odata_type": "Edm.DateTimeOffset"
@@ -264,6 +271,7 @@
             "CUSTOM_DATA_TYPE": null
         },
         {
+            "_EXPORT_SUMMARY": "Is Subscribed By Mail [isSubscribedByMail]",
             "CREATED_ON": "2023-06-14 14:21:28",
             "MODIFIED_ON": "2023-06-14 14:21:28",
             "CREATED_BY_USER": "0x31000000000000000000000000000000",
@@ -297,10 +305,10 @@
             "HIDDENFLAG": 0,
             "EDITABLEFLAG": 1,
             "REQUIREDFLAG": 0,
-            "RELATED_OBJ": "",
+            "RELATED_OBJ": null,
             "SORTERPOS": null,
             "SORTERDIR": null,
-            "RELATED_OBJ_ATTR": "",
+            "RELATED_OBJ_ATTR": null,
             "SHORT_DESCRIPTION": null,
             "DATA_ADDRESS_PROPS": {
                 "odata_type": "Edm.Boolean"
@@ -310,6 +318,7 @@
             "CUSTOM_DATA_TYPE": null
         },
         {
+            "_EXPORT_SUMMARY": "Is Archived [isArchived]",
             "CREATED_ON": "2023-06-14 14:21:28",
             "MODIFIED_ON": "2023-06-14 14:21:28",
             "CREATED_BY_USER": "0x31000000000000000000000000000000",
@@ -343,10 +352,10 @@
             "HIDDENFLAG": 0,
             "EDITABLEFLAG": 1,
             "REQUIREDFLAG": 0,
-            "RELATED_OBJ": "",
+            "RELATED_OBJ": null,
             "SORTERPOS": null,
             "SORTERDIR": null,
-            "RELATED_OBJ_ATTR": "",
+            "RELATED_OBJ_ATTR": null,
             "SHORT_DESCRIPTION": null,
             "DATA_ADDRESS_PROPS": {
                 "odata_type": "Edm.Boolean"
@@ -356,6 +365,7 @@
             "CUSTOM_DATA_TYPE": null
         },
         {
+            "_EXPORT_SUMMARY": "Description [description]",
             "CREATED_ON": "2023-06-14 14:21:28",
             "MODIFIED_ON": "2023-06-14 14:21:28",
             "CREATED_BY_USER": "0x31000000000000000000000000000000",
@@ -389,10 +399,10 @@
             "HIDDENFLAG": 0,
             "EDITABLEFLAG": 1,
             "REQUIREDFLAG": 0,
-            "RELATED_OBJ": "",
+            "RELATED_OBJ": null,
             "SORTERPOS": null,
             "SORTERDIR": null,
-            "RELATED_OBJ_ATTR": "",
+            "RELATED_OBJ_ATTR": null,
             "SHORT_DESCRIPTION": null,
             "DATA_ADDRESS_PROPS": {
                 "odata_type": "Edm.String"
@@ -402,6 +412,7 @@
             "CUSTOM_DATA_TYPE": null
         },
         {
+            "_EXPORT_SUMMARY": "Mail [mail]",
             "CREATED_ON": "2023-06-14 14:21:28",
             "MODIFIED_ON": "2023-06-14 14:21:28",
             "CREATED_BY_USER": "0x31000000000000000000000000000000",
@@ -435,10 +446,10 @@
             "HIDDENFLAG": 0,
             "EDITABLEFLAG": 1,
             "REQUIREDFLAG": 0,
-            "RELATED_OBJ": "",
+            "RELATED_OBJ": null,
             "SORTERPOS": null,
             "SORTERDIR": null,
-            "RELATED_OBJ_ATTR": "",
+            "RELATED_OBJ_ATTR": null,
             "SHORT_DESCRIPTION": null,
             "DATA_ADDRESS_PROPS": {
                 "odata_type": "Edm.String"
@@ -448,6 +459,7 @@
             "CUSTOM_DATA_TYPE": null
         },
         {
+            "_EXPORT_SUMMARY": "Classification [classification]",
             "CREATED_ON": "2023-06-14 14:21:28",
             "MODIFIED_ON": "2023-06-14 14:21:28",
             "CREATED_BY_USER": "0x31000000000000000000000000000000",
@@ -481,10 +493,10 @@
             "HIDDENFLAG": 0,
             "EDITABLEFLAG": 1,
             "REQUIREDFLAG": 0,
-            "RELATED_OBJ": "",
+            "RELATED_OBJ": null,
             "SORTERPOS": null,
             "SORTERDIR": null,
-            "RELATED_OBJ_ATTR": "",
+            "RELATED_OBJ_ATTR": null,
             "SHORT_DESCRIPTION": null,
             "DATA_ADDRESS_PROPS": {
                 "odata_type": "Edm.String"
@@ -494,6 +506,7 @@
             "CUSTOM_DATA_TYPE": null
         },
         {
+            "_EXPORT_SUMMARY": "Scope [scope]",
             "CREATED_ON": "2023-06-14 14:21:28",
             "MODIFIED_ON": "2023-06-14 14:21:28",
             "CREATED_BY_USER": "0x31000000000000000000000000000000",
@@ -527,10 +540,10 @@
             "HIDDENFLAG": 0,
             "EDITABLEFLAG": 1,
             "REQUIREDFLAG": 0,
-            "RELATED_OBJ": "",
+            "RELATED_OBJ": null,
             "SORTERPOS": null,
             "SORTERDIR": null,
-            "RELATED_OBJ_ATTR": "",
+            "RELATED_OBJ_ATTR": null,
             "SHORT_DESCRIPTION": null,
             "DATA_ADDRESS_PROPS": {
                 "odata_type": "microsoft.graph.termStore.termGroupScope"
@@ -540,6 +553,7 @@
             "CUSTOM_DATA_TYPE": null
         },
         {
+            "_EXPORT_SUMMARY": "Proxy Addresses [proxyAddresses]",
             "CREATED_ON": "2023-06-14 14:21:28",
             "MODIFIED_ON": "2023-06-14 14:21:28",
             "CREATED_BY_USER": "0x31000000000000000000000000000000",
@@ -573,10 +587,10 @@
             "HIDDENFLAG": 0,
             "EDITABLEFLAG": 1,
             "REQUIREDFLAG": 1,
-            "RELATED_OBJ": "",
+            "RELATED_OBJ": null,
             "SORTERPOS": null,
             "SORTERDIR": null,
-            "RELATED_OBJ_ATTR": "",
+            "RELATED_OBJ_ATTR": null,
             "SHORT_DESCRIPTION": null,
             "DATA_ADDRESS_PROPS": {
                 "odata_type": "Collection(Edm.String)"
@@ -586,6 +600,7 @@
             "CUSTOM_DATA_TYPE": null
         },
         {
+            "_EXPORT_SUMMARY": "Membership Rule Processing State [membershipRuleProcessingState]",
             "CREATED_ON": "2023-06-14 14:21:28",
             "MODIFIED_ON": "2023-06-14 14:21:28",
             "CREATED_BY_USER": "0x31000000000000000000000000000000",
@@ -619,10 +634,10 @@
             "HIDDENFLAG": 0,
             "EDITABLEFLAG": 1,
             "REQUIREDFLAG": 0,
-            "RELATED_OBJ": "",
+            "RELATED_OBJ": null,
             "SORTERPOS": null,
             "SORTERDIR": null,
-            "RELATED_OBJ_ATTR": "",
+            "RELATED_OBJ_ATTR": null,
             "SHORT_DESCRIPTION": null,
             "DATA_ADDRESS_PROPS": {
                 "odata_type": "Edm.String"
@@ -632,6 +647,7 @@
             "CUSTOM_DATA_TYPE": null
         },
         {
+            "_EXPORT_SUMMARY": "Is Assignable To Role [isAssignableToRole]",
             "CREATED_ON": "2023-06-14 14:21:28",
             "MODIFIED_ON": "2023-06-14 14:21:28",
             "CREATED_BY_USER": "0x31000000000000000000000000000000",
@@ -665,10 +681,10 @@
             "HIDDENFLAG": 0,
             "EDITABLEFLAG": 1,
             "REQUIREDFLAG": 0,
-            "RELATED_OBJ": "",
+            "RELATED_OBJ": null,
             "SORTERPOS": null,
             "SORTERDIR": null,
-            "RELATED_OBJ_ATTR": "",
+            "RELATED_OBJ_ATTR": null,
             "SHORT_DESCRIPTION": null,
             "DATA_ADDRESS_PROPS": {
                 "odata_type": "Edm.Boolean"
@@ -678,6 +694,7 @@
             "CUSTOM_DATA_TYPE": null
         },
         {
+            "_EXPORT_SUMMARY": "Has Members With License Errors [hasMembersWithLicenseErrors]",
             "CREATED_ON": "2023-06-14 14:21:28",
             "MODIFIED_ON": "2023-06-14 14:21:28",
             "CREATED_BY_USER": "0x31000000000000000000000000000000",
@@ -711,10 +728,10 @@
             "HIDDENFLAG": 0,
             "EDITABLEFLAG": 1,
             "REQUIREDFLAG": 0,
-            "RELATED_OBJ": "",
+            "RELATED_OBJ": null,
             "SORTERPOS": null,
             "SORTERDIR": null,
-            "RELATED_OBJ_ATTR": "",
+            "RELATED_OBJ_ATTR": null,
             "SHORT_DESCRIPTION": null,
             "DATA_ADDRESS_PROPS": {
                 "odata_type": "Edm.Boolean"
@@ -724,6 +741,7 @@
             "CUSTOM_DATA_TYPE": null
         },
         {
+            "_EXPORT_SUMMARY": "Preferred Language [preferredLanguage]",
             "CREATED_ON": "2023-06-14 14:21:28",
             "MODIFIED_ON": "2023-06-14 14:21:28",
             "CREATED_BY_USER": "0x31000000000000000000000000000000",
@@ -757,10 +775,10 @@
             "HIDDENFLAG": 0,
             "EDITABLEFLAG": 1,
             "REQUIREDFLAG": 0,
-            "RELATED_OBJ": "",
+            "RELATED_OBJ": null,
             "SORTERPOS": null,
             "SORTERDIR": null,
-            "RELATED_OBJ_ATTR": "",
+            "RELATED_OBJ_ATTR": null,
             "SHORT_DESCRIPTION": null,
             "DATA_ADDRESS_PROPS": {
                 "odata_type": "Edm.String"
@@ -770,6 +788,7 @@
             "CUSTOM_DATA_TYPE": null
         },
         {
+            "_EXPORT_SUMMARY": "On Premises Net Bios Name [onPremisesNetBiosName]",
             "CREATED_ON": "2023-06-14 14:21:28",
             "MODIFIED_ON": "2023-06-14 14:21:28",
             "CREATED_BY_USER": "0x31000000000000000000000000000000",
@@ -803,10 +822,10 @@
             "HIDDENFLAG": 0,
             "EDITABLEFLAG": 1,
             "REQUIREDFLAG": 0,
-            "RELATED_OBJ": "",
+            "RELATED_OBJ": null,
             "SORTERPOS": null,
             "SORTERDIR": null,
-            "RELATED_OBJ_ATTR": "",
+            "RELATED_OBJ_ATTR": null,
             "SHORT_DESCRIPTION": null,
             "DATA_ADDRESS_PROPS": {
                 "odata_type": "Edm.String"
@@ -816,6 +835,7 @@
             "CUSTOM_DATA_TYPE": null
         },
         {
+            "_EXPORT_SUMMARY": "Security Identifier [securityIdentifier]",
             "CREATED_ON": "2023-06-14 14:21:28",
             "MODIFIED_ON": "2023-06-14 14:21:28",
             "CREATED_BY_USER": "0x31000000000000000000000000000000",
@@ -849,10 +869,10 @@
             "HIDDENFLAG": 0,
             "EDITABLEFLAG": 1,
             "REQUIREDFLAG": 0,
-            "RELATED_OBJ": "",
+            "RELATED_OBJ": null,
             "SORTERPOS": null,
             "SORTERDIR": null,
-            "RELATED_OBJ_ATTR": "",
+            "RELATED_OBJ_ATTR": null,
             "SHORT_DESCRIPTION": null,
             "DATA_ADDRESS_PROPS": {
                 "odata_type": "Edm.String"
@@ -862,6 +882,7 @@
             "CUSTOM_DATA_TYPE": null
         },
         {
+            "_EXPORT_SUMMARY": "On Premises Sync Enabled [onPremisesSyncEnabled]",
             "CREATED_ON": "2023-06-14 14:21:28",
             "MODIFIED_ON": "2023-06-14 14:21:28",
             "CREATED_BY_USER": "0x31000000000000000000000000000000",
@@ -895,10 +916,10 @@
             "HIDDENFLAG": 0,
             "EDITABLEFLAG": 1,
             "REQUIREDFLAG": 0,
-            "RELATED_OBJ": "",
+            "RELATED_OBJ": null,
             "SORTERPOS": null,
             "SORTERDIR": null,
-            "RELATED_OBJ_ATTR": "",
+            "RELATED_OBJ_ATTR": null,
             "SHORT_DESCRIPTION": null,
             "DATA_ADDRESS_PROPS": {
                 "odata_type": "Edm.Boolean"
@@ -908,6 +929,7 @@
             "CUSTOM_DATA_TYPE": null
         },
         {
+            "_EXPORT_SUMMARY": "Assigned Licenses [assignedLicenses]",
             "CREATED_ON": "2023-06-14 14:21:28",
             "MODIFIED_ON": "2023-06-14 14:21:28",
             "CREATED_BY_USER": "0x31000000000000000000000000000000",
@@ -941,10 +963,10 @@
             "HIDDENFLAG": 0,
             "EDITABLEFLAG": 1,
             "REQUIREDFLAG": 0,
-            "RELATED_OBJ": "",
+            "RELATED_OBJ": null,
             "SORTERPOS": null,
             "SORTERDIR": null,
-            "RELATED_OBJ_ATTR": "",
+            "RELATED_OBJ_ATTR": null,
             "SHORT_DESCRIPTION": null,
             "DATA_ADDRESS_PROPS": {
                 "odata_type": "Collection(graph.assignedLicense)"
@@ -954,6 +976,7 @@
             "CUSTOM_DATA_TYPE": null
         },
         {
+            "_EXPORT_SUMMARY": "Display Name [displayName]",
             "CREATED_ON": "2023-06-14 14:21:28",
             "MODIFIED_ON": "2023-06-14 14:21:28",
             "CREATED_BY_USER": "0x31000000000000000000000000000000",
@@ -987,10 +1010,10 @@
             "HIDDENFLAG": 0,
             "EDITABLEFLAG": 1,
             "REQUIREDFLAG": 0,
-            "RELATED_OBJ": "",
+            "RELATED_OBJ": null,
             "SORTERPOS": null,
             "SORTERDIR": null,
-            "RELATED_OBJ_ATTR": "",
+            "RELATED_OBJ_ATTR": null,
             "SHORT_DESCRIPTION": null,
             "DATA_ADDRESS_PROPS": {
                 "odata_type": "Edm.String"
@@ -1000,6 +1023,7 @@
             "CUSTOM_DATA_TYPE": null
         },
         {
+            "_EXPORT_SUMMARY": "Allow External Senders [allowExternalSenders]",
             "CREATED_ON": "2023-06-14 14:21:28",
             "MODIFIED_ON": "2023-06-14 14:21:28",
             "CREATED_BY_USER": "0x31000000000000000000000000000000",
@@ -1033,10 +1057,10 @@
             "HIDDENFLAG": 0,
             "EDITABLEFLAG": 1,
             "REQUIREDFLAG": 0,
-            "RELATED_OBJ": "",
+            "RELATED_OBJ": null,
             "SORTERPOS": null,
             "SORTERDIR": null,
-            "RELATED_OBJ_ATTR": "",
+            "RELATED_OBJ_ATTR": null,
             "SHORT_DESCRIPTION": null,
             "DATA_ADDRESS_PROPS": {
                 "odata_type": "Edm.Boolean"
@@ -1046,6 +1070,7 @@
             "CUSTOM_DATA_TYPE": null
         },
         {
+            "_EXPORT_SUMMARY": "On Premises Domain Name [onPremisesDomainName]",
             "CREATED_ON": "2023-06-14 14:21:28",
             "MODIFIED_ON": "2023-06-14 14:21:28",
             "CREATED_BY_USER": "0x31000000000000000000000000000000",
@@ -1079,10 +1104,10 @@
             "HIDDENFLAG": 0,
             "EDITABLEFLAG": 1,
             "REQUIREDFLAG": 0,
-            "RELATED_OBJ": "",
+            "RELATED_OBJ": null,
             "SORTERPOS": null,
             "SORTERDIR": null,
-            "RELATED_OBJ_ATTR": "",
+            "RELATED_OBJ_ATTR": null,
             "SHORT_DESCRIPTION": null,
             "DATA_ADDRESS_PROPS": {
                 "odata_type": "Edm.String"
@@ -1092,6 +1117,7 @@
             "CUSTOM_DATA_TYPE": null
         },
         {
+            "_EXPORT_SUMMARY": "Unseen Count [unseenCount]",
             "CREATED_ON": "2023-06-14 14:21:28",
             "MODIFIED_ON": "2023-06-14 14:21:28",
             "CREATED_BY_USER": "0x31000000000000000000000000000000",
@@ -1125,10 +1151,10 @@
             "HIDDENFLAG": 0,
             "EDITABLEFLAG": 1,
             "REQUIREDFLAG": 0,
-            "RELATED_OBJ": "",
+            "RELATED_OBJ": null,
             "SORTERPOS": null,
             "SORTERDIR": null,
-            "RELATED_OBJ_ATTR": "",
+            "RELATED_OBJ_ATTR": null,
             "SHORT_DESCRIPTION": null,
             "DATA_ADDRESS_PROPS": {
                 "odata_type": "Edm.Int32"
@@ -1138,6 +1164,7 @@
             "CUSTOM_DATA_TYPE": null
         },
         {
+            "_EXPORT_SUMMARY": "Membership Rule [membershipRule]",
             "CREATED_ON": "2023-06-14 14:21:28",
             "MODIFIED_ON": "2023-06-14 14:21:28",
             "CREATED_BY_USER": "0x31000000000000000000000000000000",
@@ -1171,10 +1198,10 @@
             "HIDDENFLAG": 0,
             "EDITABLEFLAG": 1,
             "REQUIREDFLAG": 0,
-            "RELATED_OBJ": "",
+            "RELATED_OBJ": null,
             "SORTERPOS": null,
             "SORTERDIR": null,
-            "RELATED_OBJ_ATTR": "",
+            "RELATED_OBJ_ATTR": null,
             "SHORT_DESCRIPTION": null,
             "DATA_ADDRESS_PROPS": {
                 "odata_type": "Edm.String"
@@ -1184,6 +1211,7 @@
             "CUSTOM_DATA_TYPE": null
         },
         {
+            "_EXPORT_SUMMARY": "Renewed Date Time [renewedDateTime]",
             "CREATED_ON": "2023-06-14 14:21:28",
             "MODIFIED_ON": "2023-06-14 14:21:28",
             "CREATED_BY_USER": "0x31000000000000000000000000000000",
@@ -1217,10 +1245,10 @@
             "HIDDENFLAG": 0,
             "EDITABLEFLAG": 1,
             "REQUIREDFLAG": 0,
-            "RELATED_OBJ": "",
+            "RELATED_OBJ": null,
             "SORTERPOS": null,
             "SORTERDIR": null,
-            "RELATED_OBJ_ATTR": "",
+            "RELATED_OBJ_ATTR": null,
             "SHORT_DESCRIPTION": null,
             "DATA_ADDRESS_PROPS": {
                 "odata_type": "Edm.DateTimeOffset"
@@ -1230,6 +1258,7 @@
             "CUSTOM_DATA_TYPE": null
         },
         {
+            "_EXPORT_SUMMARY": "Hide From Address Lists [hideFromAddressLists]",
             "CREATED_ON": "2023-06-14 14:21:28",
             "MODIFIED_ON": "2023-06-14 14:21:28",
             "CREATED_BY_USER": "0x31000000000000000000000000000000",
@@ -1263,10 +1292,10 @@
             "HIDDENFLAG": 0,
             "EDITABLEFLAG": 1,
             "REQUIREDFLAG": 0,
-            "RELATED_OBJ": "",
+            "RELATED_OBJ": null,
             "SORTERPOS": null,
             "SORTERDIR": null,
-            "RELATED_OBJ_ATTR": "",
+            "RELATED_OBJ_ATTR": null,
             "SHORT_DESCRIPTION": null,
             "DATA_ADDRESS_PROPS": {
                 "odata_type": "Edm.Boolean"
@@ -1276,6 +1305,7 @@
             "CUSTOM_DATA_TYPE": null
         },
         {
+            "_EXPORT_SUMMARY": "Assigned Labels [assignedLabels]",
             "CREATED_ON": "2023-06-14 14:21:28",
             "MODIFIED_ON": "2023-06-14 14:21:28",
             "CREATED_BY_USER": "0x31000000000000000000000000000000",
@@ -1309,10 +1339,10 @@
             "HIDDENFLAG": 0,
             "EDITABLEFLAG": 1,
             "REQUIREDFLAG": 0,
-            "RELATED_OBJ": "",
+            "RELATED_OBJ": null,
             "SORTERPOS": null,
             "SORTERDIR": null,
-            "RELATED_OBJ_ATTR": "",
+            "RELATED_OBJ_ATTR": null,
             "SHORT_DESCRIPTION": null,
             "DATA_ADDRESS_PROPS": {
                 "odata_type": "Collection(graph.assignedLabel)"
@@ -1322,6 +1352,7 @@
             "CUSTOM_DATA_TYPE": null
         },
         {
+            "_EXPORT_SUMMARY": "Expiration Date Time [expirationDateTime]",
             "CREATED_ON": "2023-06-14 14:21:28",
             "MODIFIED_ON": "2023-06-14 14:21:28",
             "CREATED_BY_USER": "0x31000000000000000000000000000000",
@@ -1355,10 +1386,10 @@
             "HIDDENFLAG": 0,
             "EDITABLEFLAG": 1,
             "REQUIREDFLAG": 0,
-            "RELATED_OBJ": "",
+            "RELATED_OBJ": null,
             "SORTERPOS": null,
             "SORTERDIR": null,
-            "RELATED_OBJ_ATTR": "",
+            "RELATED_OBJ_ATTR": null,
             "SHORT_DESCRIPTION": null,
             "DATA_ADDRESS_PROPS": {
                 "odata_type": "Edm.DateTimeOffset"
@@ -1368,6 +1399,7 @@
             "CUSTOM_DATA_TYPE": null
         },
         {
+            "_EXPORT_SUMMARY": "On Premises Security Identifier [onPremisesSecurityIdentifier]",
             "CREATED_ON": "2023-06-14 14:21:28",
             "MODIFIED_ON": "2023-06-14 14:21:28",
             "CREATED_BY_USER": "0x31000000000000000000000000000000",
@@ -1401,10 +1433,10 @@
             "HIDDENFLAG": 0,
             "EDITABLEFLAG": 1,
             "REQUIREDFLAG": 0,
-            "RELATED_OBJ": "",
+            "RELATED_OBJ": null,
             "SORTERPOS": null,
             "SORTERDIR": null,
-            "RELATED_OBJ_ATTR": "",
+            "RELATED_OBJ_ATTR": null,
             "SHORT_DESCRIPTION": null,
             "DATA_ADDRESS_PROPS": {
                 "odata_type": "Edm.String"
@@ -1414,6 +1446,7 @@
             "CUSTOM_DATA_TYPE": null
         },
         {
+            "_EXPORT_SUMMARY": "Group Types [groupTypes]",
             "CREATED_ON": "2023-06-14 14:21:28",
             "MODIFIED_ON": "2023-06-14 14:21:28",
             "CREATED_BY_USER": "0x31000000000000000000000000000000",
@@ -1447,10 +1480,10 @@
             "HIDDENFLAG": 0,
             "EDITABLEFLAG": 1,
             "REQUIREDFLAG": 1,
-            "RELATED_OBJ": "",
+            "RELATED_OBJ": null,
             "SORTERPOS": null,
             "SORTERDIR": null,
-            "RELATED_OBJ_ATTR": "",
+            "RELATED_OBJ_ATTR": null,
             "SHORT_DESCRIPTION": null,
             "DATA_ADDRESS_PROPS": {
                 "odata_type": "Collection(Edm.String)"
@@ -1460,6 +1493,7 @@
             "CUSTOM_DATA_TYPE": null
         },
         {
+            "_EXPORT_SUMMARY": "Hide From Outlook Clients [hideFromOutlookClients]",
             "CREATED_ON": "2023-06-14 14:21:28",
             "MODIFIED_ON": "2023-06-14 14:21:28",
             "CREATED_BY_USER": "0x31000000000000000000000000000000",
@@ -1493,10 +1527,10 @@
             "HIDDENFLAG": 0,
             "EDITABLEFLAG": 1,
             "REQUIREDFLAG": 0,
-            "RELATED_OBJ": "",
+            "RELATED_OBJ": null,
             "SORTERPOS": null,
             "SORTERDIR": null,
-            "RELATED_OBJ_ATTR": "",
+            "RELATED_OBJ_ATTR": null,
             "SHORT_DESCRIPTION": null,
             "DATA_ADDRESS_PROPS": {
                 "odata_type": "Edm.Boolean"
@@ -1506,6 +1540,7 @@
             "CUSTOM_DATA_TYPE": null
         },
         {
+            "_EXPORT_SUMMARY": "Security Enabled [securityEnabled]",
             "CREATED_ON": "2023-06-14 14:21:28",
             "MODIFIED_ON": "2023-06-14 14:21:28",
             "CREATED_BY_USER": "0x31000000000000000000000000000000",
@@ -1539,10 +1574,10 @@
             "HIDDENFLAG": 0,
             "EDITABLEFLAG": 1,
             "REQUIREDFLAG": 0,
-            "RELATED_OBJ": "",
+            "RELATED_OBJ": null,
             "SORTERPOS": null,
             "SORTERDIR": null,
-            "RELATED_OBJ_ATTR": "",
+            "RELATED_OBJ_ATTR": null,
             "SHORT_DESCRIPTION": null,
             "DATA_ADDRESS_PROPS": {
                 "odata_type": "Edm.Boolean"
@@ -1552,6 +1587,7 @@
             "CUSTOM_DATA_TYPE": null
         },
         {
+            "_EXPORT_SUMMARY": "License Processing State [licenseProcessingState]",
             "CREATED_ON": "2023-06-14 14:21:28",
             "MODIFIED_ON": "2023-06-14 14:21:28",
             "CREATED_BY_USER": "0x31000000000000000000000000000000",
@@ -1585,10 +1621,10 @@
             "HIDDENFLAG": 0,
             "EDITABLEFLAG": 1,
             "REQUIREDFLAG": 0,
-            "RELATED_OBJ": "",
+            "RELATED_OBJ": null,
             "SORTERPOS": null,
             "SORTERDIR": null,
-            "RELATED_OBJ_ATTR": "",
+            "RELATED_OBJ_ATTR": null,
             "SHORT_DESCRIPTION": null,
             "DATA_ADDRESS_PROPS": {
                 "odata_type": "graph.licenseProcessingState"
@@ -1598,6 +1634,7 @@
             "CUSTOM_DATA_TYPE": null
         },
         {
+            "_EXPORT_SUMMARY": "Visibility [visibility]",
             "CREATED_ON": "2023-06-14 14:21:28",
             "MODIFIED_ON": "2023-06-14 14:21:28",
             "CREATED_BY_USER": "0x31000000000000000000000000000000",
@@ -1631,10 +1668,10 @@
             "HIDDENFLAG": 0,
             "EDITABLEFLAG": 1,
             "REQUIREDFLAG": 0,
-            "RELATED_OBJ": "",
+            "RELATED_OBJ": null,
             "SORTERPOS": null,
             "SORTERDIR": null,
-            "RELATED_OBJ_ATTR": "",
+            "RELATED_OBJ_ATTR": null,
             "SHORT_DESCRIPTION": null,
             "DATA_ADDRESS_PROPS": {
                 "odata_type": "Edm.String"
@@ -1644,6 +1681,7 @@
             "CUSTOM_DATA_TYPE": null
         },
         {
+            "_EXPORT_SUMMARY": "Mail Enabled [mailEnabled]",
             "CREATED_ON": "2023-06-14 14:21:28",
             "MODIFIED_ON": "2023-06-14 14:21:28",
             "CREATED_BY_USER": "0x31000000000000000000000000000000",
@@ -1677,10 +1715,10 @@
             "HIDDENFLAG": 0,
             "EDITABLEFLAG": 1,
             "REQUIREDFLAG": 0,
-            "RELATED_OBJ": "",
+            "RELATED_OBJ": null,
             "SORTERPOS": null,
             "SORTERDIR": null,
-            "RELATED_OBJ_ATTR": "",
+            "RELATED_OBJ_ATTR": null,
             "SHORT_DESCRIPTION": null,
             "DATA_ADDRESS_PROPS": {
                 "odata_type": "Edm.Boolean"
@@ -1690,6 +1728,7 @@
             "CUSTOM_DATA_TYPE": null
         },
         {
+            "_EXPORT_SUMMARY": "Mail Nickname [mailNickname]",
             "CREATED_ON": "2023-06-14 14:21:28",
             "MODIFIED_ON": "2023-06-14 14:21:28",
             "CREATED_BY_USER": "0x31000000000000000000000000000000",
@@ -1723,10 +1762,10 @@
             "HIDDENFLAG": 0,
             "EDITABLEFLAG": 1,
             "REQUIREDFLAG": 0,
-            "RELATED_OBJ": "",
+            "RELATED_OBJ": null,
             "SORTERPOS": null,
             "SORTERDIR": null,
-            "RELATED_OBJ_ATTR": "",
+            "RELATED_OBJ_ATTR": null,
             "SHORT_DESCRIPTION": null,
             "DATA_ADDRESS_PROPS": {
                 "odata_type": "Edm.String"
@@ -1736,6 +1775,7 @@
             "CUSTOM_DATA_TYPE": null
         },
         {
+            "_EXPORT_SUMMARY": "Preferred Data Location [preferredDataLocation]",
             "CREATED_ON": "2023-06-14 14:21:28",
             "MODIFIED_ON": "2023-06-14 14:21:28",
             "CREATED_BY_USER": "0x31000000000000000000000000000000",
@@ -1769,10 +1809,10 @@
             "HIDDENFLAG": 0,
             "EDITABLEFLAG": 1,
             "REQUIREDFLAG": 0,
-            "RELATED_OBJ": "",
+            "RELATED_OBJ": null,
             "SORTERPOS": null,
             "SORTERDIR": null,
-            "RELATED_OBJ_ATTR": "",
+            "RELATED_OBJ_ATTR": null,
             "SHORT_DESCRIPTION": null,
             "DATA_ADDRESS_PROPS": {
                 "odata_type": "Edm.String"
@@ -1782,6 +1822,7 @@
             "CUSTOM_DATA_TYPE": null
         },
         {
+            "_EXPORT_SUMMARY": "On Premises Last Sync Date Time [onPremisesLastSyncDateTime]",
             "CREATED_ON": "2023-06-14 14:21:28",
             "MODIFIED_ON": "2023-06-14 14:21:28",
             "CREATED_BY_USER": "0x31000000000000000000000000000000",
@@ -1815,10 +1856,10 @@
             "HIDDENFLAG": 0,
             "EDITABLEFLAG": 1,
             "REQUIREDFLAG": 0,
-            "RELATED_OBJ": "",
+            "RELATED_OBJ": null,
             "SORTERPOS": null,
             "SORTERDIR": null,
-            "RELATED_OBJ_ATTR": "",
+            "RELATED_OBJ_ATTR": null,
             "SHORT_DESCRIPTION": null,
             "DATA_ADDRESS_PROPS": {
                 "odata_type": "Edm.DateTimeOffset"
@@ -1828,6 +1869,7 @@
             "CUSTOM_DATA_TYPE": null
         },
         {
+            "_EXPORT_SUMMARY": "Auto Subscribe New Members [autoSubscribeNewMembers]",
             "CREATED_ON": "2023-06-14 14:21:28",
             "MODIFIED_ON": "2023-06-14 14:21:28",
             "CREATED_BY_USER": "0x31000000000000000000000000000000",
@@ -1861,10 +1903,10 @@
             "HIDDENFLAG": 0,
             "EDITABLEFLAG": 1,
             "REQUIREDFLAG": 0,
-            "RELATED_OBJ": "",
+            "RELATED_OBJ": null,
             "SORTERPOS": null,
             "SORTERDIR": null,
-            "RELATED_OBJ_ATTR": "",
+            "RELATED_OBJ_ATTR": null,
             "SHORT_DESCRIPTION": null,
             "DATA_ADDRESS_PROPS": {
                 "odata_type": "Edm.Boolean"
@@ -1874,6 +1916,7 @@
             "CUSTOM_DATA_TYPE": null
         },
         {
+            "_EXPORT_SUMMARY": "On Premises Sam Account Name [onPremisesSamAccountName]",
             "CREATED_ON": "2023-06-14 14:21:28",
             "MODIFIED_ON": "2023-06-14 14:21:28",
             "CREATED_BY_USER": "0x31000000000000000000000000000000",
@@ -1907,10 +1950,10 @@
             "HIDDENFLAG": 0,
             "EDITABLEFLAG": 1,
             "REQUIREDFLAG": 0,
-            "RELATED_OBJ": "",
+            "RELATED_OBJ": null,
             "SORTERPOS": null,
             "SORTERDIR": null,
-            "RELATED_OBJ_ATTR": "",
+            "RELATED_OBJ_ATTR": null,
             "SHORT_DESCRIPTION": null,
             "DATA_ADDRESS_PROPS": {
                 "odata_type": "Edm.String"
@@ -1920,6 +1963,7 @@
             "CUSTOM_DATA_TYPE": null
         },
         {
+            "_EXPORT_SUMMARY": "On Premises Provisioning Errors [onPremisesProvisioningErrors]",
             "CREATED_ON": "2023-06-14 14:21:28",
             "MODIFIED_ON": "2023-06-14 14:21:28",
             "CREATED_BY_USER": "0x31000000000000000000000000000000",
@@ -1953,10 +1997,10 @@
             "HIDDENFLAG": 0,
             "EDITABLEFLAG": 1,
             "REQUIREDFLAG": 0,
-            "RELATED_OBJ": "",
+            "RELATED_OBJ": null,
             "SORTERPOS": null,
             "SORTERDIR": null,
-            "RELATED_OBJ_ATTR": "",
+            "RELATED_OBJ_ATTR": null,
             "SHORT_DESCRIPTION": null,
             "DATA_ADDRESS_PROPS": {
                 "odata_type": "Collection(graph.onPremisesProvisioningError)"
@@ -1966,6 +2010,7 @@
             "CUSTOM_DATA_TYPE": null
         },
         {
+            "_EXPORT_SUMMARY": "Theme [theme]",
             "CREATED_ON": "2023-06-14 14:21:28",
             "MODIFIED_ON": "2023-06-14 14:21:28",
             "CREATED_BY_USER": "0x31000000000000000000000000000000",
@@ -1999,10 +2044,10 @@
             "HIDDENFLAG": 0,
             "EDITABLEFLAG": 1,
             "REQUIREDFLAG": 0,
-            "RELATED_OBJ": "",
+            "RELATED_OBJ": null,
             "SORTERPOS": null,
             "SORTERDIR": null,
-            "RELATED_OBJ_ATTR": "",
+            "RELATED_OBJ_ATTR": null,
             "SHORT_DESCRIPTION": null,
             "DATA_ADDRESS_PROPS": {
                 "odata_type": "Edm.String"

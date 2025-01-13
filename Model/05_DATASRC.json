@@ -2,6 +2,11 @@
     "object_alias": "exface.Core.DATASRC",
     "columns": [
         {
+            "name": "_EXPORT_SUMMARY",
+            "hidden": true,
+            "attribute_alias": "LABEL"
+        },
+        {
             "name": "CREATED_ON",
             "attribute_alias": "CREATED_ON"
         },
@@ -56,6 +61,7 @@
     ],
     "rows": [
         {
+            "_EXPORT_SUMMARY": "Microsoft Graph",
             "CREATED_ON": "2021-01-22 18:04:46",
             "MODIFIED_ON": "2023-06-14 14:02:25",
             "CREATED_BY_USER": "0x31000000000000000000000000000000",
@@ -63,7 +69,7 @@
             "UID": "0x11eb982eee23e0b8982e025041000001",
             "APP": "0x11eb8233a3d3443c8233847beb4a5184",
             "DEFAULT_CONNECTION": "0x11eb8a60df22c5a08a60847beb4a5184",
-            "DEFAULT_QUERY_BUILDER": "exface\/UrlDataConnector\/QueryBuilders\/OData4JsonUrlBuilder.php",
+            "DEFAULT_QUERY_BUILDER": "exface/UrlDataConnector/QueryBuilders/OData4JsonUrlBuilder.php",
             "READABLE_FLAG": 1,
             "WRITABLE_FLAG": 1,
             "BASE_OBJECT": "0x11ebbb1b78f9d20ebb1b847beb4a5184",
@@ -71,6 +77,7 @@
             "ALIAS": "MICROSOFT_GRAPH"
         },
         {
+            "_EXPORT_SUMMARY": "Microsoft OpenID",
             "CREATED_ON": "2021-01-25 14:17:23",
             "MODIFIED_ON": "2021-01-25 14:17:23",
             "CREATED_BY_USER": "0x31000000000000000000000000000000",
@@ -78,10 +85,10 @@
             "UID": "0x11eba852a99549f8a852025041000001",
             "APP": "0x11eb8233a3d3443c8233847beb4a5184",
             "DEFAULT_CONNECTION": "0x11eb8bf5cc97ff468bf5025041000001",
-            "DEFAULT_QUERY_BUILDER": "exface\/UrlDataConnector\/QueryBuilders\/JsonUrlBuilder.php",
+            "DEFAULT_QUERY_BUILDER": "exface/UrlDataConnector/QueryBuilders/JsonUrlBuilder.php",
             "READABLE_FLAG": 1,
             "WRITABLE_FLAG": 0,
-            "BASE_OBJECT": "",
+            "BASE_OBJECT": null,
             "LABEL": "Microsoft OpenID",
             "ALIAS": "MICROSOFT_OPENID"
         }

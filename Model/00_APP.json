@@ -2,6 +2,11 @@
     "object_alias": "exface.Core.APP",
     "columns": [
         {
+            "name": "_EXPORT_SUMMARY",
+            "hidden": true,
+            "attribute_alias": "LABEL"
+        },
+        {
             "name": "CREATED_ON",
             "attribute_alias": "CREATED_ON"
         },
@@ -36,6 +41,7 @@
     ],
     "rows": [
         {
+            "_EXPORT_SUMMARY": "Microsoft 365 Connector [axenox.Microsoft365Connector]",
             "CREATED_ON": "2021-01-21 12:41:45",
             "MODIFIED_ON": "2021-01-21 12:41:45",
             "CREATED_BY_USER": "0x31000000000000000000000000000000",

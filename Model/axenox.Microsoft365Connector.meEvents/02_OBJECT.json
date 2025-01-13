@@ -2,6 +2,11 @@
     "object_alias": "exface.Core.OBJECT",
     "columns": [
         {
+            "name": "_EXPORT_SUMMARY",
+            "hidden": true,
+            "attribute_alias": "LABEL"
+        },
+        {
             "name": "CREATED_ON",
             "attribute_alias": "CREATED_ON"
         },
@@ -80,6 +85,7 @@
     ],
     "rows": [
         {
+            "_EXPORT_SUMMARY": "Event [axenox.Microsoft365Connector.meEvents]",
             "CREATED_ON": "2021-01-27 11:31:34",
             "MODIFIED_ON": "2021-01-27 11:31:34",
             "CREATED_BY_USER": "0x31000000000000000000000000000000",
@@ -94,14 +100,14 @@
             "DATA_SOURCE": "0x11eb982eee23e0b8982e025041000001",
             "APP": "0x11eb8233a3d3443c8233847beb4a5184",
             "SHORT_DESCRIPTION": "",
-            "PARENT_OBJECT": "",
+            "PARENT_OBJECT": null,
             "DATA_ADDRESS_PROPS": {
                 "odata_entitytype": "event",
                 "odata_namespace": "microsoft.graph"
             },
             "DEFAULT_EDITOR_UXON": null,
             "ALIAS": "meEvents",
-            "DATA_ADDRESS": "me\/events"
+            "DATA_ADDRESS": "me/events"
         }
     ],
     "totals_rows": [],

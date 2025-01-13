@@ -2,6 +2,11 @@
     "object_alias": "exface.Core.ATTRIBUTE",
     "columns": [
         {
+            "name": "_EXPORT_SUMMARY",
+            "hidden": true,
+            "attribute_alias": "LABEL"
+        },
+        {
             "name": "CREATED_ON",
             "attribute_alias": "CREATED_ON"
         },
@@ -172,6 +177,7 @@
     ],
     "rows": [
         {
+            "_EXPORT_SUMMARY": "Online Meeting Provider [onlineMeetingProvider]",
             "CREATED_ON": "2021-01-27 11:32:15",
             "MODIFIED_ON": "2021-01-27 11:32:15",
             "CREATED_BY_USER": "0x31000000000000000000000000000000",
@@ -205,10 +211,10 @@
             "HIDDENFLAG": 0,
             "EDITABLEFLAG": 1,
             "REQUIREDFLAG": 0,
-            "RELATED_OBJ": "",
+            "RELATED_OBJ": null,
             "SORTERPOS": null,
             "SORTERDIR": null,
-            "RELATED_OBJ_ATTR": "",
+            "RELATED_OBJ_ATTR": null,
             "SHORT_DESCRIPTION": null,
             "DATA_ADDRESS_PROPS": {
                 "odata_type": "graph.onlineMeetingProviderType"
@@ -218,6 +224,7 @@
             "CUSTOM_DATA_TYPE": null
         },
         {
+            "_EXPORT_SUMMARY": "Series Master Id [seriesMasterId]",
             "CREATED_ON": "2021-01-27 11:32:15",
             "MODIFIED_ON": "2021-01-27 11:32:15",
             "CREATED_BY_USER": "0x31000000000000000000000000000000",
@@ -251,10 +258,10 @@
             "HIDDENFLAG": 0,
             "EDITABLEFLAG": 1,
             "REQUIREDFLAG": 0,
-            "RELATED_OBJ": "",
+            "RELATED_OBJ": null,
             "SORTERPOS": null,
             "SORTERDIR": null,
-            "RELATED_OBJ_ATTR": "",
+            "RELATED_OBJ_ATTR": null,
             "SHORT_DESCRIPTION": null,
             "DATA_ADDRESS_PROPS": {
                 "odata_type": "Edm.String"
@@ -264,6 +271,7 @@
             "CUSTOM_DATA_TYPE": null
         },
         {
+            "_EXPORT_SUMMARY": "Type [type]",
             "CREATED_ON": "2021-01-27 11:32:15",
             "MODIFIED_ON": "2021-01-27 11:32:15",
             "CREATED_BY_USER": "0x31000000000000000000000000000000",
@@ -297,10 +305,10 @@
             "HIDDENFLAG": 0,
             "EDITABLEFLAG": 1,
             "REQUIREDFLAG": 0,
-            "RELATED_OBJ": "",
+            "RELATED_OBJ": null,
             "SORTERPOS": null,
             "SORTERDIR": null,
-            "RELATED_OBJ_ATTR": "",
+            "RELATED_OBJ_ATTR": null,
             "SHORT_DESCRIPTION": null,
             "DATA_ADDRESS_PROPS": {
                 "odata_type": "graph.eventType"
@@ -310,6 +318,7 @@
             "CUSTOM_DATA_TYPE": null
         },
         {
+            "_EXPORT_SUMMARY": "Is Cancelled [isCancelled]",
             "CREATED_ON": "2021-01-27 11:32:15",
             "MODIFIED_ON": "2021-01-27 11:32:15",
             "CREATED_BY_USER": "0x31000000000000000000000000000000",
@@ -343,10 +352,10 @@
             "HIDDENFLAG": 0,
             "EDITABLEFLAG": 1,
             "REQUIREDFLAG": 0,
-            "RELATED_OBJ": "",
+            "RELATED_OBJ": null,
             "SORTERPOS": null,
             "SORTERDIR": null,
-            "RELATED_OBJ_ATTR": "",
+            "RELATED_OBJ_ATTR": null,
             "SHORT_DESCRIPTION": null,
             "DATA_ADDRESS_PROPS": {
                 "odata_type": "Edm.Boolean"
@@ -356,6 +365,7 @@
             "CUSTOM_DATA_TYPE": null
         },
         {
+            "_EXPORT_SUMMARY": "Original Start Time Zone [originalStartTimeZone]",
             "CREATED_ON": "2021-01-27 11:32:15",
             "MODIFIED_ON": "2021-01-27 11:32:15",
             "CREATED_BY_USER": "0x31000000000000000000000000000000",
@@ -389,10 +399,10 @@
             "HIDDENFLAG": 0,
             "EDITABLEFLAG": 1,
             "REQUIREDFLAG": 0,
-            "RELATED_OBJ": "",
+            "RELATED_OBJ": null,
             "SORTERPOS": null,
             "SORTERDIR": null,
-            "RELATED_OBJ_ATTR": "",
+            "RELATED_OBJ_ATTR": null,
             "SHORT_DESCRIPTION": null,
             "DATA_ADDRESS_PROPS": {
                 "odata_type": "Edm.String"
@@ -402,6 +412,7 @@
             "CUSTOM_DATA_TYPE": null
         },
         {
+            "_EXPORT_SUMMARY": "Is Online Meeting [isOnlineMeeting]",
             "CREATED_ON": "2021-01-27 11:32:15",
             "MODIFIED_ON": "2021-01-27 11:32:15",
             "CREATED_BY_USER": "0x31000000000000000000000000000000",
@@ -435,10 +446,10 @@
             "HIDDENFLAG": 0,
             "EDITABLEFLAG": 1,
             "REQUIREDFLAG": 0,
-            "RELATED_OBJ": "",
+            "RELATED_OBJ": null,
             "SORTERPOS": null,
             "SORTERDIR": null,
-            "RELATED_OBJ_ATTR": "",
+            "RELATED_OBJ_ATTR": null,
             "SHORT_DESCRIPTION": null,
             "DATA_ADDRESS_PROPS": {
                 "odata_type": "Edm.Boolean"
@@ -448,6 +459,7 @@
             "CUSTOM_DATA_TYPE": null
         },
         {
+            "_EXPORT_SUMMARY": "Recurrence [recurrence]",
             "CREATED_ON": "2021-01-27 11:32:15",
             "MODIFIED_ON": "2021-01-27 11:32:15",
             "CREATED_BY_USER": "0x31000000000000000000000000000000",
@@ -481,10 +493,10 @@
             "HIDDENFLAG": 0,
             "EDITABLEFLAG": 1,
             "REQUIREDFLAG": 0,
-            "RELATED_OBJ": "",
+            "RELATED_OBJ": null,
             "SORTERPOS": null,
             "SORTERDIR": null,
-            "RELATED_OBJ_ATTR": "",
+            "RELATED_OBJ_ATTR": null,
             "SHORT_DESCRIPTION": null,
             "DATA_ADDRESS_PROPS": {
                 "odata_type": "graph.patternedRecurrence"
@@ -494,6 +506,7 @@
             "CUSTOM_DATA_TYPE": null
         },
         {
+            "_EXPORT_SUMMARY": "Importance [importance]",
             "CREATED_ON": "2021-01-27 11:32:15",
             "MODIFIED_ON": "2021-01-27 11:32:15",
             "CREATED_BY_USER": "0x31000000000000000000000000000000",
@@ -527,10 +540,10 @@
             "HIDDENFLAG": 0,
             "EDITABLEFLAG": 1,
             "REQUIREDFLAG": 0,
-            "RELATED_OBJ": "",
+            "RELATED_OBJ": null,
             "SORTERPOS": null,
             "SORTERDIR": null,
-            "RELATED_OBJ_ATTR": "",
+            "RELATED_OBJ_ATTR": null,
             "SHORT_DESCRIPTION": null,
             "DATA_ADDRESS_PROPS": {
                 "odata_type": "graph.importance"
@@ -540,6 +553,7 @@
             "CUSTOM_DATA_TYPE": null
         },
         {
+            "_EXPORT_SUMMARY": "Organizer [organizer]",
             "CREATED_ON": "2021-01-27 11:32:15",
             "MODIFIED_ON": "2021-01-27 11:32:15",
             "CREATED_BY_USER": "0x31000000000000000000000000000000",
@@ -573,10 +587,10 @@
             "HIDDENFLAG": 0,
             "EDITABLEFLAG": 1,
             "REQUIREDFLAG": 0,
-            "RELATED_OBJ": "",
+            "RELATED_OBJ": null,
             "SORTERPOS": null,
             "SORTERDIR": null,
-            "RELATED_OBJ_ATTR": "",
+            "RELATED_OBJ_ATTR": null,
             "SHORT_DESCRIPTION": null,
             "DATA_ADDRESS_PROPS": {
                 "odata_type": "graph.recipient"
@@ -586,6 +600,7 @@
             "CUSTOM_DATA_TYPE": null
         },
         {
+            "_EXPORT_SUMMARY": "Online Meeting Url [onlineMeetingUrl]",
             "CREATED_ON": "2021-01-27 11:32:15",
             "MODIFIED_ON": "2021-01-27 11:32:15",
             "CREATED_BY_USER": "0x31000000000000000000000000000000",
@@ -619,10 +634,10 @@
             "HIDDENFLAG": 0,
             "EDITABLEFLAG": 1,
             "REQUIREDFLAG": 0,
-            "RELATED_OBJ": "",
+            "RELATED_OBJ": null,
             "SORTERPOS": null,
             "SORTERDIR": null,
-            "RELATED_OBJ_ATTR": "",
+            "RELATED_OBJ_ATTR": null,
             "SHORT_DESCRIPTION": null,
             "DATA_ADDRESS_PROPS": {
                 "odata_type": "Edm.String"
@@ -632,6 +647,7 @@
             "CUSTOM_DATA_TYPE": null
         },
         {
+            "_EXPORT_SUMMARY": "Online Meeting [onlineMeeting]",
             "CREATED_ON": "2021-01-27 11:32:15",
             "MODIFIED_ON": "2021-01-27 11:32:15",
             "CREATED_BY_USER": "0x31000000000000000000000000000000",
@@ -665,10 +681,10 @@
             "HIDDENFLAG": 0,
             "EDITABLEFLAG": 1,
             "REQUIREDFLAG": 0,
-            "RELATED_OBJ": "",
+            "RELATED_OBJ": null,
             "SORTERPOS": null,
             "SORTERDIR": null,
-            "RELATED_OBJ_ATTR": "",
+            "RELATED_OBJ_ATTR": null,
             "SHORT_DESCRIPTION": null,
             "DATA_ADDRESS_PROPS": {
                 "odata_type": "graph.onlineMeetingInfo"
@@ -678,6 +694,7 @@
             "CUSTOM_DATA_TYPE": null
         },
         {
+            "_EXPORT_SUMMARY": "Original End Time Zone [originalEndTimeZone]",
             "CREATED_ON": "2021-01-27 11:32:15",
             "MODIFIED_ON": "2021-01-27 11:32:15",
             "CREATED_BY_USER": "0x31000000000000000000000000000000",
@@ -711,10 +728,10 @@
             "HIDDENFLAG": 0,
             "EDITABLEFLAG": 1,
             "REQUIREDFLAG": 0,
-            "RELATED_OBJ": "",
+            "RELATED_OBJ": null,
             "SORTERPOS": null,
             "SORTERDIR": null,
-            "RELATED_OBJ_ATTR": "",
+            "RELATED_OBJ_ATTR": null,
             "SHORT_DESCRIPTION": null,
             "DATA_ADDRESS_PROPS": {
                 "odata_type": "Edm.String"
@@ -724,6 +741,7 @@
             "CUSTOM_DATA_TYPE": null
         },
         {
+            "_EXPORT_SUMMARY": "Original Start [originalStart]",
             "CREATED_ON": "2021-01-27 11:32:15",
             "MODIFIED_ON": "2021-01-27 11:32:15",
             "CREATED_BY_USER": "0x31000000000000000000000000000000",
@@ -757,10 +775,10 @@
             "HIDDENFLAG": 0,
             "EDITABLEFLAG": 1,
             "REQUIREDFLAG": 0,
-            "RELATED_OBJ": "",
+            "RELATED_OBJ": null,
             "SORTERPOS": null,
             "SORTERDIR": null,
-            "RELATED_OBJ_ATTR": "",
+            "RELATED_OBJ_ATTR": null,
             "SHORT_DESCRIPTION": null,
             "DATA_ADDRESS_PROPS": {
                 "odata_type": "Edm.DateTimeOffset"
@@ -770,6 +788,7 @@
             "CUSTOM_DATA_TYPE": null
         },
         {
+            "_EXPORT_SUMMARY": "Subject [subject]",
             "CREATED_ON": "2021-01-27 11:32:15",
             "MODIFIED_ON": "2021-01-27 11:32:15",
             "CREATED_BY_USER": "0x31000000000000000000000000000000",
@@ -803,10 +822,10 @@
             "HIDDENFLAG": 0,
             "EDITABLEFLAG": 1,
             "REQUIREDFLAG": 0,
-            "RELATED_OBJ": "",
+            "RELATED_OBJ": null,
             "SORTERPOS": null,
             "SORTERDIR": null,
-            "RELATED_OBJ_ATTR": "",
+            "RELATED_OBJ_ATTR": null,
             "SHORT_DESCRIPTION": null,
             "DATA_ADDRESS_PROPS": {
                 "odata_type": "Edm.String"
@@ -816,6 +835,7 @@
             "CUSTOM_DATA_TYPE": null
         },
         {
+            "_EXPORT_SUMMARY": "Response Status [responseStatus]",
             "CREATED_ON": "2021-01-27 11:32:15",
             "MODIFIED_ON": "2021-01-27 11:32:15",
             "CREATED_BY_USER": "0x31000000000000000000000000000000",
@@ -849,10 +869,10 @@
             "HIDDENFLAG": 0,
             "EDITABLEFLAG": 1,
             "REQUIREDFLAG": 0,
-            "RELATED_OBJ": "",
+            "RELATED_OBJ": null,
             "SORTERPOS": null,
             "SORTERDIR": null,
-            "RELATED_OBJ_ATTR": "",
+            "RELATED_OBJ_ATTR": null,
             "SHORT_DESCRIPTION": null,
             "DATA_ADDRESS_PROPS": {
                 "odata_type": "graph.responseStatus"
@@ -862,6 +882,7 @@
             "CUSTOM_DATA_TYPE": null
         },
         {
+            "_EXPORT_SUMMARY": "Start [start]",
             "CREATED_ON": "2021-01-27 11:32:15",
             "MODIFIED_ON": "2021-01-27 11:32:15",
             "CREATED_BY_USER": "0x31000000000000000000000000000000",
@@ -895,10 +916,10 @@
             "HIDDENFLAG": 0,
             "EDITABLEFLAG": 1,
             "REQUIREDFLAG": 0,
-            "RELATED_OBJ": "",
+            "RELATED_OBJ": null,
             "SORTERPOS": null,
             "SORTERDIR": null,
-            "RELATED_OBJ_ATTR": "",
+            "RELATED_OBJ_ATTR": null,
             "SHORT_DESCRIPTION": null,
             "DATA_ADDRESS_PROPS": {
                 "odata_type": "graph.dateTimeTimeZone"
@@ -908,6 +929,7 @@
             "CUSTOM_DATA_TYPE": null
         },
         {
+            "_EXPORT_SUMMARY": "Is Organizer [isOrganizer]",
             "CREATED_ON": "2021-01-27 11:32:15",
             "MODIFIED_ON": "2021-01-27 11:32:15",
             "CREATED_BY_USER": "0x31000000000000000000000000000000",
@@ -941,10 +963,10 @@
             "HIDDENFLAG": 0,
             "EDITABLEFLAG": 1,
             "REQUIREDFLAG": 0,
-            "RELATED_OBJ": "",
+            "RELATED_OBJ": null,
             "SORTERPOS": null,
             "SORTERDIR": null,
-            "RELATED_OBJ_ATTR": "",
+            "RELATED_OBJ_ATTR": null,
             "SHORT_DESCRIPTION": null,
             "DATA_ADDRESS_PROPS": {
                 "odata_type": "Edm.Boolean"
@@ -954,6 +976,7 @@
             "CUSTOM_DATA_TYPE": null
         },
         {
+            "_EXPORT_SUMMARY": "I Cal U Id [iCalUId]",
             "CREATED_ON": "2021-01-27 11:32:15",
             "MODIFIED_ON": "2021-01-27 11:32:15",
             "CREATED_BY_USER": "0x31000000000000000000000000000000",
@@ -987,10 +1010,10 @@
             "HIDDENFLAG": 0,
             "EDITABLEFLAG": 1,
             "REQUIREDFLAG": 0,
-            "RELATED_OBJ": "",
+            "RELATED_OBJ": null,
             "SORTERPOS": null,
             "SORTERDIR": null,
-            "RELATED_OBJ_ATTR": "",
+            "RELATED_OBJ_ATTR": null,
             "SHORT_DESCRIPTION": null,
             "DATA_ADDRESS_PROPS": {
                 "odata_type": "Edm.String"
@@ -1000,6 +1023,7 @@
             "CUSTOM_DATA_TYPE": null
         },
         {
+            "_EXPORT_SUMMARY": "Attendees [attendees]",
             "CREATED_ON": "2021-01-27 11:32:15",
             "MODIFIED_ON": "2021-01-27 11:32:15",
             "CREATED_BY_USER": "0x31000000000000000000000000000000",
@@ -1033,10 +1057,10 @@
             "HIDDENFLAG": 0,
             "EDITABLEFLAG": 1,
             "REQUIREDFLAG": 0,
-            "RELATED_OBJ": "",
+            "RELATED_OBJ": null,
             "SORTERPOS": null,
             "SORTERDIR": null,
-            "RELATED_OBJ_ATTR": "",
+            "RELATED_OBJ_ATTR": null,
             "SHORT_DESCRIPTION": null,
             "DATA_ADDRESS_PROPS": {
                 "odata_type": "Collection(graph.attendee)"
@@ -1046,6 +1070,7 @@
             "CUSTOM_DATA_TYPE": null
         },
         {
+            "_EXPORT_SUMMARY": "Sensitivity [sensitivity]",
             "CREATED_ON": "2021-01-27 11:32:15",
             "MODIFIED_ON": "2021-01-27 11:32:15",
             "CREATED_BY_USER": "0x31000000000000000000000000000000",
@@ -1079,10 +1104,10 @@
             "HIDDENFLAG": 0,
             "EDITABLEFLAG": 1,
             "REQUIREDFLAG": 0,
-            "RELATED_OBJ": "",
+            "RELATED_OBJ": null,
             "SORTERPOS": null,
             "SORTERDIR": null,
-            "RELATED_OBJ_ATTR": "",
+            "RELATED_OBJ_ATTR": null,
             "SHORT_DESCRIPTION": null,
             "DATA_ADDRESS_PROPS": {
                 "odata_type": "graph.sensitivity"
@@ -1092,6 +1117,7 @@
             "CUSTOM_DATA_TYPE": null
         },
         {
+            "_EXPORT_SUMMARY": "Is All Day [isAllDay]",
             "CREATED_ON": "2021-01-27 11:32:15",
             "MODIFIED_ON": "2021-01-27 11:32:15",
             "CREATED_BY_USER": "0x31000000000000000000000000000000",
@@ -1125,10 +1151,10 @@
             "HIDDENFLAG": 0,
             "EDITABLEFLAG": 1,
             "REQUIREDFLAG": 0,
-            "RELATED_OBJ": "",
+            "RELATED_OBJ": null,
             "SORTERPOS": null,
             "SORTERDIR": null,
-            "RELATED_OBJ_ATTR": "",
+            "RELATED_OBJ_ATTR": null,
             "SHORT_DESCRIPTION": null,
             "DATA_ADDRESS_PROPS": {
                 "odata_type": "Edm.Boolean"
@@ -1138,6 +1164,7 @@
             "CUSTOM_DATA_TYPE": null
         },
         {
+            "_EXPORT_SUMMARY": "End [end]",
             "CREATED_ON": "2021-01-27 11:32:15",
             "MODIFIED_ON": "2021-01-27 11:32:15",
             "CREATED_BY_USER": "0x31000000000000000000000000000000",
@@ -1171,10 +1198,10 @@
             "HIDDENFLAG": 0,
             "EDITABLEFLAG": 1,
             "REQUIREDFLAG": 0,
-            "RELATED_OBJ": "",
+            "RELATED_OBJ": null,
             "SORTERPOS": null,
             "SORTERDIR": null,
-            "RELATED_OBJ_ATTR": "",
+            "RELATED_OBJ_ATTR": null,
             "SHORT_DESCRIPTION": null,
             "DATA_ADDRESS_PROPS": {
                 "odata_type": "graph.dateTimeTimeZone"
@@ -1184,6 +1211,7 @@
             "CUSTOM_DATA_TYPE": null
         },
         {
+            "_EXPORT_SUMMARY": "Is Reminder On [isReminderOn]",
             "CREATED_ON": "2021-01-27 11:32:15",
             "MODIFIED_ON": "2021-01-27 11:32:15",
             "CREATED_BY_USER": "0x31000000000000000000000000000000",
@@ -1217,10 +1245,10 @@
             "HIDDENFLAG": 0,
             "EDITABLEFLAG": 1,
             "REQUIREDFLAG": 0,
-            "RELATED_OBJ": "",
+            "RELATED_OBJ": null,
             "SORTERPOS": null,
             "SORTERDIR": null,
-            "RELATED_OBJ_ATTR": "",
+            "RELATED_OBJ_ATTR": null,
             "SHORT_DESCRIPTION": null,
             "DATA_ADDRESS_PROPS": {
                 "odata_type": "Edm.Boolean"
@@ -1230,6 +1258,7 @@
             "CUSTOM_DATA_TYPE": null
         },
         {
+            "_EXPORT_SUMMARY": "Body [body]",
             "CREATED_ON": "2021-01-27 11:32:15",
             "MODIFIED_ON": "2021-01-27 11:32:15",
             "CREATED_BY_USER": "0x31000000000000000000000000000000",
@@ -1263,10 +1292,10 @@
             "HIDDENFLAG": 0,
             "EDITABLEFLAG": 1,
             "REQUIREDFLAG": 0,
-            "RELATED_OBJ": "",
+            "RELATED_OBJ": null,
             "SORTERPOS": null,
             "SORTERDIR": null,
-            "RELATED_OBJ_ATTR": "",
+            "RELATED_OBJ_ATTR": null,
             "SHORT_DESCRIPTION": null,
             "DATA_ADDRESS_PROPS": {
                 "odata_type": "graph.itemBody"
@@ -1276,6 +1305,7 @@
             "CUSTOM_DATA_TYPE": null
         },
         {
+            "_EXPORT_SUMMARY": "Locations [locations]",
             "CREATED_ON": "2021-01-27 11:32:15",
             "MODIFIED_ON": "2021-01-27 11:32:15",
             "CREATED_BY_USER": "0x31000000000000000000000000000000",
@@ -1309,10 +1339,10 @@
             "HIDDENFLAG": 0,
             "EDITABLEFLAG": 1,
             "REQUIREDFLAG": 0,
-            "RELATED_OBJ": "",
+            "RELATED_OBJ": null,
             "SORTERPOS": null,
             "SORTERDIR": null,
-            "RELATED_OBJ_ATTR": "",
+            "RELATED_OBJ_ATTR": null,
             "SHORT_DESCRIPTION": null,
             "DATA_ADDRESS_PROPS": {
                 "odata_type": "Collection(graph.location)"
@@ -1322,6 +1352,7 @@
             "CUSTOM_DATA_TYPE": null
         },
         {
+            "_EXPORT_SUMMARY": "Body Preview [bodyPreview]",
             "CREATED_ON": "2021-01-27 11:32:15",
             "MODIFIED_ON": "2021-01-27 11:32:15",
             "CREATED_BY_USER": "0x31000000000000000000000000000000",
@@ -1355,10 +1386,10 @@
             "HIDDENFLAG": 0,
             "EDITABLEFLAG": 1,
             "REQUIREDFLAG": 0,
-            "RELATED_OBJ": "",
+            "RELATED_OBJ": null,
             "SORTERPOS": null,
             "SORTERDIR": null,
-            "RELATED_OBJ_ATTR": "",
+            "RELATED_OBJ_ATTR": null,
             "SHORT_DESCRIPTION": null,
             "DATA_ADDRESS_PROPS": {
                 "odata_type": "Edm.String"
@@ -1368,6 +1399,7 @@
             "CUSTOM_DATA_TYPE": null
         },
         {
+            "_EXPORT_SUMMARY": "Location [location]",
             "CREATED_ON": "2021-01-27 11:32:15",
             "MODIFIED_ON": "2021-01-27 11:32:15",
             "CREATED_BY_USER": "0x31000000000000000000000000000000",
@@ -1401,10 +1433,10 @@
             "HIDDENFLAG": 0,
             "EDITABLEFLAG": 1,
             "REQUIREDFLAG": 0,
-            "RELATED_OBJ": "",
+            "RELATED_OBJ": null,
             "SORTERPOS": null,
             "SORTERDIR": null,
-            "RELATED_OBJ_ATTR": "",
+            "RELATED_OBJ_ATTR": null,
             "SHORT_DESCRIPTION": null,
             "DATA_ADDRESS_PROPS": {
                 "odata_type": "graph.location"
@@ -1414,6 +1446,7 @@
             "CUSTOM_DATA_TYPE": null
         },
         {
+            "_EXPORT_SUMMARY": "Reminder Minutes Before Start [reminderMinutesBeforeStart]",
             "CREATED_ON": "2021-01-27 11:32:15",
             "MODIFIED_ON": "2021-01-27 11:32:15",
             "CREATED_BY_USER": "0x31000000000000000000000000000000",
@@ -1447,10 +1480,10 @@
             "HIDDENFLAG": 0,
             "EDITABLEFLAG": 1,
             "REQUIREDFLAG": 0,
-            "RELATED_OBJ": "",
+            "RELATED_OBJ": null,
             "SORTERPOS": null,
             "SORTERDIR": null,
-            "RELATED_OBJ_ATTR": "",
+            "RELATED_OBJ_ATTR": null,
             "SHORT_DESCRIPTION": null,
             "DATA_ADDRESS_PROPS": {
                 "odata_type": "Edm.Int32"
@@ -1460,6 +1493,7 @@
             "CUSTOM_DATA_TYPE": null
         },
         {
+            "_EXPORT_SUMMARY": "Has Attachments [hasAttachments]",
             "CREATED_ON": "2021-01-27 11:32:15",
             "MODIFIED_ON": "2021-01-27 11:32:15",
             "CREATED_BY_USER": "0x31000000000000000000000000000000",
@@ -1493,10 +1527,10 @@
             "HIDDENFLAG": 0,
             "EDITABLEFLAG": 1,
             "REQUIREDFLAG": 0,
-            "RELATED_OBJ": "",
+            "RELATED_OBJ": null,
             "SORTERPOS": null,
             "SORTERDIR": null,
-            "RELATED_OBJ_ATTR": "",
+            "RELATED_OBJ_ATTR": null,
             "SHORT_DESCRIPTION": null,
             "DATA_ADDRESS_PROPS": {
                 "odata_type": "Edm.Boolean"
@@ -1506,6 +1540,7 @@
             "CUSTOM_DATA_TYPE": null
         },
         {
+            "_EXPORT_SUMMARY": "Response Requested [responseRequested]",
             "CREATED_ON": "2021-01-27 11:32:15",
             "MODIFIED_ON": "2021-01-27 11:32:15",
             "CREATED_BY_USER": "0x31000000000000000000000000000000",
@@ -1539,10 +1574,10 @@
             "HIDDENFLAG": 0,
             "EDITABLEFLAG": 1,
             "REQUIREDFLAG": 0,
-            "RELATED_OBJ": "",
+            "RELATED_OBJ": null,
             "SORTERPOS": null,
             "SORTERDIR": null,
-            "RELATED_OBJ_ATTR": "",
+            "RELATED_OBJ_ATTR": null,
             "SHORT_DESCRIPTION": null,
             "DATA_ADDRESS_PROPS": {
                 "odata_type": "Edm.Boolean"
@@ -1552,6 +1587,7 @@
             "CUSTOM_DATA_TYPE": null
         },
         {
+            "_EXPORT_SUMMARY": "Hide Attendees [hideAttendees]",
             "CREATED_ON": "2021-01-27 11:32:15",
             "MODIFIED_ON": "2021-01-27 11:32:15",
             "CREATED_BY_USER": "0x31000000000000000000000000000000",
@@ -1585,10 +1621,10 @@
             "HIDDENFLAG": 0,
             "EDITABLEFLAG": 1,
             "REQUIREDFLAG": 0,
-            "RELATED_OBJ": "",
+            "RELATED_OBJ": null,
             "SORTERPOS": null,
             "SORTERDIR": null,
-            "RELATED_OBJ_ATTR": "",
+            "RELATED_OBJ_ATTR": null,
             "SHORT_DESCRIPTION": null,
             "DATA_ADDRESS_PROPS": {
                 "odata_type": "Edm.Boolean"
@@ -1598,6 +1634,7 @@
             "CUSTOM_DATA_TYPE": null
         },
         {
+            "_EXPORT_SUMMARY": "Transaction Id [transactionId]",
             "CREATED_ON": "2021-01-27 11:32:15",
             "MODIFIED_ON": "2021-01-27 11:32:15",
             "CREATED_BY_USER": "0x31000000000000000000000000000000",
@@ -1631,10 +1668,10 @@
             "HIDDENFLAG": 0,
             "EDITABLEFLAG": 1,
             "REQUIREDFLAG": 0,
-            "RELATED_OBJ": "",
+            "RELATED_OBJ": null,
             "SORTERPOS": null,
             "SORTERDIR": null,
-            "RELATED_OBJ_ATTR": "",
+            "RELATED_OBJ_ATTR": null,
             "SHORT_DESCRIPTION": null,
             "DATA_ADDRESS_PROPS": {
                 "odata_type": "Edm.String"
@@ -1644,6 +1681,7 @@
             "CUSTOM_DATA_TYPE": null
         },
         {
+            "_EXPORT_SUMMARY": "Is Draft [isDraft]",
             "CREATED_ON": "2021-01-27 11:32:15",
             "MODIFIED_ON": "2021-01-27 11:32:15",
             "CREATED_BY_USER": "0x31000000000000000000000000000000",
@@ -1677,10 +1715,10 @@
             "HIDDENFLAG": 0,
             "EDITABLEFLAG": 1,
             "REQUIREDFLAG": 0,
-            "RELATED_OBJ": "",
+            "RELATED_OBJ": null,
             "SORTERPOS": null,
             "SORTERDIR": null,
-            "RELATED_OBJ_ATTR": "",
+            "RELATED_OBJ_ATTR": null,
             "SHORT_DESCRIPTION": null,
             "DATA_ADDRESS_PROPS": {
                 "odata_type": "Edm.Boolean"
@@ -1690,6 +1728,7 @@
             "CUSTOM_DATA_TYPE": null
         },
         {
+            "_EXPORT_SUMMARY": "Allow New Time Proposals [allowNewTimeProposals]",
             "CREATED_ON": "2021-01-27 11:32:15",
             "MODIFIED_ON": "2021-01-27 11:32:15",
             "CREATED_BY_USER": "0x31000000000000000000000000000000",
@@ -1723,10 +1762,10 @@
             "HIDDENFLAG": 0,
             "EDITABLEFLAG": 1,
             "REQUIREDFLAG": 0,
-            "RELATED_OBJ": "",
+            "RELATED_OBJ": null,
             "SORTERPOS": null,
             "SORTERDIR": null,
-            "RELATED_OBJ_ATTR": "",
+            "RELATED_OBJ_ATTR": null,
             "SHORT_DESCRIPTION": null,
             "DATA_ADDRESS_PROPS": {
                 "odata_type": "Edm.Boolean"
@@ -1736,6 +1775,7 @@
             "CUSTOM_DATA_TYPE": null
         },
         {
+            "_EXPORT_SUMMARY": "Web Link [webLink]",
             "CREATED_ON": "2021-01-27 11:32:15",
             "MODIFIED_ON": "2021-01-27 11:32:15",
             "CREATED_BY_USER": "0x31000000000000000000000000000000",
@@ -1769,10 +1809,10 @@
             "HIDDENFLAG": 0,
             "EDITABLEFLAG": 1,
             "REQUIREDFLAG": 0,
-            "RELATED_OBJ": "",
+            "RELATED_OBJ": null,
             "SORTERPOS": null,
             "SORTERDIR": null,
-            "RELATED_OBJ_ATTR": "",
+            "RELATED_OBJ_ATTR": null,
             "SHORT_DESCRIPTION": null,
             "DATA_ADDRESS_PROPS": {
                 "odata_type": "Edm.String"
@@ -1782,6 +1822,7 @@
             "CUSTOM_DATA_TYPE": null
         },
         {
+            "_EXPORT_SUMMARY": "Show As [showAs]",
             "CREATED_ON": "2021-01-27 11:32:15",
             "MODIFIED_ON": "2021-01-27 11:32:15",
             "CREATED_BY_USER": "0x31000000000000000000000000000000",
@@ -1815,10 +1856,10 @@
             "HIDDENFLAG": 0,
             "EDITABLEFLAG": 1,
             "REQUIREDFLAG": 0,
-            "RELATED_OBJ": "",
+            "RELATED_OBJ": null,
             "SORTERPOS": null,
             "SORTERDIR": null,
-            "RELATED_OBJ_ATTR": "",
+            "RELATED_OBJ_ATTR": null,
             "SHORT_DESCRIPTION": null,
             "DATA_ADDRESS_PROPS": {
                 "odata_type": "graph.freeBusyStatus"
