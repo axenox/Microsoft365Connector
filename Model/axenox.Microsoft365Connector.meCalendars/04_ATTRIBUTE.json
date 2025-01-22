@@ -2,6 +2,11 @@
     "object_alias": "exface.Core.ATTRIBUTE",
     "columns": [
         {
+            "name": "_EXPORT_SUMMARY",
+            "hidden": true,
+            "attribute_alias": "LABEL"
+        },
+        {
             "name": "CREATED_ON",
             "attribute_alias": "CREATED_ON"
         },
@@ -172,6 +177,7 @@
     ],
     "rows": [
         {
+            "_EXPORT_SUMMARY": "Calendar Name [name]",
             "CREATED_ON": "2021-01-25 09:39:09",
             "MODIFIED_ON": "2021-01-25 09:39:09",
             "CREATED_BY_USER": "0x31000000000000000000000000000000",
@@ -205,10 +211,10 @@
             "HIDDENFLAG": 0,
             "EDITABLEFLAG": 0,
             "REQUIREDFLAG": 0,
-            "RELATED_OBJ": "",
+            "RELATED_OBJ": null,
             "SORTERPOS": null,
             "SORTERDIR": "",
-            "RELATED_OBJ_ATTR": "",
+            "RELATED_OBJ_ATTR": null,
             "SHORT_DESCRIPTION": "",
             "DATA_ADDRESS_PROPS": null,
             "DEFAULT_VALUE": "",
@@ -216,6 +222,7 @@
             "CUSTOM_DATA_TYPE": null
         },
         {
+            "_EXPORT_SUMMARY": "Is Removable [isRemovable]",
             "CREATED_ON": "2021-01-27 11:28:36",
             "MODIFIED_ON": "2021-01-27 11:28:36",
             "CREATED_BY_USER": "0x31000000000000000000000000000000",
@@ -249,10 +256,10 @@
             "HIDDENFLAG": 0,
             "EDITABLEFLAG": 1,
             "REQUIREDFLAG": 0,
-            "RELATED_OBJ": "",
+            "RELATED_OBJ": null,
             "SORTERPOS": null,
             "SORTERDIR": null,
-            "RELATED_OBJ_ATTR": "",
+            "RELATED_OBJ_ATTR": null,
             "SHORT_DESCRIPTION": null,
             "DATA_ADDRESS_PROPS": {
                 "odata_type": "Edm.Boolean"
@@ -262,6 +269,7 @@
             "CUSTOM_DATA_TYPE": null
         },
         {
+            "_EXPORT_SUMMARY": "Default Online Meeting Provider [defaultOnlineMeetingProvider]",
             "CREATED_ON": "2021-01-27 11:28:36",
             "MODIFIED_ON": "2021-01-27 11:28:36",
             "CREATED_BY_USER": "0x31000000000000000000000000000000",
@@ -295,10 +303,10 @@
             "HIDDENFLAG": 0,
             "EDITABLEFLAG": 1,
             "REQUIREDFLAG": 0,
-            "RELATED_OBJ": "",
+            "RELATED_OBJ": null,
             "SORTERPOS": null,
             "SORTERDIR": null,
-            "RELATED_OBJ_ATTR": "",
+            "RELATED_OBJ_ATTR": null,
             "SHORT_DESCRIPTION": null,
             "DATA_ADDRESS_PROPS": {
                 "odata_type": "graph.onlineMeetingProviderType"
@@ -308,6 +316,7 @@
             "CUSTOM_DATA_TYPE": null
         },
         {
+            "_EXPORT_SUMMARY": "Allowed Online Meeting Providers [allowedOnlineMeetingProviders]",
             "CREATED_ON": "2021-01-27 11:28:36",
             "MODIFIED_ON": "2021-01-27 11:28:36",
             "CREATED_BY_USER": "0x31000000000000000000000000000000",
@@ -341,10 +350,10 @@
             "HIDDENFLAG": 0,
             "EDITABLEFLAG": 1,
             "REQUIREDFLAG": 0,
-            "RELATED_OBJ": "",
+            "RELATED_OBJ": null,
             "SORTERPOS": null,
             "SORTERDIR": null,
-            "RELATED_OBJ_ATTR": "",
+            "RELATED_OBJ_ATTR": null,
             "SHORT_DESCRIPTION": null,
             "DATA_ADDRESS_PROPS": {
                 "odata_type": "Collection(graph.onlineMeetingProviderType)"
@@ -354,6 +363,7 @@
             "CUSTOM_DATA_TYPE": null
         },
         {
+            "_EXPORT_SUMMARY": "Owner [owner]",
             "CREATED_ON": "2021-01-27 11:28:36",
             "MODIFIED_ON": "2021-01-27 11:28:36",
             "CREATED_BY_USER": "0x31000000000000000000000000000000",
@@ -387,10 +397,10 @@
             "HIDDENFLAG": 0,
             "EDITABLEFLAG": 1,
             "REQUIREDFLAG": 0,
-            "RELATED_OBJ": "",
+            "RELATED_OBJ": null,
             "SORTERPOS": null,
             "SORTERDIR": null,
-            "RELATED_OBJ_ATTR": "",
+            "RELATED_OBJ_ATTR": null,
             "SHORT_DESCRIPTION": null,
             "DATA_ADDRESS_PROPS": {
                 "odata_type": "graph.emailAddress"
@@ -400,6 +410,7 @@
             "CUSTOM_DATA_TYPE": null
         },
         {
+            "_EXPORT_SUMMARY": "Can Edit [canEdit]",
             "CREATED_ON": "2021-01-27 11:28:36",
             "MODIFIED_ON": "2021-01-27 11:28:36",
             "CREATED_BY_USER": "0x31000000000000000000000000000000",
@@ -433,10 +444,10 @@
             "HIDDENFLAG": 0,
             "EDITABLEFLAG": 1,
             "REQUIREDFLAG": 0,
-            "RELATED_OBJ": "",
+            "RELATED_OBJ": null,
             "SORTERPOS": null,
             "SORTERDIR": null,
-            "RELATED_OBJ_ATTR": "",
+            "RELATED_OBJ_ATTR": null,
             "SHORT_DESCRIPTION": null,
             "DATA_ADDRESS_PROPS": {
                 "odata_type": "Edm.Boolean"
@@ -446,6 +457,7 @@
             "CUSTOM_DATA_TYPE": null
         },
         {
+            "_EXPORT_SUMMARY": "Hex Color [hexColor]",
             "CREATED_ON": "2021-01-27 11:28:36",
             "MODIFIED_ON": "2021-01-27 11:28:36",
             "CREATED_BY_USER": "0x31000000000000000000000000000000",
@@ -479,10 +491,10 @@
             "HIDDENFLAG": 0,
             "EDITABLEFLAG": 1,
             "REQUIREDFLAG": 0,
-            "RELATED_OBJ": "",
+            "RELATED_OBJ": null,
             "SORTERPOS": null,
             "SORTERDIR": null,
-            "RELATED_OBJ_ATTR": "",
+            "RELATED_OBJ_ATTR": null,
             "SHORT_DESCRIPTION": null,
             "DATA_ADDRESS_PROPS": {
                 "odata_type": "Edm.String"
@@ -492,6 +504,7 @@
             "CUSTOM_DATA_TYPE": null
         },
         {
+            "_EXPORT_SUMMARY": "Change Key [changeKey]",
             "CREATED_ON": "2021-01-27 11:28:36",
             "MODIFIED_ON": "2021-01-27 11:28:36",
             "CREATED_BY_USER": "0x31000000000000000000000000000000",
@@ -525,10 +538,10 @@
             "HIDDENFLAG": 0,
             "EDITABLEFLAG": 1,
             "REQUIREDFLAG": 0,
-            "RELATED_OBJ": "",
+            "RELATED_OBJ": null,
             "SORTERPOS": null,
             "SORTERDIR": null,
-            "RELATED_OBJ_ATTR": "",
+            "RELATED_OBJ_ATTR": null,
             "SHORT_DESCRIPTION": null,
             "DATA_ADDRESS_PROPS": {
                 "odata_type": "Edm.String"
@@ -538,6 +551,7 @@
             "CUSTOM_DATA_TYPE": null
         },
         {
+            "_EXPORT_SUMMARY": "Is Tallying Responses [isTallyingResponses]",
             "CREATED_ON": "2021-01-27 11:28:36",
             "MODIFIED_ON": "2021-01-27 11:28:36",
             "CREATED_BY_USER": "0x31000000000000000000000000000000",
@@ -571,10 +585,10 @@
             "HIDDENFLAG": 0,
             "EDITABLEFLAG": 1,
             "REQUIREDFLAG": 0,
-            "RELATED_OBJ": "",
+            "RELATED_OBJ": null,
             "SORTERPOS": null,
             "SORTERDIR": null,
-            "RELATED_OBJ_ATTR": "",
+            "RELATED_OBJ_ATTR": null,
             "SHORT_DESCRIPTION": null,
             "DATA_ADDRESS_PROPS": {
                 "odata_type": "Edm.Boolean"
@@ -584,6 +598,7 @@
             "CUSTOM_DATA_TYPE": null
         },
         {
+            "_EXPORT_SUMMARY": "Color [color]",
             "CREATED_ON": "2021-01-27 11:28:36",
             "MODIFIED_ON": "2021-01-27 11:28:36",
             "CREATED_BY_USER": "0x31000000000000000000000000000000",
@@ -617,10 +632,10 @@
             "HIDDENFLAG": 0,
             "EDITABLEFLAG": 1,
             "REQUIREDFLAG": 0,
-            "RELATED_OBJ": "",
+            "RELATED_OBJ": null,
             "SORTERPOS": null,
             "SORTERDIR": null,
-            "RELATED_OBJ_ATTR": "",
+            "RELATED_OBJ_ATTR": null,
             "SHORT_DESCRIPTION": null,
             "DATA_ADDRESS_PROPS": {
                 "odata_type": "graph.calendarColor"
@@ -630,6 +645,7 @@
             "CUSTOM_DATA_TYPE": null
         },
         {
+            "_EXPORT_SUMMARY": "Is Default Calendar [isDefaultCalendar]",
             "CREATED_ON": "2021-01-27 11:28:36",
             "MODIFIED_ON": "2021-01-27 11:28:36",
             "CREATED_BY_USER": "0x31000000000000000000000000000000",
@@ -663,10 +679,10 @@
             "HIDDENFLAG": 0,
             "EDITABLEFLAG": 1,
             "REQUIREDFLAG": 0,
-            "RELATED_OBJ": "",
+            "RELATED_OBJ": null,
             "SORTERPOS": null,
             "SORTERDIR": null,
-            "RELATED_OBJ_ATTR": "",
+            "RELATED_OBJ_ATTR": null,
             "SHORT_DESCRIPTION": null,
             "DATA_ADDRESS_PROPS": {
                 "odata_type": "Edm.Boolean"
@@ -676,6 +692,7 @@
             "CUSTOM_DATA_TYPE": null
         },
         {
+            "_EXPORT_SUMMARY": "Can View Private Items [canViewPrivateItems]",
             "CREATED_ON": "2021-01-27 11:28:36",
             "MODIFIED_ON": "2021-01-27 11:28:36",
             "CREATED_BY_USER": "0x31000000000000000000000000000000",
@@ -709,10 +726,10 @@
             "HIDDENFLAG": 0,
             "EDITABLEFLAG": 1,
             "REQUIREDFLAG": 0,
-            "RELATED_OBJ": "",
+            "RELATED_OBJ": null,
             "SORTERPOS": null,
             "SORTERDIR": null,
-            "RELATED_OBJ_ATTR": "",
+            "RELATED_OBJ_ATTR": null,
             "SHORT_DESCRIPTION": null,
             "DATA_ADDRESS_PROPS": {
                 "odata_type": "Edm.Boolean"
@@ -722,6 +739,7 @@
             "CUSTOM_DATA_TYPE": null
         },
         {
+            "_EXPORT_SUMMARY": "Can Share [canShare]",
             "CREATED_ON": "2021-01-27 11:28:36",
             "MODIFIED_ON": "2021-01-27 11:28:36",
             "CREATED_BY_USER": "0x31000000000000000000000000000000",
@@ -755,10 +773,10 @@
             "HIDDENFLAG": 0,
             "EDITABLEFLAG": 1,
             "REQUIREDFLAG": 0,
-            "RELATED_OBJ": "",
+            "RELATED_OBJ": null,
             "SORTERPOS": null,
             "SORTERDIR": null,
-            "RELATED_OBJ_ATTR": "",
+            "RELATED_OBJ_ATTR": null,
             "SHORT_DESCRIPTION": null,
             "DATA_ADDRESS_PROPS": {
                 "odata_type": "Edm.Boolean"
