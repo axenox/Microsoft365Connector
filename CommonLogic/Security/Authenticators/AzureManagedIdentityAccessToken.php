@@ -2,7 +2,10 @@
 
 namespace axenox\Microsoft365Connector\CommonLogic\Security\Authenticators;
 
-class AzureManagedIdentityAccessToken
+use exface\Core\Interfaces\Facades\FacadeInterface;
+use exface\Core\Interfaces\Security\AuthenticationTokenInterface;
+
+class AzureManagedIdentityAccessToken implements AuthenticationTokenInterface
 {
     public const PROP_TOKEN_TYPE = 'token_type';
     public const PROP_EXPIRES_IN = 'expires_in';
@@ -107,5 +110,29 @@ class AzureManagedIdentityAccessToken
             self::PROP_ACCESS_TOKEN => $this->getAccessToken(),
             self::PROP_TOKEN_TYPE => $this->getTokenType()
         ]);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getFacade(): ?FacadeInterface
+    {
+        return null;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getUsername(): ?string
+    {
+        return null;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function isAnonymous(): bool
+    {
+        return false;
     }
 }

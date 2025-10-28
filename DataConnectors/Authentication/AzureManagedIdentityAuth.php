@@ -3,7 +3,9 @@
 namespace axenox\Microsoft365Connector\DataConnectors\Authentication;
 
 use axenox\Microsoft365Connector\CommonLogic\Security\Authenticators\AzureManagedIdentityAccessToken;
+use axenox\Microsoft365Connector\CommonLogic\Security\Authenticators\AzureManagedIdentityRequestToken;
 use exface\Core\CommonLogic\UxonObject;
+use exface\Core\Exceptions\InvalidArgumentException;
 use exface\Core\Interfaces\Security\AuthenticationTokenInterface;
 use exface\Core\Interfaces\Widgets\iContainOtherWidgets;
 use exface\UrlDataConnector\CommonLogic\AbstractHttpAuthenticationProvider;
@@ -77,14 +79,19 @@ class AzureManagedIdentityAuth extends AbstractHttpAuthenticationProvider
      */
     public function getCredentialsUxon(AuthenticationTokenInterface $authenticatedToken): UxonObject
     {
+        if (! $authenticatedToken instanceof AzureManagedIdentityAccessToken) {
+            // TODO
+            // throw new InvalidArgumentException();
+        }
         return new UxonObject([
             'authentication' => [
                 'class' => '\\' . get_class($this),
-                'authentication_url' => $this->getAuthenticationUrl(),
-                'scope' => $this->getScope(),
+                'scope' => $authenticatedToken->getScope(),
                 'client_id' => $this->getClientId(),
                 'client_secret' => $this->getClientSecret(),
                 'subscription' => $this->getSubscriptionKey(),
+                'tenant' => $this->getTenant(),
+                'access_token' => $authenticatedToken->toArray(),
             ]
         ]);
     }
@@ -97,13 +104,26 @@ class AzureManagedIdentityAuth extends AbstractHttpAuthenticationProvider
         if (! $this->needsSigning($request)) {
             return $request;
         }
+
+        $accessToken = $this->getAccessToken();
+        if ($accessToken === null || $accessToken->isExpired()) {
+            // Fetch access token and save it to credential storage
+            $requestToken = new AzureManagedIdentityRequestToken(
+                $this->getSubscriptionKey(),
+                $this->getTenant(),
+                $this->getClientId(),
+                $this->getClientSecret(),
+                $this->getScope()
+            );
+            $authenticatedToken = $this->getConnection()->authenticate($requestToken, true, null, false);
+        }
         
         return $request->withHeader(
             'Authorization',
-            $this->getAccessToken()->getAuthorizationString()
+            $authenticatedToken->getAuthorizationString()
         )->withHeader(
             'Ocp-Apim-Subscription-Key',
-            $this->getSubscriptionKey()
+            $authenticatedToken->getSubscriptionKey()
         );
     }
     
@@ -320,17 +340,17 @@ class AzureManagedIdentityAuth extends AbstractHttpAuthenticationProvider
      * Returns a valid Azure Managed Identities access token, either from cache or fresh from
      * Azure, if no cached token is available or if it has expired.
      * 
-     * @return AzureManagedIdentityAccessToken
+     * @return AzureManagedIdentityAccessToken|null
      */
-    protected function getAccessToken() : AzureManagedIdentityAccessToken
+    protected function getAccessToken() : ?AzureManagedIdentityAccessToken
+    {       
+        return $this->tokenCached;
+    }
+    
+    protected function setAccessToken(UxonObject $uxon) : AzureManagedIdentityAuth
     {
-        $token = $this->tokenCached ?? $this->fetchTokenFromStorage();
-        
-        if($token === null || $token->isExpired()) {
-            $token = $this->fetchTokenFromServer();
-        } 
-        
-        return $this->tokenCached = $token;
+        $this->tokenCached = AzureManagedIdentityAccessToken::fromJson($uxon->toJson());
+        return $this;
     }
 
     /**
