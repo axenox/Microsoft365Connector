@@ -3,8 +3,9 @@
 namespace axenox\Microsoft365Connector\DataConnectors\Authentication;
 
 use axenox\Microsoft365Connector\CommonLogic\Security\Authenticators\AzureAppRegistrationAccessToken;
-use axenox\Microsoft365Connector\CommonLogic\Security\Authenticators\AzureAppRegistrationRequestToken;
 use exface\Core\CommonLogic\UxonObject;
+use exface\Core\DataTypes\EncryptedDataType;
+use exface\Core\Exceptions\InvalidArgumentException;
 use exface\Core\Exceptions\Security\AuthenticationFailedError;
 use exface\Core\Interfaces\Security\AuthenticationTokenInterface;
 use exface\Core\Interfaces\Widgets\iContainOtherWidgets;
@@ -45,20 +46,10 @@ class AzureAppRegistrationAuth extends AbstractHttpAuthenticationProvider
 
     /**
      * @inheritDoc
-     * @param AzureAppRegistrationRequestToken $token
      */
     public function authenticate(AuthenticationTokenInterface $token): AuthenticationTokenInterface
     {
-        if(!$token instanceof AzureAppRegistrationRequestToken) {
-            return $token;
-        }
-        
-        $authenticatedToken = $this->getAccessToken();
-        if($authenticatedToken === null || $authenticatedToken->isExpired()) {
-            $authenticatedToken = $this->fetchTokenFromServer($token);
-        }
-        
-        return $authenticatedToken;
+        return $token;
     }
 
     /**
@@ -69,24 +60,8 @@ class AzureAppRegistrationAuth extends AbstractHttpAuthenticationProvider
         if (! $this->needsSigning($request)) {
             return $request;
         }
-
-        $authenticatedToken = $this->getAccessToken();
-        if ($authenticatedToken === null || $authenticatedToken->isExpired()) {
-            // Fetch access token and save it to credential storage
-            $requestToken = new AzureAppRegistrationRequestToken(
-                $this->getSubscription(),
-                $this->getTenant(),
-                $this->getClientId(),
-                $this->getClientSecret(),
-                $this->getScope()
-            );
-            
-            $authenticatedToken = $this->getConnection()->authenticate($requestToken, true, null, false);
-        }
         
-        if(!$authenticatedToken instanceof AzureAppRegistrationAccessToken) {
-            return $request;
-        }
+        $authenticatedToken = $this->getAccessToken();
         
         return $request->withHeader(
             'Authorization',
@@ -126,28 +101,92 @@ class AzureAppRegistrationAuth extends AbstractHttpAuthenticationProvider
     }
 
     /**
-     * @param AzureAppRegistrationRequestToken $requestToken
+     * Returns a valid AzureAppRegistrationAccess token. Either from cache, if available, or fresh from Azure.
+     *
      * @return AzureAppRegistrationAccessToken|null
      */
-    protected function fetchTokenFromServer(AzureAppRegistrationRequestToken $requestToken) : ?AzureAppRegistrationAccessToken
+    protected function getAccessToken() : ?AzureAppRegistrationAccessToken
+    {
+        $token = $this->tokenCached ?? $this->fetchAccessTokenFromStorage();
+        
+        if($token === null || $token->isExpired()) {
+            $token = $this->fetchAccessTokenFromServer();
+        }
+        
+        return $this->tokenCached = $token;
+    }
+
+    /**
+     * @return AzureAppRegistrationAccessToken|null
+     */
+    protected function fetchAccessTokenFromServer() : ?AzureAppRegistrationAccessToken
     {
         $body =
             'grant_type=' . self::GRANT_TYPE_CLIENT_CREDENTIALS .
-            '&client_id=' . $requestToken->getClientId() .
-            '&client_secret=' . $requestToken->getClientSecret() .
-            '&scope=' . $requestToken->getScope();
+            '&client_id=' . $this->getClientId() .
+            '&client_secret=' . $this->getClientSecret() .
+            '&scope=' . $this->getScope();
 
         $authRequest = new Request(
             'POST',
-            $this->getAuthenticationUrl($requestToken->getTenant()),
+            $this->getAuthenticationUrl($this->getTenant()),
             [],
             $body
         );
 
         $response = $this->getConnection()->sendRequest($authRequest);
         $body = (string) $response->getBody();
+        
+        $token = AzureAppRegistrationAccessToken::fromJson($body, $this->getSubscription());
+        return $this->storeAccessToken($token);
+    }
 
-        return AzureAppRegistrationAccessToken::fromJson($body, $requestToken->getSubscription());
+    /**
+     * @return AzureAppRegistrationAccessToken|null
+     */
+    protected function fetchAccessTokenFromStorage() : ?AzureAppRegistrationAccessToken
+    {
+        $json = $this->getWorkbench()->getContext()->getScopeInstallation()->getVariable(
+            $this->getScopeVariableName()
+        );
+        
+        if($json === null) {
+            return null;
+        }
+        
+        $json = EncryptedDataType::decrypt(
+            $this->getEncryptionSecret(),
+            $json
+        );
+        
+        return AzureAppRegistrationAccessToken::fromJson($json);
+    }
+
+    /**
+     * @param AzureAppRegistrationAccessToken $token
+     * @return AzureAppRegistrationAccessToken
+     */
+    protected function storeAccessToken(AzureAppRegistrationAccessToken $token) : AzureAppRegistrationAccessToken
+    {
+        $json = EncryptedDataType::encrypt(
+            $this->getEncryptionSecret(),
+            json_encode($token->toArray())
+        );
+        
+        $this->getWorkbench()->getContext()->getScopeInstallation()->setVariable(
+            $this->getScopeVariableName(),
+            $json
+        );
+        
+        return $token;
+    }
+
+    /**
+     * @return string
+     */
+    public function getScopeVariableName() : string
+    {
+        return 'AzureAppRegistration_AccessToken_' . $this->getConnection()->getId();
     }
 
     /**
@@ -195,28 +234,6 @@ class AzureAppRegistrationAuth extends AbstractHttpAuthenticationProvider
     }
 
     /**
-     * Returns a valid AzureAppRegistrationAccess token. Either from cache, if available, or fresh from Azure.
-     *
-     * @return AzureAppRegistrationAccessToken|null
-     */
-    protected function getAccessToken() : ?AzureAppRegistrationAccessToken
-    {
-        return $this->tokenCached;
-    }
-
-    /**
-     * Hidden UXON setter. Used when loading credentials from storage.
-     * 
-     * @param UxonObject $uxon
-     * @return $this
-     */
-    protected function setAccessToken(UxonObject $uxon) : AzureAppRegistrationAuth
-    {
-        $this->tokenCached = AzureAppRegistrationAccessToken::fromJson($uxon->toJson());
-        return $this;
-    }
-
-    /**
      * @return string|null
      */
     public function getClientId(): ?string
@@ -246,6 +263,23 @@ class AzureAppRegistrationAuth extends AbstractHttpAuthenticationProvider
     public function getClientSecret(): ?string
     {
         return $this->clientSecret;
+    }
+
+    /**
+     * @return string
+     * @throws \SodiumException
+     */
+    protected function getEncryptionSecret() : string
+    {
+        if($this->clientSecret === '') {
+            throw new InvalidArgumentException('Failed to generate encryption secret, "client_secret" cannot be empty.');
+        }
+        
+        $secret = str_pad($this->clientSecret, SODIUM_CRYPTO_SECRETBOX_NONCEBYTES, '=');
+        $secret = substr($secret, 0, SODIUM_CRYPTO_SECRETBOX_NONCEBYTES);
+        $secret = sodium_crypto_generichash($secret);
+
+        return base64_encode($secret);
     }
 
     /**

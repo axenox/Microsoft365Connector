@@ -35,11 +35,11 @@ class AzureAppRegistrationAccessToken implements AuthenticationTokenInterface
 
     /**
      * @param string      $json
-     * @param string|null $subscriptionKey
+     * @param string|null $subscription
      * Fallback, in case the JSON does not contain a property named `subscription`.
      * @return AzureAppRegistrationAccessToken
      */
-    public static function fromJson(string $json, string $subscriptionKey = null) : AzureAppRegistrationAccessToken
+    public static function fromJson(string $json, string $subscription = null) : AzureAppRegistrationAccessToken
     {
         $json = json_decode($json, true);
         
@@ -48,7 +48,7 @@ class AzureAppRegistrationAccessToken implements AuthenticationTokenInterface
         }
         
         if(!key_exists(self::PROP_SUBSCRIPTION, $json)) {
-            $json[self::PROP_SUBSCRIPTION] = $subscriptionKey;
+            $json[self::PROP_SUBSCRIPTION] = $subscription;
         }
         
         return new self(
