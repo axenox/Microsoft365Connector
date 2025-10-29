@@ -5,39 +5,41 @@ namespace axenox\Microsoft365Connector\CommonLogic\Security\Authenticators;
 use exface\Core\Interfaces\Facades\FacadeInterface;
 use exface\Core\Interfaces\Security\AuthenticationTokenInterface;
 
-class AzureManagedIdentityAccessToken implements AuthenticationTokenInterface
+class AzureAppRegistrationAccessToken implements AuthenticationTokenInterface
 {
-    public const PROP_TOKEN_TYPE = 'token_type';
+    public const PROP_SUBSCRIPTION = 'subscription';
     public const PROP_EXPIRES_IN = 'expires_in';
     public const PROP_EXPIRATION_TIME = 'expiration_time';
     public const PROP_ACCESS_TOKEN = 'access_token';
     
     private int $expirationTime;
-    private string $tokenType;
     private string $accessToken;
+    private string $subscription;
 
     /**
      * Create a new Azure Managed Identity token.
-     * 
+     *
      * @param int    $expirationTime
      * Timestamp in seconds, when this token expires.
      * @param string $accessToken
      * The base64 encoded token data.
-     * @param string $tokenType
-     * The type of this token. Default is `Bearer`.
+     * @param string $subscriptionKey
+     * The subscription key governing the resource you are trying to access.
      */
-    public function __construct(int $expirationTime, string $accessToken, string $tokenType = 'Bearer')
+    public function __construct(int $expirationTime, string $accessToken, string $subscriptionKey)
     {
-        $this->tokenType = $tokenType;
         $this->expirationTime = $expirationTime;
         $this->accessToken = $accessToken;
+        $this->subscription = $subscriptionKey;
     }
 
     /**
-     * @param string $json
-     * @return AzureManagedIdentityAccessToken
+     * @param string      $json
+     * @param string|null $subscriptionKey
+     * Fallback, in case the JSON does not contain a property named `subscription`.
+     * @return AzureAppRegistrationAccessToken
      */
-    public static function fromJson(string $json) : AzureManagedIdentityAccessToken
+    public static function fromJson(string $json, string $subscriptionKey = null) : AzureAppRegistrationAccessToken
     {
         $json = json_decode($json, true);
         
@@ -45,10 +47,14 @@ class AzureManagedIdentityAccessToken implements AuthenticationTokenInterface
             $json[self::PROP_EXPIRATION_TIME] = time() + $json[self::PROP_EXPIRES_IN];
         }
         
+        if(!key_exists(self::PROP_SUBSCRIPTION, $json)) {
+            $json[self::PROP_SUBSCRIPTION] = $subscriptionKey;
+        }
+        
         return new self(
             $json[self::PROP_EXPIRATION_TIME],
             $json[self::PROP_ACCESS_TOKEN],
-            $json[self::PROP_TOKEN_TYPE]
+            $json[self::PROP_SUBSCRIPTION]
         );
     }
 
@@ -57,7 +63,7 @@ class AzureManagedIdentityAccessToken implements AuthenticationTokenInterface
      */
     public function getTokenType() : string
     {
-        return $this->tokenType;
+        return 'Bearer';
     }
 
     /**
@@ -89,6 +95,11 @@ class AzureManagedIdentityAccessToken implements AuthenticationTokenInterface
     {
         return $this->expirationTime;
     }
+    
+    public function getSubscription() : string
+    {
+        return $this->subscription;
+    }
 
     /**
      * Returns TRUE if this token has expired (i.e. is no longer valid).
@@ -101,15 +112,15 @@ class AzureManagedIdentityAccessToken implements AuthenticationTokenInterface
     }
 
     /**
-     * @return string
+     * @return array
      */
-    public function toJson() : string
+    public function toArray() : array
     {
-        return json_encode([
+        return [
             self::PROP_EXPIRATION_TIME => $this->getExpirationTime(),
             self::PROP_ACCESS_TOKEN => $this->getAccessToken(),
-            self::PROP_TOKEN_TYPE => $this->getTokenType()
-        ]);
+            self::PROP_SUBSCRIPTION => $this->getSubscription()
+        ];
     }
 
     /**

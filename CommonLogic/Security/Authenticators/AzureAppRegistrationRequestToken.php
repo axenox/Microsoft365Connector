@@ -5,51 +5,76 @@ namespace axenox\Microsoft365Connector\CommonLogic\Security\Authenticators;
 use exface\Core\Interfaces\Facades\FacadeInterface;
 use exface\Core\Interfaces\Security\AuthenticationTokenInterface;
 
-class AzureManagedIdentityRequestToken implements AuthenticationTokenInterface
+class AzureAppRegistrationRequestToken implements AuthenticationTokenInterface
 {
-    private $subscriptionKey;
-    private $tenant;
-    private $clientId;
-    private $clientSecret;
-    private $scope;
+    private string $subscription;
+    private string $tenant;
+    private string $clientId;
+    private string $clientSecret;
+    private string $scope;
 
     /**
      * Create a new Azure Managed Identity token.
-     * 
-     * @param int    $expirationTime
-     * Timestamp in seconds, when this token expires.
-     * @param string $accessToken
-     * The base64 encoded token data.
-     * @param string $tokenType
-     * The type of this token. Default is `Bearer`.
+     *
+     * @param string $subscription
+     * @param string $tenant
+     * @param string $clientId
+     * @param string $clientSecret
+     * @param string $scope
      */
-    public function __construct($subscriptionKey, $tenant, $clientId, $clientSecret, $scope)
+    public function __construct(
+        string $subscription, 
+        string $tenant,
+        string $clientId, 
+        string $clientSecret, 
+        string $scope
+    )
     {
-        $this->subscriptionKey = $subscriptionKey;
+        $this->subscription = $subscription;
         $this->tenant = $tenant;
         $this->clientId = $clientId;
         $this->clientSecret = $clientSecret;
         $this->scope = $scope;
     }
-    
+
+    /**
+     * @return string
+     */
     public function getTenant() : string
     {
         return $this->tenant;
     }
-    
+
+    /**
+     * @return string
+     */
     public function getClientId() : string
     {
         return $this->clientId;
     }
-    
+
+    /**
+     * @return string
+     */
     public function getClientSecret() : string
     {
         return $this->clientSecret;
     }
-    
+
+    /**
+     * @return string
+     */
     public function getScope() : string
     {
         return $this->scope;
+    }
+
+    /**
+     * @return string
+     */
+    public function getSubscription() : string
+    {
+        return $this->subscription;
     }
 
     /**
