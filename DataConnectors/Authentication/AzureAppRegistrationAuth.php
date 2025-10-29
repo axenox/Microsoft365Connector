@@ -63,6 +63,10 @@ class AzureAppRegistrationAuth extends AbstractHttpAuthenticationProvider
         
         $authenticatedToken = $this->getAccessToken();
         
+        if($authenticatedToken === null) {
+            return $request;
+        }
+        
         return $request->withHeader(
             'Authorization',
             $authenticatedToken->getAuthorizationString()
@@ -143,6 +147,7 @@ class AzureAppRegistrationAuth extends AbstractHttpAuthenticationProvider
 
     /**
      * @return AzureAppRegistrationAccessToken|null
+     * @throws \SodiumException
      */
     protected function fetchAccessTokenFromStorage() : ?AzureAppRegistrationAccessToken
     {
@@ -165,6 +170,7 @@ class AzureAppRegistrationAuth extends AbstractHttpAuthenticationProvider
     /**
      * @param AzureAppRegistrationAccessToken $token
      * @return AzureAppRegistrationAccessToken
+     * @throws \SodiumException
      */
     protected function storeAccessToken(AzureAppRegistrationAccessToken $token) : AzureAppRegistrationAccessToken
     {
@@ -271,11 +277,11 @@ class AzureAppRegistrationAuth extends AbstractHttpAuthenticationProvider
      */
     protected function getEncryptionSecret() : string
     {
-        if($this->clientSecret === '') {
+        if($this->getClientSecret() === '') {
             throw new InvalidArgumentException('Failed to generate encryption secret, "client_secret" cannot be empty.');
         }
         
-        $secret = str_pad($this->clientSecret, SODIUM_CRYPTO_SECRETBOX_NONCEBYTES, '=');
+        $secret = str_pad($this->getClientSecret(), SODIUM_CRYPTO_SECRETBOX_NONCEBYTES, '=');
         $secret = substr($secret, 0, SODIUM_CRYPTO_SECRETBOX_NONCEBYTES);
         $secret = sodium_crypto_generichash($secret);
 
