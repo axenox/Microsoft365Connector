@@ -281,9 +281,7 @@ class AzureAppRegistrationAuth extends AbstractHttpAuthenticationProvider
             throw new InvalidArgumentException('Failed to generate encryption secret, "client_secret" cannot be empty.');
         }
         
-        $secret = str_pad($this->getClientSecret(), SODIUM_CRYPTO_SECRETBOX_NONCEBYTES, '=');
-        $secret = substr($secret, 0, SODIUM_CRYPTO_SECRETBOX_NONCEBYTES);
-        $secret = sodium_crypto_generichash($secret);
+        $secret = sodium_crypto_generichash($this->getClientSecret());
 
         return base64_encode($secret);
     }
