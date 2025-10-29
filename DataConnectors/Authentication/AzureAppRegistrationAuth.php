@@ -122,6 +122,7 @@ class AzureAppRegistrationAuth extends AbstractHttpAuthenticationProvider
 
     /**
      * @return AzureAppRegistrationAccessToken|null
+     * @throws \SodiumException
      */
     protected function fetchAccessTokenFromServer() : ?AzureAppRegistrationAccessToken
     {
@@ -147,7 +148,6 @@ class AzureAppRegistrationAuth extends AbstractHttpAuthenticationProvider
 
     /**
      * @return AzureAppRegistrationAccessToken|null
-     * @throws \SodiumException
      */
     protected function fetchAccessTokenFromStorage() : ?AzureAppRegistrationAccessToken
     {
@@ -158,13 +158,13 @@ class AzureAppRegistrationAuth extends AbstractHttpAuthenticationProvider
         if($json === null) {
             return null;
         }
-        
-        $json = EncryptedDataType::decrypt(
-            $this->getEncryptionSecret(),
-            $json
-        );
 
         try {
+            $json = EncryptedDataType::decrypt(
+                $this->getEncryptionSecret(),
+                $json
+            );
+            
             $token = AzureAppRegistrationAccessToken::fromJson($json);
         } catch (\Throwable $e) {
             return null;
