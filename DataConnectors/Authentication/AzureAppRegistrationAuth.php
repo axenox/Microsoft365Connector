@@ -163,8 +163,14 @@ class AzureAppRegistrationAuth extends AbstractHttpAuthenticationProvider
             $this->getEncryptionSecret(),
             $json
         );
+
+        try {
+            $token = AzureAppRegistrationAccessToken::fromJson($json);
+        } catch (\Throwable $e) {
+            return null;
+        }
         
-        return AzureAppRegistrationAccessToken::fromJson($json);
+        return $token;
     }
 
     /**
