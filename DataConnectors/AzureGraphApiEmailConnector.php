@@ -6,7 +6,18 @@ use Symfony\Component\Mailer\Transport\TransportInterface;
 use Vitrus\SymfonyOfficeGraphMailer\Transport\GraphApiTransportFactory;
 
 /**
- * Connector to send emails 
+ * Connector to send emails through the Microsoft Graph API
+ * 
+ * Example config:
+ * 
+ * ```
+ * {
+ *  "tenant": "",
+ *  "client_id": "",
+ *  "client_secret": ""    
+ * }
+ * 
+ * ```
  */
 class AzureGraphApiEmailConnector extends SmtpConnector
 {
