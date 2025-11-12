@@ -122,6 +122,7 @@ class AzureAppRegistrationAuth extends AbstractHttpAuthenticationProvider
 
     /**
      * @return AzureAppRegistrationAccessToken|null
+     * @throws \SodiumException
      */
     protected function fetchAccessTokenFromServer() : ?AzureAppRegistrationAccessToken
     {
@@ -147,7 +148,6 @@ class AzureAppRegistrationAuth extends AbstractHttpAuthenticationProvider
 
     /**
      * @return AzureAppRegistrationAccessToken|null
-     * @throws \SodiumException
      */
     protected function fetchAccessTokenFromStorage() : ?AzureAppRegistrationAccessToken
     {
@@ -158,13 +158,19 @@ class AzureAppRegistrationAuth extends AbstractHttpAuthenticationProvider
         if($json === null) {
             return null;
         }
+
+        try {
+            $json = EncryptedDataType::decrypt(
+                $this->getEncryptionSecret(),
+                $json
+            );
+            
+            $token = AzureAppRegistrationAccessToken::fromJson($json);
+        } catch (\Throwable $e) {
+            return null;
+        }
         
-        $json = EncryptedDataType::decrypt(
-            $this->getEncryptionSecret(),
-            $json
-        );
-        
-        return AzureAppRegistrationAccessToken::fromJson($json);
+        return $token;
     }
 
     /**
@@ -281,9 +287,7 @@ class AzureAppRegistrationAuth extends AbstractHttpAuthenticationProvider
             throw new InvalidArgumentException('Failed to generate encryption secret, "client_secret" cannot be empty.');
         }
         
-        $secret = str_pad($this->getClientSecret(), SODIUM_CRYPTO_SECRETBOX_NONCEBYTES, '=');
-        $secret = substr($secret, 0, SODIUM_CRYPTO_SECRETBOX_NONCEBYTES);
-        $secret = sodium_crypto_generichash($secret);
+        $secret = sodium_crypto_generichash($this->getClientSecret());
 
         return base64_encode($secret);
     }
