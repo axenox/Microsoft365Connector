@@ -170,6 +170,12 @@ class AzureAppRegistrationAuth extends AbstractHttpAuthenticationProvider
             return null;
         }
         
+        // Do not use the token if the subscription has changed and the configuration of the connection does
+        // not match the one, that was used when requesting the token stored here.
+        if ($token->getSubscription() !== $this->getSubscription()) {
+            return null;
+        }
+        
         return $token;
     }
 
