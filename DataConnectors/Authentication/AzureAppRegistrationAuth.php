@@ -1,5 +1,4 @@
 <?php
-
 namespace axenox\Microsoft365Connector\DataConnectors\Authentication;
 
 use axenox\Microsoft365Connector\CommonLogic\Security\Authenticators\AzureAppRegistrationAccessToken;
@@ -14,6 +13,14 @@ use GuzzleHttp\Psr7\Request;
 use Psr\Http\Message\RequestInterface;
 
 /**
+ * Client-application authorization to access Azure resources - recommended to secure web services in Azure
+ * 
+ * Documentation from Microsoft:
+ * 
+ * - https://learn.microsoft.com/en-us/entra/identity-platform/quickstart-configure-app-expose-web-apis
+ * - https://learn.microsoft.com/en-us/azure/api-management/applications#register-client-application-to-access-product
+ * - https://learn.microsoft.com/en-us/azure/api-management/api-management-howto-protect-backend-with-aad#configure-a-jwt-validation-policy-to-pre-authorize-requests
+ * 
  * ## Example config of data connection
  * 
  * ```
@@ -24,6 +31,7 @@ use Psr\Http\Message\RequestInterface;
  *          "client_secret": "",
  *          "tenant": "",
  *          "subscription": "",
+ *          "scope": "api://<client_id>/.default"
  *      }
  *  }
  * 
