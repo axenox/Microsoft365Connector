@@ -96,6 +96,32 @@
             "WRAP_PATH": "",
             "UXON_SCHEMA": "connection",
             "THUMBNAIL": ""
+        },
+        {
+            "_EXPORT_SUMMARY": "Azure client web API",
+            "CREATED_ON": "2025-12-03 14:04:19",
+            "MODIFIED_ON": "2025-12-03 14:04:19",
+            "CREATED_BY_USER": "0x31000000000000000000000000000000",
+            "MODIFIED_BY_USER": "0x31000000000000000000000000000000",
+            "UID": "0x11f0925094ab54d89250025041000001",
+            "APP": "0x11eb8233a3d3443c8233847beb4a5184",
+            "NAME": "Azure client web API",
+            "DESCRIPTION": "Access a web API deployed on azure and managed via AppRegistration",
+            "PROTOTYPE": "exface/UrlDataConnector/DataConnectors/HttpConnector.php",
+            "UXON": {
+                "url": "https://<myapi>.azure-api.net/<mypath>/",
+                "authentication": {
+                    "class": "\\axenox\\Microsoft365Connector\\DataConnectors\\Authentication\\AzureAppRegistrationAuth",
+                    "client_id": "",
+                    "client_secret": "",
+                    "tenant": "",
+                    "subscription": "",
+                    "scope": "api://<client_id>/.default"
+                }
+            },
+            "WRAP_PATH": "",
+            "UXON_SCHEMA": "connection",
+            "THUMBNAIL": ""
         }
     ],
     "totals_rows": [],
