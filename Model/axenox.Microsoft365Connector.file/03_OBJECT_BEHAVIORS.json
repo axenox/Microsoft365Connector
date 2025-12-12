@@ -67,7 +67,7 @@
             "CREATED_BY_USER": "0x31000000000000000000000000000000",
             "MODIFIED_BY_USER": "0x31000000000000000000000000000000",
             "UID": "0x11ee9f4ecd93a7c89f4e025041000001",
-            "BEHAVIOR": "exface/Core/Behaviors/FileBehavior.php",
+            "BEHAVIOR": "exface/core/Behaviors/FileBehavior.php",
             "CONFIG_UXON": {
                 "filename_attribute": "filename",
                 "contents_attribute": "content",
