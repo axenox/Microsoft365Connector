@@ -66,7 +66,7 @@
             "APP": "0x11eb8233a3d3443c8233847beb4a5184",
             "TIME_ZONE": null,
             "LABEL": "Microsoft Graph",
-            "CONNECTOR": "exface/UrlDataConnector/DataConnectors/OData4Connector.php",
+            "CONNECTOR": "exface/urldataconnector/DataConnectors/OData4Connector.php",
             "CONFIG": {
                 "url": "https:\/\/graph.microsoft.com\/v1.0\/",
                 "authentication": {
@@ -93,7 +93,7 @@
             "APP": "0x11eb8233a3d3443c8233847beb4a5184",
             "TIME_ZONE": null,
             "LABEL": "Microsoft OpenID",
-            "CONNECTOR": "exface/UrlDataConnector/DataConnectors/HttpConnector.php",
+            "CONNECTOR": "exface/urldataconnector/DataConnectors/HttpConnector.php",
             "CONFIG": {
                 "url": "https:\/\/graph.microsoft.com",
                 "authentication": {

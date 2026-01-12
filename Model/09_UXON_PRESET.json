@@ -78,7 +78,7 @@
                 "5. Assign the required scopes in Azure Portal",
                 "6. Add these scopes to the config here too"
             ],
-            "PROTOTYPE": "exface/UrlDataConnector/DataConnectors/OData4Connector.php",
+            "PROTOTYPE": "exface/urldataconnector/DataConnectors/OData4Connector.php",
             "UXON": {
                 "url": "https://graph.microsoft.com/v1.0/",
                 "authentication": {
@@ -107,7 +107,7 @@
             "APP": "0x11eb8233a3d3443c8233847beb4a5184",
             "NAME": "Azure client web API",
             "DESCRIPTION": "Access a web API deployed on azure and managed via AppRegistration",
-            "PROTOTYPE": "exface/UrlDataConnector/DataConnectors/HttpConnector.php",
+            "PROTOTYPE": "exface/urldataconnector/DataConnectors/HttpConnector.php",
             "UXON": {
                 "url": "https://<myapi>.azure-api.net/<mypath>/",
                 "authentication": {
