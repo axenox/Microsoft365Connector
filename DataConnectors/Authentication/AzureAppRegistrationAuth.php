@@ -36,6 +36,8 @@ use Psr\Http\Message\RequestInterface;
  *  }
  * 
  * ```
+ * 
+ * The subscription is optional. If you do not know it, just remove the property or leave it empty.
  */
 class AzureAppRegistrationAuth extends AbstractHttpAuthenticationProvider
 {
@@ -48,7 +50,7 @@ class AzureAppRegistrationAuth extends AbstractHttpAuthenticationProvider
     private string $clientId = '';
     private string $clientSecret = '';
     private string $tenant = '';
-    private string $subscription = '';
+    private ?string $subscription = null;
     private array $excludeUrls = [];
     private ?AzureAppRegistrationAccessToken $tokenCached = null;
 
@@ -75,13 +77,19 @@ class AzureAppRegistrationAuth extends AbstractHttpAuthenticationProvider
             return $request;
         }
         
-        return $request->withHeader(
+        $request = $request->withHeader(
             'Authorization',
             $authenticatedToken->getAuthorizationString()
-        )->withHeader(
-            'Ocp-Apim-Subscription-Key',
-            $authenticatedToken->getSubscription()
         );
+        
+        if (null !== $subscription = $authenticatedToken->getSubscription()) {
+            $request = $request->withHeader(
+                'Ocp-Apim-Subscription-Key',
+                $subscription
+            );
+        }
+        
+        return $request;
     }
 
     /**
@@ -273,6 +281,7 @@ class AzureAppRegistrationAuth extends AbstractHttpAuthenticationProvider
      * 
      * @uxon-property client_id
      * @uxon-type string
+     * @uxon-required true
      * 
      * @param string $clientId
      * @return $this
@@ -311,6 +320,7 @@ class AzureAppRegistrationAuth extends AbstractHttpAuthenticationProvider
      *
      * @uxon-property client_secret
      * @uxon-type string
+     * @uxon-required true
      *
      * @param string|null $clientSecret
      * @return AzureAppRegistrationAuth
@@ -387,9 +397,9 @@ class AzureAppRegistrationAuth extends AbstractHttpAuthenticationProvider
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getSubscription(): string
+    public function getSubscription(): ?string
     {
         return $this->subscription;
     }
@@ -422,6 +432,7 @@ class AzureAppRegistrationAuth extends AbstractHttpAuthenticationProvider
      * 
      * @uxon-property tenant
      * @uxon-type string
+     * @uxon-required true
      * 
      * @param string $tenant
      * @return $this
