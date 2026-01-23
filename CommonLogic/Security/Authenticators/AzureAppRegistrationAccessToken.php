@@ -14,7 +14,7 @@ class AzureAppRegistrationAccessToken implements AuthenticationTokenInterface
     
     private int $expirationTime;
     private string $accessToken;
-    private string $subscription;
+    private ?string $subscription = null;
 
     /**
      * Create a new Azure Managed Identity token.
@@ -39,7 +39,7 @@ class AzureAppRegistrationAccessToken implements AuthenticationTokenInterface
      * Fallback, in case the JSON does not contain a property named `subscription`.
      * @return AzureAppRegistrationAccessToken
      */
-    public static function fromJson(string $json, string $subscription = null) : AzureAppRegistrationAccessToken
+    public static function fromJson(string $json, ?string $subscription = null) : AzureAppRegistrationAccessToken
     {
         $json = json_decode($json, true);
         
@@ -96,7 +96,7 @@ class AzureAppRegistrationAccessToken implements AuthenticationTokenInterface
         return $this->expirationTime;
     }
     
-    public function getSubscription() : string
+    public function getSubscription() : ?string
     {
         return $this->subscription;
     }
