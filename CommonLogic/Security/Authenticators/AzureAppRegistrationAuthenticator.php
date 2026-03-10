@@ -4,6 +4,7 @@ namespace axenox\Microsoft365Connector\CommonLogic\Security\Authenticators;
 use exface\Core\CommonLogic\Security\AuthenticationToken\JWTAuthToken;
 use exface\Core\CommonLogic\Security\Authenticators\AbstractAuthenticator;
 use exface\Core\Exceptions\Security\AuthenticationFailedError;
+use exface\Core\Exceptions\Security\AuthenticatorConfigError;
 use exface\Core\Interfaces\Security\AuthenticationTokenInterface;
 use Firebase\JWT\JWK;
 use Firebase\JWT\JWT;
@@ -18,6 +19,20 @@ use GuzzleHttp\Client;
  * 
  * useful links:
  * - microsoft jwt token decoder: https://jwt.ms/
+ * 
+ * ## Examples
+ * 
+ * In System.config.json
+ * 
+ * ```
+ * "SECURITY.AUTHENTICATORS": [
+ *  {
+ *      "class": "axenox\\Microsoft365Connector\\CommonLogic\\Security\\Authenticators\\AzureAppRegistrationAuthenticator",
+ *      "tenant_id": "your-tenant-id",
+ *      "application_id": "your-app-id",
+ *  }
+ * ]
+ * ```
  * 
  * @author Sergej Riel
  */
@@ -34,15 +49,15 @@ class AzureAppRegistrationAuthenticator extends AbstractAuthenticator
         "https://sts.windows.net/{tenantId}/",
     ];
 
-    private string $tenant;
-    private string $audience;
-    private string $role;
+    private ?string $tenant = null;
+    private ?string $audience = null;
+    private ?string $role = null;
     
     private $authenticatedToken = null;
 
     /**
      * Authenticates the given JWT token by verifying its signature and claims against the Azure Entra ID tenant's JWKS and expected values.
-     *
+     * 
      * {@inheritDoc}
      * @throws JsonException
      * @see \exface\Core\Interfaces\Security\SecurityManagerInterface::authenticate()
@@ -284,13 +299,16 @@ class AzureAppRegistrationAuthenticator extends AbstractAuthenticator
     public function isSupported(AuthenticationTokenInterface $token) : bool {
         return ($token instanceof JWTAuthToken) && $this->isSupportedFacade($token);
     }
-
+    
     /**
      * @return string
      */
-    public function getTenant(): string
+    protected function getTenant(): string
     {
-        return $this->tenant;
+        if ($this->tenant === null) {
+            throw new AuthenticatorConfigError($this, 'Tenant ID is not set. Please check your configuration.');
+        }
+        return $this->tenantId;
     }
 
     /**
@@ -312,13 +330,14 @@ class AzureAppRegistrationAuthenticator extends AbstractAuthenticator
     /**
      * @return string
      */
-    public function getAudience(): string
+    protected function getAudience(): string
     {
         return $this->audience;
     }
     
     /**
-     * Sets the expected audience for the JWT tokens. This is used to check the "aud" claim in the token against this value.
+     * Sets the expected audience for the JWT tokens. 
+     * This is used to check the "aud" claim in the token against this value.
      * 
      * @uxon-property audience
      * @uxon-type string
@@ -336,7 +355,7 @@ class AzureAppRegistrationAuthenticator extends AbstractAuthenticator
     /**
      * @return string
      */
-    public function getRole(): string
+    protected function getRole(): string
     {
         return $this->role;
     }
