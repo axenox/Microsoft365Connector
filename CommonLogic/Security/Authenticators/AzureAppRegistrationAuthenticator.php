@@ -27,9 +27,11 @@ use GuzzleHttp\Client;
  * ```
  * "SECURITY.AUTHENTICATORS": [
  *  {
- *      "class": "axenox\\Microsoft365Connector\\CommonLogic\\Security\\Authenticators\\AzureAppRegistrationAuthenticator",
- *      "tenant_id": "your-tenant-id",
- *      "application_id": "your-app-id",
+ *      "class": "\\axenox\\Microsoft365Connector\\CommonLogic\\Security\\Authenticators\\AzureAppRegistrationAuthenticator",
+ *      "id": "MICROSOFT_O_AUTH",
+ *      "tenant": "your-tenant-id",
+ *      "audience": "api://your-app-id,
+ *      "role": "required-role-name"
  *  }
  * ]
  * ```
@@ -39,8 +41,6 @@ use GuzzleHttp\Client;
 class AzureAppRegistrationAuthenticator extends AbstractAuthenticator
 {
     private const JWT_ERROR_PREFIX = 'Azure App Registration Authenticator Error: ';
-    private const ALLOWED_ALGORITHMS = ['RS256', 'RS384', 'RS512', 'ES384','ES256', 'HS256', 'HS384', 'HS512'];
-    
     private const OPEN_CONFIG_URL_RAW = 'https://login.microsoftonline.com/{tenantId}/v2.0/.well-known/openid-configuration';
     
     // The valid issuers for Azure Entra ID (Azure AD) tokens can be in different formats depending on the token version (v1 or v2).
@@ -308,7 +308,7 @@ class AzureAppRegistrationAuthenticator extends AbstractAuthenticator
         if ($this->tenant === null) {
             throw new AuthenticatorConfigError($this, 'Tenant ID is not set. Please check your configuration.');
         }
-        return $this->tenantId;
+        return $this->tenant;
     }
 
     /**
@@ -332,6 +332,9 @@ class AzureAppRegistrationAuthenticator extends AbstractAuthenticator
      */
     protected function getAudience(): string
     {
+        if ($this->audience === null) {
+            throw new AuthenticatorConfigError($this, 'Audience is not set. Please check your configuration.');
+        }
         return $this->audience;
     }
     
@@ -357,6 +360,9 @@ class AzureAppRegistrationAuthenticator extends AbstractAuthenticator
      */
     protected function getRole(): string
     {
+        if ($this->role === null) {
+            throw new AuthenticatorConfigError($this, 'Role is not set. Please check your configuration.');
+        }
         return $this->role;
     }
     
