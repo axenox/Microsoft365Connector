@@ -3,13 +3,14 @@ namespace axenox\Microsoft365Connector\CommonLogic\Security\Authenticators;
 
 use exface\Core\CommonLogic\Security\AuthenticationToken\JWTAuthToken;
 use exface\Core\CommonLogic\Security\Authenticators\AbstractAuthenticator;
-use exface\Core\DataTypes\StringDataType;
 use exface\Core\Exceptions\Security\AuthenticationFailedError;
 use exface\Core\Exceptions\Security\AuthenticatorConfigError;
 use exface\Core\Interfaces\Security\AuthenticationTokenInterface;
 use Firebase\JWT\JWK;
 use Firebase\JWT\JWT;
+use JsonException;
 use RuntimeException;
+use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Client;
 
@@ -26,9 +27,11 @@ use GuzzleHttp\Client;
  * ```
  * "SECURITY.AUTHENTICATORS": [
  *  {
- *      "class": "axenox\\Microsoft365Connector\\CommonLogic\\Security\\Authenticators\\AzureAppRegistrationAuthenticator",
- *      "tenant_id": "your-tenant-id",
- *      "application_id": "your-app-id",
+ *      "class": "\\axenox\\Microsoft365Connector\\CommonLogic\\Security\\Authenticators\\AzureAppRegistrationAuthenticator",
+ *      "id": "MICROSOFT_O_AUTH",
+ *      "tenant": "your-tenant-id",
+ *      "audience": "api://your-app-id,
+ *      "role": "required-role-name"
  *  }
  * ]
  * ```
@@ -38,11 +41,7 @@ use GuzzleHttp\Client;
 class AzureAppRegistrationAuthenticator extends AbstractAuthenticator
 {
     private const JWT_ERROR_PREFIX = 'Azure App Registration Authenticator Error: ';
-    private const ALLOWED_ALGORITHMS = ['RS256','RS384','RS512','PS256','PS384','PS512']; // TODO: maybe place this in the configuration
     private const OPEN_CONFIG_URL_RAW = 'https://login.microsoftonline.com/{tenantId}/v2.0/.well-known/openid-configuration';
-    
-    private ?string $tenantId = null;
-    private ?string $scope = null;
     
     // The valid issuers for Azure Entra ID (Azure AD) tokens can be in different formats depending on the token version (v1 or v2).
     private const VALID_ISSUERS_RAW = [
@@ -50,12 +49,17 @@ class AzureAppRegistrationAuthenticator extends AbstractAuthenticator
         "https://sts.windows.net/{tenantId}/",
     ];
 
-    private $authenticatedToken = null;
+    private ?string $tenant = null;
+    private ?string $audience = null;
+    private ?string $role = null;
     
+    private $authenticatedToken = null;
+
     /**
      * Authenticates the given JWT token by verifying its signature and claims against the Azure Entra ID tenant's JWKS and expected values.
      * 
      * {@inheritDoc}
+     * @throws JsonException
      * @see \exface\Core\Interfaces\Security\SecurityManagerInterface::authenticate()
      */
     public function authenticate(AuthenticationTokenInterface $token): AuthenticationTokenInterface
@@ -69,84 +73,68 @@ class AzureAppRegistrationAuthenticator extends AbstractAuthenticator
         }
         
         $jwtToken = $token->getJWTToken();
-        $tenantId = $this->getTenantId();
-        
-        $tokenAud = $token->getScope();
-        $requiredRole = $this->getAllowedRoles();
         $username = $token->getUsername();
+        $header = $token->getHeader();
         
-        $keyId = $token->getHeader()['keyId'] ?? null;
-        if (! $keyId) {
-            throw new RuntimeException(self::JWT_ERROR_PREFIX . "JWT header does not contain 'keyId'");
-        }
+        $tenantId = $this->getTenant();
+        $expectedAud = $this->getAudience();
+        $requiredRole = $this->getRole();
         
-        // Gets the JWKS (JSON Web Key Set) for the given tenant ID.
-        // This contains the public keys that can be used to verify tokens issued by Entra ID (Azure AD) for this tenant.
-        
-        // You can not just trust the alg in the header, because the token is not verified at this point.
-        // The public keys from the JWKS also contain the alg, but not in all cases (not in v1 tokens).
-        // That is why we check the alg against a whitelist of allowed algorithms before we use it to parse the JWKS.
-        $headerAlg = $token->getAlgorithm();
-        if (!is_string($headerAlg) || !in_array($headerAlg, self::ALLOWED_ALGORITHMS, true)) {
-            throw new RuntimeException(self::JWT_ERROR_PREFIX . "Unexpected encryption algorithm (alg): " . (string)$headerAlg);
+        // Getting the "kid" (key ID) from the JWT header:
+        $keyId = $header['kid'] ?? null;
+        if (!$keyId) {
+            throw new RuntimeException(self::JWT_ERROR_PREFIX . "JWT header does not contain 'kid'");
         }
 
-        // Getting the right public key from the JWKS based on the keyId.
+        // Validating public key via tenant JWKS (JSON Web Key Set)
         $jwks = $this->fetchJwksForTenant($tenantId);
-        $keySet = JWK::parseKeySet($jwks, $headerAlg);
+        $jwkKeySet = JWK::parseKeySet($jwks, $token->getHeaderAlgorithm());
 
-        if (!isset($keySet[$keyId])) {
-            throw new RuntimeException(self::JWT_ERROR_PREFIX . "Token header keyId is not matching with the JWKS keys keyId.");
+        if (!isset($jwkKeySet[$keyId])) {
+            throw new RuntimeException(self::JWT_ERROR_PREFIX . "Token header kid is not matching with the JWKS keys kid.");
         }
-        $key = $keySet[$keyId];
+        $validPublicKey = $jwkKeySet[$keyId];
         
         // The public key is used to check whether the token's signature is correct.
-        // If so, the claims (payload) are returned.
-        // The JWT decoder also checks the signature, "nbf" (not before) and "exp" (expiration) claims,
+        // If so, the payload (claims) are returned.
+        // The JWT decoder also checks the signature, "nbf" (not before) and "exp" (expiration) in payload,
         // if present, and throws exceptions if the token is not valid or expired.
         try {
-            $decoded = JWT::decode($jwtToken, $key);
+            $decodedAndVerifiedJwtToken = JWT::decode($jwtToken, $validPublicKey);
         } catch (\Exception $e) {
             throw new RuntimeException(self::JWT_ERROR_PREFIX . $e->getMessage(), $e->getCode(), $e);
         }
         
-        // decoded body with all claims:
-        $claims = json_decode(
-            json_encode($decoded, JSON_THROW_ON_ERROR), 
-            true, flags: 
-            JSON_THROW_ON_ERROR
-        );
+        $payload = $this->convertDecodedTokenObjToArray($decodedAndVerifiedJwtToken);
 
-        // Additional checks on the claims (in addition to the signature verification):
-        
+        // Payload Verification:
+        // - Issuer verification:
         $validIssuers = $this->getValidIssuers($tenantId);
-        $iss = $claims['iss'] ?? null;
-        if (!is_string($iss) || !in_array($iss, $validIssuers, true)) {
+        $issuer = $payload['iss'] ?? null;
+        if (!is_string($issuer) || !in_array($issuer, $validIssuers, true)) {
             throw new RuntimeException(self::JWT_ERROR_PREFIX . "Unexpected Issuer (iss).");
         }
 
-        $aud = $claims['aud'] ?? null;
-        
-        $audOk = is_string($aud) ? ($aud === $tokenAud) : (is_array($aud) && in_array($tokenAud, $aud, true));
+        // - Audience verification:
+        $aud = $payload['aud'] ?? null;
+        $audOk = is_string($aud) ? ($aud === $expectedAud) : (is_array($aud) && in_array($expectedAud, $aud, true));
         if (!$audOk) {
             throw new RuntimeException(self::JWT_ERROR_PREFIX . "Unexpected Audience (aud).");
         }
 
-        $roles = $claims['roles'] ?? [];
+        // - Role verification:
+        $roles = $payload['roles'] ?? [];
         if (!is_array($roles) || !in_array($requiredRole, $roles, true)) {
             throw new RuntimeException( self::JWT_ERROR_PREFIX . " Missing required role: {$requiredRole}");
         }
         
         // If we reach this point, the token is valid and contains the required role.
-        // echo json_encode($claims, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) . PHP_EOL;
+        // echo json_encode($payload, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) . PHP_EOL;
         $authenticatedToken = new JWTAuthToken(
             $jwtToken,
             $username,
             $token->getFacade(),
-            $tenantId,
-            $tokenAud,
-            $requiredRole,  
-            $claims
+            $payload
         );
         
         $this->authenticatedToken = $authenticatedToken;
@@ -154,29 +142,11 @@ class AzureAppRegistrationAuthenticator extends AbstractAuthenticator
     }
 
     /**
-     * Decodes a Base64URL encoded string. Returns the decoded string or throws an exception if decoding fails.
-     * 
-     * @param string $data
-     * @return string
-     */
-    function base64UrlDecode(string $data): string
-    {
-        $data = strtr($data, '-_', '+/');
-        $pad = strlen($data) % 4;
-        if ($pad) $data .= str_repeat('=', 4 - $pad);
-        $decoded = base64_decode($data, true);
-        if ($decoded === false) {
-            throw new RuntimeException('Base64URL decode failed');
-        }
-        return $decoded;
-    }
-
-    /**
-     * Fetches the JWKS (JSON Web Key Set) for a given Entra ID (Azure AD) tenant ID. 
+     * Fetches the JWKS (JSON Web Key Set) for a given tenant ID. 
      * It first retrieves the OpenID Connect configuration to find the JWKS URI, 
      * then fetches the JWKS and returns it as an array. 
      * 
-     * Throws exceptions if any step fails (e.g. network issues, invalid responses, missing keys).
+     * JWKS contains the public keys that can be used to verify tokens issued by Entra ID (Azure AD) for this tenant.
      * 
      * @param string $tenantId
      * @return array
@@ -184,17 +154,17 @@ class AzureAppRegistrationAuthenticator extends AbstractAuthenticator
      */
     function fetchJwksForTenant(string $tenantId): array
     {
-        $openidConfigUrl = $this->getOpenConfigUrl($tenantId);
-        $cfg = json_decode($this->httpGet($openidConfigUrl), true, flags: JSON_THROW_ON_ERROR);
+        $jwksUri = $this->getJwksUri($tenantId);
 
-        $jwksUri = $cfg['jwks_uri'] ?? null;
-        if (!$jwksUri) {
-            throw new RuntimeException('openid-configuration contains no jwks_uri');
-        }
-
-        $jwks = json_decode($this->httpGet($jwksUri), true, flags: JSON_THROW_ON_ERROR);
+        $jwks = json_decode(
+            $this->httpGet($jwksUri), 
+            true, 
+            flags: JSON_THROW_ON_ERROR
+        );
+        
+        
         if (empty($jwks['keys']) || !is_array($jwks['keys'])) {
-            throw new RuntimeException('JWKS does not contain any keys');
+            throw new RuntimeException(self::JWT_ERROR_PREFIX . 'JWKS does not contain any keys');
         }
 
         return $jwks;
@@ -226,6 +196,46 @@ class AzureAppRegistrationAuthenticator extends AbstractAuthenticator
     function getOpenConfigUrl(string $tenantId): string
     {
         return str_replace('{tenantId}', $tenantId, self::OPEN_CONFIG_URL_RAW);
+    }
+
+    /**
+     * @param $tokenObj
+     * @return array
+     * @throws JsonException
+     */
+    function convertDecodedTokenObjToArray($tokenObj) : array
+    {
+        return json_decode(
+            json_encode($tokenObj, JSON_THROW_ON_ERROR),
+            true,
+            flags: JSON_THROW_ON_ERROR
+        );
+    }
+
+    /**
+     * Gets the JWKS URI from the OpenID Connect configuration for the given tenant ID.
+     * This is used to fetch the JWKS for verifying tokens.
+     * 
+     * @param string $tenantId
+     * @return string|null
+     * @throws \JsonException
+     */
+    function getJwksUri(string $tenantId): ?string
+    {
+        $openConfigUrl = $this->getOpenConfigUrl($tenantId);
+        $openIdConfiguration = json_decode(
+            $this->httpGet($openConfigUrl), 
+            true,
+            flags: JSON_THROW_ON_ERROR
+        );
+
+        $jwksUri = $openIdConfiguration['jwks_uri'] ?? null;
+        
+        if (!$jwksUri) {
+            throw new RuntimeException('openid-configuration contains no jwks_uri');
+        }
+        
+        return $jwksUri;
     }
 
     /**
@@ -290,59 +300,85 @@ class AzureAppRegistrationAuthenticator extends AbstractAuthenticator
         return ($token instanceof JWTAuthToken) && $this->isSupportedFacade($token);
     }
     
-    protected function getTenantId(): string
+    /**
+     * @return string
+     */
+    protected function getTenant(): string
     {
-        if ($this->tenantId === null) {
+        if ($this->tenant === null) {
             throw new AuthenticatorConfigError($this, 'Tenant ID is not set. Please check your configuration.');
         }
-        return $this->tenantId;
+        return $this->tenant;
     }
 
     /**
-     * Azure tenant id
+     * Sets the tenant ID for this authenticator. This is used to determine which Azure Entra ID tenant's JWKS to use for verifying tokens.
      * 
-     * @uxon-property tenant_id
+     * @uxon-property tenant
      * @uxon-type string
-     * @uxon-required 
+     * @uxon-required true
      * 
-     * @param string $tenantId
+     * @param string $tenant
      * @return $this
      */
-    protected function setTenantId(string $tenantId): AzureAppRegistrationAuthenticator
+    protected function setTenant(string $tenant): AzureAppRegistrationAuthenticator
     {
-        $this->tenantId = $tenantId;
-        return $this;
-    }
-    
-    protected function getScope() : string
-    {
-        $scope = $this->scope;
-        if (!is_string($scope) || empty($scope)) {
-            throw new AuthenticatorConfigError($this, 'Scope is not set or invalid. Please check your configuration.');
-        }
-        return $scope;
-    }
-
-    /**
-     * 
-     * 
-     * @param string $scope
-     * @return $this
-     */
-    protected function setScope(string $scope): AzureAppRegistrationAuthenticator
-    {
-        $this->scope = $scope;
+        $this->tenant = $tenant;
         return $this;
     }
 
     /**
      * @return string
      */
-    protected function getAudience() : string
+    protected function getAudience(): string
     {
-        $scope = $this->getScope();
-        $audience = StringDataType::substringAfter($scope, 'api://');
-        $audience = StringDataType::substringBefore($audience, '/');
-        return $audience;
+        if ($this->audience === null) {
+            throw new AuthenticatorConfigError($this, 'Audience is not set. Please check your configuration.');
+        }
+        return $this->audience;
+    }
+    
+    /**
+     * Sets the expected audience for the JWT tokens. 
+     * This is used to check the "aud" claim in the token against this value.
+     * 
+     * @uxon-property audience
+     * @uxon-type string
+     * @uxon-required true
+     * 
+     * @param string $audience
+     * @return $this
+     */
+    protected function setAudience(string $audience): AzureAppRegistrationAuthenticator
+    {
+        $this->audience = $audience;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    protected function getRole(): string
+    {
+        if ($this->role === null) {
+            throw new AuthenticatorConfigError($this, 'Role is not set. Please check your configuration.');
+        }
+        return $this->role;
+    }
+    
+    /**
+     * Sets the required role for the JWT tokens. This is used to check the "roles" claim in the token for the presence of this role.
+     * 
+     * @uxon-property role
+     * @uxon-type string
+     * @uxon-required true
+     * 
+     * @param string $role
+     * @return $this
+     */
+    protected function setRole(string $role): AzureAppRegistrationAuthenticator
+    {
+        $this->role = $role;
+        return $this;
     }
 }
