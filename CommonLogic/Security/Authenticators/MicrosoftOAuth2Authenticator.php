@@ -2,6 +2,7 @@
 namespace axenox\Microsoft365Connector\CommonLogic\Security\Authenticators;
 
 use axenox\OAuth2Connector\CommonLogic\Security\Authenticators\OAuth2Authenticator;
+use exface\Core\Interfaces\Security\AuthenticatorInterface;
 use TheNetworg\OAuth2\Client\Token\AccessToken;
 use League\OAuth2\Client\Token\AccessTokenInterface;
 use exface\Core\DataTypes\EncryptedDataType;
@@ -245,6 +246,11 @@ class MicrosoftOAuth2Authenticator extends OAuth2Authenticator
             return $this->getExternalRolesFromToken($token);
         }
         return parent::getExternalRolesFromRemote($user, $token);
+    }
+
+    public function syncUserRoles(UserInterface $user, AuthenticationTokenInterface $token) : AuthenticatorInterface
+    {
+        return parent::syncUserRoles($user, $token);
     }
     
     /**

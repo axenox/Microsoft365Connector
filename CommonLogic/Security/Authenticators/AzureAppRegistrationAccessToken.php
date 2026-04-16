@@ -26,7 +26,7 @@ class AzureAppRegistrationAccessToken implements AuthenticationTokenInterface
      * @param string $subscriptionKey
      * The subscription key governing the resource you are trying to access.
      */
-    public function __construct(int $expirationTime, string $accessToken, string $subscriptionKey)
+    public function __construct(int $expirationTime, string $accessToken, ?string $subscriptionKey = null)
     {
         $this->expirationTime = $expirationTime;
         $this->accessToken = $accessToken;

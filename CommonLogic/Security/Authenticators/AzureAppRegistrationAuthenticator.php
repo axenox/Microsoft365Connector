@@ -1,16 +1,18 @@
 <?php
 namespace axenox\Microsoft365Connector\CommonLogic\Security\Authenticators;
 
+use axenox\Microsoft365Connector\DataConnectors\Authentication\AzureAppRegistrationAuth;
 use exface\Core\CommonLogic\Security\AuthenticationToken\JWTAuthToken;
 use exface\Core\CommonLogic\Security\Authenticators\AbstractAuthenticator;
 use exface\Core\Exceptions\Security\AuthenticationFailedError;
 use exface\Core\Exceptions\Security\AuthenticatorConfigError;
+use exface\Core\Factories\DataConnectionFactory;
 use exface\Core\Interfaces\Security\AuthenticationTokenInterface;
+use exface\UrlDataConnector\Interfaces\HttpConnectionInterface;
 use Firebase\JWT\JWK;
 use Firebase\JWT\JWT;
 use JsonException;
 use RuntimeException;
-use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Client;
 
@@ -380,5 +382,35 @@ class AzureAppRegistrationAuthenticator extends AbstractAuthenticator
     {
         $this->role = $role;
         return $this;
+    }
+
+    /**
+     * Use settings of a certain connection instead of defining tenant, audience, etc. here
+     * 
+     * 
+     * 
+     * @uxon-property use_connection_settings
+     * @uxon-type metamodel:connection
+     * 
+     * @param string $connectionAlias
+     * @return AzureAppRegistrationAuthenticator
+     */
+    protected function setUseConnectionSettings(string $connectionAlias) : AzureAppRegistrationAuthenticator
+    {
+        $this->useConnectionAlias = $connectionAlias;
+        return $this;
+    }
+    
+    protected function getConfigFromConnection() : AzureAppRegistrationAuth
+    {
+        $connection = DataConnectionFactory::createFromModel($this->getWorkbench(), $connectionAlias);
+        if (! $connection instanceof HttpConnectionInterface) {
+            throw new AuthenticatorConfigError($this, 'Invalid connection type');
+        }
+        $auth = $connection->getAuthProvider();
+        if (! $connection instanceof AzureAppRegistrationAuth) {
+            // TODO throw error
+        }
+        $this->audience = $auth->getClientId();
     }
 }
