@@ -54,6 +54,7 @@ class AzureAppRegistrationAuthenticator extends AbstractAuthenticator
     private ?string $tenant = null;
     private ?string $audience = null;
     private ?string $role = null;
+    private ?string $useConnectionAlias = null;
     
     private $authenticatedToken = null;
 
@@ -77,6 +78,8 @@ class AzureAppRegistrationAuthenticator extends AbstractAuthenticator
         $jwtToken = $token->getJWTToken();
         $username = $token->getUsername();
         $header = $token->getHeader();
+        
+        $this->getConfigFromConnection();
         
         $tenantId = $this->getTenant();
         $expectedAud = $this->getAudience();
@@ -400,17 +403,26 @@ class AzureAppRegistrationAuthenticator extends AbstractAuthenticator
         $this->useConnectionAlias = $connectionAlias;
         return $this;
     }
-    
+
+    /**
+     * @return AzureAppRegistrationAuth
+     */
     protected function getConfigFromConnection() : AzureAppRegistrationAuth
     {
-        $connection = DataConnectionFactory::createFromModel($this->getWorkbench(), $connectionAlias);
+        $connection = DataConnectionFactory::createFromModel($this->getWorkbench(), $this->useConnectionAlias);
         if (! $connection instanceof HttpConnectionInterface) {
             throw new AuthenticatorConfigError($this, 'Invalid connection type');
         }
         $auth = $connection->getAuthProvider();
         if (! $connection instanceof AzureAppRegistrationAuth) {
-            // TODO throw error
+            throw new RuntimeException(self::JWT_ERROR_PREFIX . "the connection authentication class must be AzureAppRegistrationAuth");
         }
-        $this->audience = $auth->getClientId();
+        
+        //TODO: Test it!
+        //TODO: the "role" property is still defined inside the configuration and is not present in the connection right now.
+        $this->audience = 'api://' . $auth->getClientId();
+        $this->tenant = $auth->getTenant();
+        
+        return $auth;
     }
 }
