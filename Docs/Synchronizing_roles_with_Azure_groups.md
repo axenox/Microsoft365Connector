@@ -32,3 +32,7 @@ tries to login to the application.
 ## Mapping Azure groups to workbench user roles
 
 See `Administration > Users & Security > User roles`.
+
+## Background-sync for user roles
+
+TODO [via Microsoft Graph API](Microsoft_Graph_as_data_source.md)

@@ -27,3 +27,15 @@ You will need a so-called app registration to access Graph API. The setup is the
 Microsoft Graph is actually a huge collection of different APIs. Most of them are based on the OData 4 standard - see the documentation for [OData data connectors](https://github.com/ExFace/UrlDataConnector/blob/master/Docs/OData/index.md) for more details.
 
 Microsoft also provides a very good playground called [Graph explorer](https://developer.microsoft.com/en-us/graph/graph-explorer) to look around, try different APIs and find out, what claims you need.
+
+## Authentication
+
+### Accessing Microsoft Graph API from a user session
+
+This is called "delegated access". The user needs to log in to Azure and grant the app permissions to access Graph API on their behalf. The app will then use the user's token to access Graph API.
+
+### Accessing Microsoft Graph API from a background job (no user session)
+
+This is called "application access". The app needs to have its own permissions to access Graph API. The app will use its own token to access Graph API.
+
+To set up application access, you need to create an app registration in Azure and grant it the necessary permissions to access Graph API. You can then use the client credentials flow to get a token for the app and use it to access Graph API.
