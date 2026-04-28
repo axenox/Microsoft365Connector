@@ -81,7 +81,10 @@ use exface\Core\Interfaces\UserInterface;
  * connection to Microsoft Graph via `share_token_with_connections`. See detailed documentation in 
  * `Administration > Documentation > App docs > Microsoft365Connector > Single-Sign-On`.
  * 
- * **IMPORTANT:** the configuration of the data connection for Microsoft Graph (client_id, secret, tenant, claims etc.)
+ * **IMPORTANT:** 
+ * 
+ * - The app registration used must have the following permissions: `User.Read.All`.
+ * - The configuration of the data connection for Microsoft Graph (client_id, secret, tenant, claims etc.)
  * MUST be identical with that of the authenticator!
  * 
  * ```

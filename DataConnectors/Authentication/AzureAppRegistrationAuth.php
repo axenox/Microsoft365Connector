@@ -349,7 +349,12 @@ class AzureAppRegistrationAuth extends AbstractHttpAuthenticationProvider
     }
 
     /**
-     * The resource identifier of the resource you want, suffixed with `.default`.
+     * The identifier of the resource you want to access (suffixed with `.default`).
+     * 
+     * If you are accessing a custom API, the scope will look like this: `api://<INSERT client_id>/.default`
+     * where the `client_id` is the one of the app registration that we are trying to access.
+     * 
+     * If you are accessing Microsoft Graph API, the scope MUST be `https://graph.microsoft.com/.default`.
      * 
      * NOTE: The default value is dynamically calculated. Only overwrite this property, 
      * if you know what you are doing. When overwriting, use the fully qualified scope.

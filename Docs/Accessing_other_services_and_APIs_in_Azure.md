@@ -94,7 +94,7 @@ Connection example:
     "scope": "api://.../.default"
   },
 ```
-The `scope` is build of the `client_id` of the app that we are trying to access and the suffix `/.default`.
+The `scope` is build of the `client_id` of the app registration that we are trying to access and the suffix `/.default`.
 "default" means, that the app will get all permissions that are assigned to it in Azure. 
 This is a special scope for app-only access that fetches all app roles and is not used for delegated access.
 
