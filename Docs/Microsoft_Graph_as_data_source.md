@@ -29,13 +29,26 @@ Microsoft Graph is actually a huge collection of different APIs. Most of them ar
 Microsoft also provides a very good playground called [Graph explorer](https://developer.microsoft.com/en-us/graph/graph-explorer) to look around, try different APIs and find out, what claims you need.
 
 ## Authentication
+Microsoft Graph API uses OAuth 2.0 for authentication. You can use the same app registration for Graph API as for single-sign-on if you want to. 
+Just make sure that the app registration has the required permissions to access the Graph API you want to use.
 
-### Accessing Microsoft Graph API from a user session
+Here is another example of the data connection config for Graph API for App-only access (Access without a user) 
+If you want to learn more about the different access scenarios and scopes, see [Accessing other services and APIs in Azure](Accessing_other_services_and_APIs_in_Azure.md).
 
-This is called "delegated access". The user needs to log in to Azure and grant the app permissions to access Graph API on their behalf. The app will then use the user's token to access Graph API.
+```
+{
+  "url": "https://graph.microsoft.com/v1.0/",
+  "authentication": {
+    "exclude_urls": [
+      "~.*/\\$metadata~"
+    ],
+    "class": "\\axenox\\Microsoft365Connector\\DataConnectors\\Authentication\\AzureAppRegistrationAuth",
+    "client_id": "...",
+    "client_secret": "...",
+    "tenant": "...",
+    "scope": "https://graph.microsoft.com/.default"
+  }
+}
+```
 
-### Accessing Microsoft Graph API from a background job (no user session)
-
-This is called "application access". The app needs to have its own permissions to access Graph API. The app will use its own token to access Graph API.
-
-To set up application access, you need to create an app registration in Azure and grant it the necessary permissions to access Graph API. You can then use the client credentials flow to get a token for the app and use it to access Graph API.
+Just swap the "..." with the values from your Azure app registration.
