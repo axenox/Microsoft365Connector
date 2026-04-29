@@ -47,18 +47,30 @@ Connection example:
 ```
 The `scope` is build of the `client_id` of the app registration that we are trying to access and the suffix `/.default`.
 "default" means, that the app will get all permissions that are assigned to it in Azure.
-This is a special scope for app-only access that fetches all app roles and is not used for delegated access.
+This is a special scope for app-only access that fetches all app roles / permissions and is not used for delegated access.
 
-App-only access uses app roles instead of delegated scopes.
-When granted through consent, app roles might also be called applications permissions.
 The client app must be granted appropriate application permissions of the resource app it's calling.
-Once granted, the client app can access the requested data.
-For more information about assigning app roles to client applications, see [official Azure documentation](https://learn.microsoft.com/en-us/entra/identity-platform/howto-add-app-roles-in-apps#assign-app-roles-to-applications).
+Once granted, the client app can access the requested data. For more information about permissions look at the [API permissions](#api-permissions) section below.
 
 ## App-only access to Microsoft Graph API
 Microsoft Graph API has the `client_id` = `00000003-0000-0000-c000-000000000000`.
 So the scope for app-only access to Microsoft Graph would be `api://00000003-0000-0000-c000-000000000000/.default`.
 Or the more human-readable version can also be used: `https://graph.microsoft.com/.default` .
+
+## API permissions
+To enable client applications to access web APIs, you need to add permissions to the client application (in app registration) to access the web API.
+Similarly, in the web API, you need to configure access scopes and roles for the client application.
+
+For more information about configuring app permissions for a web API please see the [official Azure documentation](https://learn.microsoft.com/en-us/entra/identity-platform/quickstart-configure-app-access-web-apis).
+
+### Microsoft Graph API permissions
+The access permissions for Microsoft Graph API are defined in Azure as "API permissions" in the app registration.
+Each permission can be a delegated permission (access on behalf of a user) or an application permission (app-only access).
+Be aware that a delegated permission will not work for app-only access!
+
+Here is an example of API permissions for Microsoft Graph API:
+![API permissions](Images/azure_microsoft_graph_api_permissions.png)
+
 
 ---
 For more information about the authentication and authorization basics see the [Overview of permissions and consent in the Microsoft identity platform](https://learn.microsoft.com/en-us/entra/identity-platform/permissions-consent-overview#consent).
