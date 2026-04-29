@@ -7,7 +7,8 @@ Microsoft also provides a very good playground called [Graph explorer](https://d
 
 This app contains a template for a data connection to Microsoft Graph: `axenox.Microsoft365Connector.MICROSOFT_GRAPH_TEMPLATE`. DO NOT use it directly! Copy it and fill in your data as shown below.
 
-You will need a so-called app registration to access Graph API. The setup is the same as for [single-sign-on via OAuth 2.0](Single-Sign-On_with_Azure_via_OAuth.md). However, the app registration must have permissions for all desired Graph APIs.
+You will need a so-called app registration to access Graph API. The setup is the same as for [single-sign-on via OAuth 2.0](Single-Sign-On_with_Azure_via_OAuth.md). 
+However, the app registration must have permissions for all desired Graph APIs. You can find an example for Graph API permissions in [Authentication and authorization basics, chapter "Microsoft Graph API permissions"](Authentication_and_authorization_basics_with_Azure.md#microsoft-graph-api-permissions)
 
 ## Access types
 
