@@ -79,7 +79,8 @@
                     "exclude_urls": [
                         "~.*\/\\$metadata~"
                     ]
-                },
+                }
+            },
             "READONLY": 0,
             "ALIAS": "MICROSOFT_GRAPH_TEMPLATE"
         },
