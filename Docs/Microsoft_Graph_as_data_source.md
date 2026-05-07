@@ -7,14 +7,15 @@ Microsoft also provides a very good playground called [Graph explorer](https://d
 
 This app contains a template for a data connection to Microsoft Graph: `axenox.Microsoft365Connector.MICROSOFT_GRAPH_TEMPLATE`. DO NOT use it directly! Copy it and fill in your data as shown below.
 
-You will need a so-called app registration to access Graph API. The setup is the same as for [single-sign-on via OAuth 2.0](Single-Sign-On_with_Azure_via_OAuth.md). However, the app registration must have permissions for all desired Graph APIs.
+You will need a so-called app registration to access Graph API. The setup is the same as for [single-sign-on via OAuth 2.0](Single-Sign-On_with_Azure_via_OAuth.md). 
+However, the app registration must have permissions for all desired Graph APIs. You can find an example for Graph API permissions in [Authentication and authorization basics, chapter "Microsoft Graph API permissions"](Authentication_and_authorization_basics_with_Azure.md#microsoft-graph-api-permissions)
 
 ## Access types
 
 - Delegated access (access on behalf of a user)
 - App-only access (access without a user)
 
-TODO see new central docs for authentication and authorization basics
+If you want to learn more about the different access scenarios and scopes, see [Authentication and authorization basics with Azure](Authentication_and_authorization_basics_with_Azure.md).
 
 ## Connection configuration
 
@@ -24,6 +25,7 @@ Just make sure that the app registration has the required permissions to access 
 ### Delegated access (access on behalf of a user)
 
 ```
+
 {
 	"url": "https://graph.microsoft.com/v1.0/",
 	"authentication": {
@@ -39,6 +41,7 @@ Just make sure that the app registration has the required permissions to access 
 		]
 	}
 }
+
 ```
 
 ### Delegated access with single-sign-on and shared tokens
@@ -47,10 +50,10 @@ If you are using single-sign-on with Azure, it is probably a good idea to use th
 
 ### App-only access (access without a user)
 
-Here is another example of the data connection config for Graph API for App-only access (Access without a user) 
-If you want to learn more about the different access scenarios and scopes, see [Accessing other services and APIs in Azure](Accessing_other_services_and_APIs_in_Azure.md).
+Here is another example of the data connection config for Graph API for App-only access (Access without a user)
 
 ```
+
 {
   "url": "https://graph.microsoft.com/v1.0/",
   "authentication": {
@@ -64,6 +67,7 @@ If you want to learn more about the different access scenarios and scopes, see [
     "scope": "https://graph.microsoft.com/.default"
   }
 }
+
 ```
 
 Just swap the "..." with the values from your Azure app registration.

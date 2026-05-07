@@ -49,7 +49,7 @@ use exface\Core\Interfaces\Tasks\TaskInterface;
  * single-sign-on process. However, if syncing with this action, the user who presses the button needs to be able to 
  * access MS Graph API.
  * 
- * Read more about [Accessing Azure APIs here](https://github.com/axenox/Microsoft365Connector/blob/1.x-dev/Docs/Accessing_other_services_and_APIs_in_Azure.md).
+ * Read more about [different access scenarios here](https://github.com/axenox/Microsoft365Connector/blob/1.x-dev/Docs/Authentication_and_authorization_basics_with_Azure.md).
  * 
  * ### Syncing user roles manually
  * 
