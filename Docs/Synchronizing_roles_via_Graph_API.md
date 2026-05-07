@@ -6,9 +6,13 @@ In this case, the Azure groups will be read via Microsoft Graph using the OAuth 
 initial authentication. To make this work, you need to tell the authenticator to share the token with the
 connection to Microsoft Graph via `share_token_with_connections`.
 
+## Configuration in Azure
+
 To make this work, the Azure app registration must have the permission to read groups of a user:
 
 ![Azure API permissions](Images/user_sync_api_permissions.png)
+
+## Configuration of the workbench
 
 In the workbench it is neccessary to configure the authenticator and a data connection for Microsoft Graph. The required meta objects for users and roles are already part of this app and do not need to be changed.
 
@@ -57,7 +61,7 @@ MUST be identical with that of the authenticator!
  }
 ```
 
-The "rows_limit" set to 998 is the highest possible value for Microsoft Graph.
+The `rows_limit` set to 998 is the highest possible value for Microsoft Graph.
 
 The column name you enter into 
 
@@ -93,17 +97,25 @@ and modify its configuration to match that of the authenticator. See [Graph data
  }
 ```
 
-After you have a custom MS Graph connection you need to enter the name of that connection into 
+### Sharing tokens between connections
+
+You can share the token received during single-sign-on with other connections - in particular the Microsoft Graph API
+connection. Doing so will allow signed on users to access these connection without loggin in again. This is an alternative
+to using "app-only access" for these connections.
+
+To share tokens, create a custom MS Graph connection and enter its alias into the authenticator config:
 
 ```
-"share_token_with_connections": [
+     "share_token_with_connections": [
          "my.App.ConnectionToMicrosoftGraph"
      ]
 ```
 
 You also have to edit the data source 'Microsoft Graph'. In the input for 'Custom connection' you need to add the name of the custom MS Graph connection you have just created. Otherwise the authenticator will not be able to login to Microsoft Graph.
 
-## Troubleshooting Admin Consent
+## Troubleshooting 
+
+### Admin Consent errors
 
 Oftentimes you will encounter the following error when trying to login after you have just setup role synchronisation via 'Group.Read.All' for the first time:
 
