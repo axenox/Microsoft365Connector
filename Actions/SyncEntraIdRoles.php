@@ -107,8 +107,13 @@ class SyncEntraIdRoles extends AbstractAction
         $collector->addAttributeAlias('EMAIL');
         $collector->enrich($usersData);
         
+        $logbook = $this->getLogBook($task);
+        $logbook->addLine('Syncing roles for `' . $usersData->countRows() . '` rows');
+        $logbook->addIndent(+1);
+        
         foreach ($usersData->getRows() as $row) {
             $username = $row['USERNAME'];
+            $logbook->addLine('Syncing roles for `' . $username . '`');
             $user = UserFactory::createFromUsername($this->getWorkbench(), $username);
             $fakeToken = new RememberMeAuthToken($username);
             
@@ -124,9 +129,14 @@ class SyncEntraIdRoles extends AbstractAction
             });
 
             if (empty($userMails)) {
+                $logbook->continueLine(' -no Email address found - **skipping**!');
                 // No sync if there is no email address available for the user.
+                // TODO continue instead of return?
                 return ResultFactory::createEmptyResult($task);
             }
+
+            $logbook->continueLine('with emails `' . implode(', ', $userMails) . '`');
+            $logbook->addIndent(+1);
 
             $conditionGroup = $azureUserSheet->getFilters()->addNestedOR();
             $conditionGroup->addConditionFromValueArray('userPrincipalName', $userMails);
@@ -156,6 +166,7 @@ class SyncEntraIdRoles extends AbstractAction
                 ]
             ]));
             $authenticator->syncUserRoles($user, $fakeToken);
+            $logbook->addIndent(-1);
         }
         return ResultFactory::createDataResult($task, $usersData, 'Sync successful');
     }

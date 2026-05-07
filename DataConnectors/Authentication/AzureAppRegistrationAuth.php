@@ -373,6 +373,18 @@ class AzureAppRegistrationAuth extends AbstractHttpAuthenticationProvider
     }
 
     /**
+     * @deprecated do not use directly!
+     * 
+     * 
+     * @param UxonObject $scopes
+     * @return $this
+     */
+    protected function setScopes(UxonObject $scopes) : AzureAppRegistrationAuth
+    {
+        return $this;
+    }
+
+    /**
      * @return array
      */
     public function getExcludeUrls(): array
