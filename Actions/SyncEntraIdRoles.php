@@ -168,6 +168,7 @@ class SyncEntraIdRoles extends AbstractAction
                 ]
             ]));
             $authenticator->syncUserRoles($user, $fakeToken);
+            $logbook->continueLine(' - synchronized.');
             $logbook->addIndent(-1);
         }
         return ResultFactory::createDataResult($task, $usersData, 'Sync successful');
