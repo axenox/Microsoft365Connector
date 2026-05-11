@@ -99,6 +99,8 @@ class SyncEntraIdRoles extends AbstractAction
         
         // DataSheet with user UID per row
         $usersData = $this->getInputDataSheet($task);
+        $usersCount = $usersData->countRows();
+        $usersSynced = 0;
         
         // Make sure, the data has the username as column
         $collector = new DataCollector($usersData->getMetaObject());
@@ -107,7 +109,7 @@ class SyncEntraIdRoles extends AbstractAction
         $collector->enrich($usersData);
         
         $logbook = $this->getLogBook($task);
-        $logbook->addLine('Syncing roles for `' . $usersData->countRows() . '` rows');
+        $logbook->addLine('Syncing roles for `' . $usersCount . '` rows');
         $logbook->addIndent(+1);
         
         foreach ($usersData->getRows() as $row) {
@@ -144,6 +146,7 @@ class SyncEntraIdRoles extends AbstractAction
             
             if (empty($azureUserId)) {
                 $logbook->continueLine(' -no Azure User for given emails found - **skipping**!');
+                $logbook->addIndent(-1);
                 continue;
             }
             
@@ -170,8 +173,11 @@ class SyncEntraIdRoles extends AbstractAction
             $authenticator->syncUserRoles($user, $fakeToken);
             $logbook->continueLine(' - synchronized.');
             $logbook->addIndent(-1);
+            $usersSynced++;
         }
-        return ResultFactory::createDataResult($task, $usersData, 'Sync successful');
+        $logbook->addIndent(-1);
+        $logbook->addLine('Synchronized roles for `' . $usersSynced . ' / ' . $usersCount . '` users.');
+        return ResultFactory::createDataResult($task, $usersData, 'Synchronized roles for ' . $usersSynced . ' / ' . $usersCount . ' users.');
     }
 
     /**
