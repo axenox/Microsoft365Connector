@@ -145,7 +145,7 @@ class SyncEntraIdRoles extends AbstractAction
             $azureUserId = $azureUserSheet->getCellValue('id', 0);
             
             if (empty($azureUserId)) {
-                $logbook->continueLine(' -no Azure User for given emails found - **skipping**!');
+                $logbook->continueLine(' -no Azure user was found for the given emails. - **skipping**!');
                 $logbook->addIndent(-1);
                 continue;
             }
