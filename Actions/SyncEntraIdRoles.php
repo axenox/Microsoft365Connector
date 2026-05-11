@@ -1,7 +1,6 @@
 <?php
 namespace axenox\Microsoft365Connector\Actions;
 
-use axenox\Microsoft365Connector\CommonLogic\Security\Authenticators\AzureAppRegistrationAuthenticator;
 use axenox\Microsoft365Connector\CommonLogic\Security\Authenticators\MicrosoftOAuth2Authenticator;
 use exface\Core\CommonLogic\AbstractAction;
 use exface\Core\CommonLogic\DataSheets\DataCollector;
@@ -130,9 +129,7 @@ class SyncEntraIdRoles extends AbstractAction
 
             if (empty($userMails)) {
                 $logbook->continueLine(' -no Email address found - **skipping**!');
-                // No sync if there is no email address available for the user.
-                // TODO continue instead of return?
-                return ResultFactory::createEmptyResult($task);
+                continue;
             }
 
             $logbook->continueLine('with emails `' . implode(', ', $userMails) . '`');
@@ -144,6 +141,11 @@ class SyncEntraIdRoles extends AbstractAction
 
             $azureUserSheet->dataRead();
             $azureUserId = $azureUserSheet->getCellValue('id', 0);
+            
+            if (empty($azureUserId)) {
+                $logbook->continueLine(' -no Azure User for given emails found - **skipping**!');
+                continue;
+            }
             
             $authenticator->importUxonObject(new UxonObject([
                 "sync_roles_with_data_sheet" => [
