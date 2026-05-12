@@ -8,7 +8,9 @@ use exface\Core\CommonLogic\Security\AuthenticationToken\RememberMeAuthToken;
 use exface\Core\CommonLogic\Security\SecurityManager;
 use exface\Core\CommonLogic\UxonObject;
 use exface\Core\DataTypes\ComparatorDataType;
+use exface\Core\DataTypes\DateTimeDataType;
 use exface\Core\Exceptions\Actions\ActionConfigurationError;
+use exface\Core\Factories\ConditionGroupFactory;
 use exface\Core\Factories\DataSheetFactory;
 use exface\Core\Factories\ResultFactory;
 use exface\Core\Factories\UserFactory;
@@ -85,6 +87,7 @@ use exface\Core\Interfaces\Tasks\TaskInterface;
 class SyncEntraIdRoles extends AbstractAction
 {
     private ?string $authenticatorId = null;
+    private bool $disableUsersWithoutAzureAccount = false;
 
     /**
      * @inheritDoc
@@ -99,22 +102,38 @@ class SyncEntraIdRoles extends AbstractAction
         
         // DataSheet with user UID per row
         $usersData = $this->getInputDataSheet($task);
-        $usersCount = $usersData->countRows();
-        $usersSynced = 0;
         
         // Make sure, the data has the username as column
         $collector = new DataCollector($usersData->getMetaObject());
         $collector->addAttributeAlias('USERNAME');
         $collector->addAttributeAlias('EMAIL');
+        $collector->addAttributeAlias('DISABLED_FLAG');
+        $collector->addAttributeAlias('COMMENTS');
+        $collector->addAttributeAlias('USER_AUTHENTICATOR__AUTHENTICATOR_USERNAME:LIST_DISTINCT');
+        $collector->addAttributeAlias('USER_AUTHENTICATOR__AUTHENTICATOR_USERNAME:MAX_OF(LAST_AUTHENTICATED_ON)');
         $collector->enrich($usersData);
+
+        // Force-filter task input-data to only show users, controlled by EntraID.
+        // Do this BEFORE calling `$this->getInputDataSheet($task)` because that will probably do the reading.
+        // Read only users, that have the authenticator of this action as of their authentication ways.
+        // This will give us ONLY users, that are remote-controlled by EntraID. Any user, that was created locally
+        // (= does not have a corresponding USER_AUTHENTICATOR entry) will be ignored because these users are
+        // controlled by the workbench. In particular, users, that were created automatically when logging in via
+        // Azure will always have the USER_AUTHENTICATOR entry with the authenticator id, that created them.
+        $usersData->getFilters()->addConditionFromString('USER_AUTHENTICATOR__AUTHENTICATOR', $this->getAuthenticatorId(), ComparatorDataType::EQUALS);
+        $usersData->dataRead();
+        $usersCount = $usersData->countRows();
+        $usersSynced = 0;
         
         $logbook = $this->getLogBook($task);
         $logbook->addLine('Syncing roles for `' . $usersCount . '` rows');
-        $logbook->addIndent(+1);
+        $logbook->addLine('| Username | Email | Azure account | Action |');
+        $logbook->continueLine("\n" . '| -------- | ----- | ------------- | ------ |');
         
+        $principalNameCol = $usersData->getColumns()->getByExpression('USER_AUTHENTICATOR__AUTHENTICATOR_USERNAME:MAX_OF(LAST_AUTHENTICATED_ON)')->getName();
         foreach ($usersData->getRows() as $row) {
             $username = $row['USERNAME'];
-            $logbook->addLine('Syncing roles for `' . $username . '`');
+            $logbook->continueLine("\n" . '| `' . $username . '` |');
             $user = UserFactory::createFromUsername($this->getWorkbench(), $username);
             $fakeToken = new RememberMeAuthToken($username);
             
@@ -130,24 +149,39 @@ class SyncEntraIdRoles extends AbstractAction
             });
 
             if (empty($userMails)) {
-                $logbook->continueLine(' -no Email address found - **skipping**!');
+                $logbook->continueLine(' no Email address | | **skipping** |');
                 continue;
             }
 
-            $logbook->continueLine('with emails `' . implode(', ', $userMails) . '`');
-            $logbook->addIndent(+1);
+            $logbook->continueLine(' `' . implode(', ', $userMails) . '` |');
 
             $conditionGroup = $azureUserSheet->getFilters()->addNestedOR();
-            $conditionGroup->addConditionFromValueArray('userPrincipalName', $userMails);
+            $conditionGroup->addConditionFromValueArray('userPrincipalName', $row[$principalNameCol]);
             $conditionGroup->addConditionFromValueArray('mail', $userMails);
 
             $azureUserSheet->dataRead();
             $azureUserId = $azureUserSheet->getCellValue('id', 0);
             
             if (empty($azureUserId)) {
-                $logbook->continueLine(' -no Azure user was found for the given emails. - **skipping**!');
-                $logbook->addIndent(-1);
+                $logbook->continueLine(' **not found** |');
+                if ($row['DISABLED_FLAG']) {
+                    $logbook->continueLine(' disabled previously |');
+                } else {
+                    if ($this->getDisableUsersWithoutAzureAccount()) {
+                        $logbook->continueLine(' **DISABLING** |');
+                        $disableSheet = DataSheetFactory::createFromObject($usersData->getMetaObject());#
+                        $disableSheet->addRow([
+                            'UID' => $row['UID'],
+                            'DISABLE_DATE' => DateTimeDataType::now()
+                        ]);
+                        $disableSheet->dataUpdate(false);
+                    } else {
+                        $logbook->continueLine(' **skipping** |');
+                    }
+                }
                 continue;
+            } else {
+                $logbook->continueLine(' ' . $azureUserId . ' |');
             }
             
             $authenticator->importUxonObject(new UxonObject([
@@ -171,11 +205,9 @@ class SyncEntraIdRoles extends AbstractAction
                 ]
             ]));
             $authenticator->syncUserRoles($user, $fakeToken);
-            $logbook->continueLine(' - synchronized.');
-            $logbook->addIndent(-1);
+            $logbook->continueLine(' synced |');
             $usersSynced++;
         }
-        $logbook->addIndent(-1);
         $logbook->addLine('Synchronized roles for `' . $usersSynced . ' / ' . $usersCount . '` users.');
         return ResultFactory::createDataResult($task, $usersData, 'Synchronized roles for ' . $usersSynced . ' / ' . $usersCount . ' users.');
     }
@@ -201,5 +233,29 @@ class SyncEntraIdRoles extends AbstractAction
     protected function getAuthenticatorId() : string
     {
         return $this->authenticatorId;
+    }
+
+    /**
+     * @return bool
+     */
+    protected function getDisableUsersWithoutAzureAccount() : bool
+    {
+        return $this->disableUsersWithoutAzureAccount;
+    }
+
+    /**
+     * Set to TRUE to disabled workbench users if no Azure account could be found!
+     * 
+     * @uxon-property disable_users_without_azure_account
+     * @uxon-type boolean
+     * @uxon-default false
+     * 
+     * @param bool $trueOrFalse
+     * @return $this
+     */
+    protected function setDisableUsersWithoutAzureAccount(bool $trueOrFalse) : SyncEntraIdRoles
+    {
+        $this->disableUsersWithoutAzureAccount = $trueOrFalse;
+        return $this;
     }
 }
