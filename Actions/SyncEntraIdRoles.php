@@ -4,13 +4,13 @@ namespace axenox\Microsoft365Connector\Actions;
 use axenox\Microsoft365Connector\CommonLogic\Security\Authenticators\MicrosoftOAuth2Authenticator;
 use exface\Core\CommonLogic\AbstractAction;
 use exface\Core\CommonLogic\DataSheets\DataCollector;
+use exface\Core\CommonLogic\DataSheets\DataSheet;
 use exface\Core\CommonLogic\Security\AuthenticationToken\RememberMeAuthToken;
 use exface\Core\CommonLogic\Security\SecurityManager;
 use exface\Core\CommonLogic\UxonObject;
 use exface\Core\DataTypes\ComparatorDataType;
 use exface\Core\DataTypes\DateTimeDataType;
 use exface\Core\Exceptions\Actions\ActionConfigurationError;
-use exface\Core\Factories\ConditionGroupFactory;
 use exface\Core\Factories\DataSheetFactory;
 use exface\Core\Factories\ResultFactory;
 use exface\Core\Factories\UserFactory;
@@ -111,28 +111,32 @@ class SyncEntraIdRoles extends AbstractAction
         $collector->addAttributeAlias('COMMENTS');
         $collector->addAttributeAlias('USER_AUTHENTICATOR__AUTHENTICATOR_USERNAME:LIST_DISTINCT');
         $collector->addAttributeAlias('USER_AUTHENTICATOR__AUTHENTICATOR_USERNAME:MAX_OF(LAST_AUTHENTICATED_ON)');
+        $collector->addAttributeAlias('USER_AUTHENTICATOR__AUTHENTICATOR:LIST_DISTINCT');
         $collector->enrich($usersData);
-
-        // Force-filter task input-data to only show users, controlled by EntraID.
-        // Do this BEFORE calling `$this->getInputDataSheet($task)` because that will probably do the reading.
-        // Read only users, that have the authenticator of this action as of their authentication ways.
-        // This will give us ONLY users, that are remote-controlled by EntraID. Any user, that was created locally
-        // (= does not have a corresponding USER_AUTHENTICATOR entry) will be ignored because these users are
-        // controlled by the workbench. In particular, users, that were created automatically when logging in via
-        // Azure will always have the USER_AUTHENTICATOR entry with the authenticator id, that created them.
-        $usersData->getFilters()->addConditionFromString('USER_AUTHENTICATOR__AUTHENTICATOR', $this->getAuthenticatorId(), ComparatorDataType::EQUALS);
-        $usersData->dataRead();
+        
         $usersCount = $usersData->countRows();
         $usersSynced = 0;
+        $usersDisabledOrSkippedDisabling = 0;
+        
+        // Authenticator username is used for authentication in Azure and is stored as userPrincipalName in Graph.
+        $userAzureAuthUsernameCol = $usersData->getColumns()->getByExpression('USER_AUTHENTICATOR__AUTHENTICATOR_USERNAME:MAX_OF(LAST_AUTHENTICATED_ON)')->getName();
+        $userAzureAuthCol = $usersData->getColumns()->getByExpression('USER_AUTHENTICATOR__AUTHENTICATOR:LIST_DISTINCT')->getName();
         
         $logbook = $this->getLogBook($task);
-        $logbook->addLine('Syncing roles for `' . $usersCount . '` rows');
-        $logbook->addLine('| Username | Email | Azure account | Action |');
+        $logbook->addLine('Using Azure Authenticator to search for each user by their Authenticator username. If the username is missing, using their in PowerUI saved email address instead. Then, sync roles based on Azure groups or disable them if no active Azure user is found.');
+        $logbook->addLine('Strategy for missing active Azure account: `' . ($this->getDisableUsersWithoutAzureAccount() ? 'DISABLING' : 'SKIP DISABLING') . '`');
+        $logbook->addLine('Syncing roles for `' . $usersCount . '` users:');
+        $logbook->addLine('| PowerUI Username | Auth. Username / PowerUI Email | Active Azure account ID | Action |');
         $logbook->continueLine("\n" . '| -------- | ----- | ------------- | ------ |');
         
-        $principalNameCol = $usersData->getColumns()->getByExpression('USER_AUTHENTICATOR__AUTHENTICATOR_USERNAME:MAX_OF(LAST_AUTHENTICATED_ON)')->getName();
         foreach ($usersData->getRows() as $row) {
             $username = $row['USERNAME'];
+            
+            if ($username === null) {
+                $logbook->continueLine("\n" . '| no username found | | | **skipping** |');
+                continue;
+            }
+            
             $logbook->continueLine("\n" . '| `' . $username . '` |');
             $user = UserFactory::createFromUsername($this->getWorkbench(), $username);
             $fakeToken = new RememberMeAuthToken($username);
@@ -140,50 +144,84 @@ class SyncEntraIdRoles extends AbstractAction
             $azureUserSheet = DataSheetFactory::createFromObjectIdOrAlias($this->getWorkbench(), 'axenox.Microsoft365Connector.users');
             $azureUserSheet->getColumns()->addFromExpression('userPrincipalName');
             $azureUserSheet->getColumns()->addFromExpression('mail');
+            $azureUserSheet->getColumns()->addFromExpression('accountEnabled');
 
             $userMailsRaw = $row['EMAIL'];
             $userMails = is_array($userMailsRaw) ? $userMailsRaw : [$userMailsRaw];
+
+            $userAzureAuthUsername = $row[$userAzureAuthUsernameCol];
+            $userAuthenticators = explode(',',$row[$userAzureAuthCol]);
             
             $userMails = array_filter($userMails, function($userMail) {
                 return !empty($userMail);
             });
 
-            if (empty($userMails)) {
-                $logbook->continueLine(' no Email address | | **skipping** |');
+            // Sync only users, that have the authenticator of this action as of their authentication ways.
+            // This will give us ONLY users, that are remote-controlled by EntraID. Any user, that was created locally
+            // (= does not have a corresponding USER_AUTHENTICATOR entry) will be ignored because these users are
+            // controlled by the workbench. In particular, users, that were created automatically when logging in via
+            // Azure will always have the USER_AUTHENTICATOR entry with the authenticator id, that created them.
+            if(!in_array($this->getAuthenticatorId(), $userAuthenticators)) {
+                $logbook->continueLine(' | no Azure Authenticator | skipping |');
                 continue;
             }
 
-            $logbook->continueLine(' `' . implode(', ', $userMails) . '` |');
+            // If no Authenticator Username (called userPrincipalName in Azure) AND no email (workbench email) is given,
+            // we have no way to find the user in Azure. Skip syncing in this case.
+            if (empty($userAzureAuthUsername) && empty($userMails)) {
+                $logbook->continueLine('no Email address | | skipping |');
+                continue;
+            }
 
-            $conditionGroup = $azureUserSheet->getFilters()->addNestedOR();
-            $conditionGroup->addConditionFromValueArray('userPrincipalName', $row[$principalNameCol]);
-            $conditionGroup->addConditionFromValueArray('mail', $userMails);
+            // Auth. Username / PowerUI Email
+            $userLookupValue = !empty($userAzureAuthUsername) ? '`' . $userAzureAuthUsername . '`' : '';
+            $userLookupValue .= !empty($userMails) ? ' / `' . implode(', ', $userMails) . '`' : '';
+            $logbook->continueLine($userLookupValue . ' |');
 
-            $azureUserSheet->dataRead();
+            // First, we need to find the user in Azure Graph.
+            // We will search for the user by their Authenticator Username (userPrincipalName) in Graph.
+            // If nothing is found, we try again with the user email.
+            $this->readActiveAzureUserDataByFilterCondition($azureUserSheet,'userPrincipalName', $userAzureAuthUsername, false);
+            
+            if (($azureUserSheet->countRows() <= 0) && !empty($userMails)) {
+                // Trying again with the mail:
+                $this->readActiveAzureUserDataByFilterCondition($azureUserSheet,'mail', $userMails, true);
+
+                // This case may happen, if one person has multiple accounts with the same email address AND the userPrincipalNames are wrong (maybe got changed in Azure).
+                // In this case, we cannot be sure which one is the right one, so we skip syncing to avoid mistakes.
+                if ($azureUserSheet->countRows() > 1) {
+                    $logbook->continueLine(' **found multiple Accounts** | skipping |');
+                    Continue;
+                }
+            }
             $azureUserId = $azureUserSheet->getCellValue('id', 0);
             
             if (empty($azureUserId)) {
-                $logbook->continueLine(' **not found** |');
+                $logbook->continueLine(' **not found in Azure** |');
                 if ($row['DISABLED_FLAG']) {
                     $logbook->continueLine(' disabled previously |');
                 } else {
                     if ($this->getDisableUsersWithoutAzureAccount()) {
                         $logbook->continueLine(' **DISABLING** |');
-                        $disableSheet = DataSheetFactory::createFromObject($usersData->getMetaObject());#
+                        $disableSheet = DataSheetFactory::createFromObject($usersData->getMetaObject());
                         $disableSheet->addRow([
                             'UID' => $row['UID'],
-                            'DISABLE_DATE' => DateTimeDataType::now()
+                            'DISABLE_DATE' => DateTimeDataType::now(),
+                            'MODIFIED_ON' => $row['MODIFIED_ON']
                         ]);
                         $disableSheet->dataUpdate(false);
+                        $usersSynced++;
                     } else {
-                        $logbook->continueLine(' **skipping** |');
+                        $logbook->continueLine(' **SKIP DISABLING** |');
                     }
+                    $usersDisabledOrSkippedDisabling++;
                 }
                 continue;
             } else {
                 $logbook->continueLine(' ' . $azureUserId . ' |');
             }
             
+            // azureUserId can now be used to fetch the user roles and sync them.
             $authenticator->importUxonObject(new UxonObject([
                 "sync_roles_with_data_sheet" => [
                     "object_alias" => "axenox.Microsoft365Connector.userGroups",
@@ -205,11 +243,14 @@ class SyncEntraIdRoles extends AbstractAction
                 ]
             ]));
             $authenticator->syncUserRoles($user, $fakeToken);
-            $logbook->continueLine(' synced |');
+            $logbook->continueLine(' **roles synced** |');
             $usersSynced++;
         }
         $logbook->addLine('Synchronized roles for `' . $usersSynced . ' / ' . $usersCount . '` users.');
-        return ResultFactory::createDataResult($task, $usersData, 'Synchronized roles for ' . $usersSynced . ' / ' . $usersCount . ' users.');
+        $logbook->addLine(($this->getDisableUsersWithoutAzureAccount() ? 'Disabled' : 'Disabling was skipped for') . ' `' . $usersDisabledOrSkippedDisabling . '` of the users.');
+        return ResultFactory::createDataResult($task, $usersData, 'Synchronized roles for ' . $usersSynced . ' / ' . $usersCount . ' users.' 
+            . ($this->getDisableUsersWithoutAzureAccount() ? ' Disabled' : ' Disabling was skipped for') . ' ' . $usersDisabledOrSkippedDisabling . ' of the users.'
+        );
     }
 
     /**
@@ -257,5 +298,30 @@ class SyncEntraIdRoles extends AbstractAction
     {
         $this->disableUsersWithoutAzureAccount = $trueOrFalse;
         return $this;
+    }
+
+    /**
+     * Reads active Azure user data with given search values and flush filter if needed.
+     *
+     * @param DataSheet $azureUserSheet
+     * @param string $azureValue
+     * @param array|string $searchValueList
+     * @param bool $flushFilter
+     */
+    private function readActiveAzureUserDataByFilterCondition(
+        DataSheet $azureUserSheet, 
+        string $azureValue, 
+        array | string $searchValueList, 
+        bool $flushFilter
+    ) : void
+    {
+        if ($flushFilter) {
+            $azureUserSheet->getFilters()->removeAll();
+        }
+        
+        $conditionGroup = $azureUserSheet->getFilters()->addNestedAND();
+        $conditionGroup->addConditionFromString('accountEnabled', 'true', ComparatorDataType::EQUALS);
+        $conditionGroup->addConditionFromValueArray($azureValue, $searchValueList);
+        $azureUserSheet->dataRead();
     }
 }
