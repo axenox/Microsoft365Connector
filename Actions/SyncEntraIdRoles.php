@@ -87,7 +87,7 @@ use exface\Core\Interfaces\Tasks\TaskInterface;
 class SyncEntraIdRoles extends AbstractAction
 {
     private ?string $authenticatorId = null;
-    private bool $disableUsersWithoutAzureAccount = false;
+    private bool $disabledAzureAuthenticatedUsers = false;
 
     /**
      * @inheritDoc
@@ -124,7 +124,7 @@ class SyncEntraIdRoles extends AbstractAction
         
         $logbook = $this->getLogBook($task);
         $logbook->addLine('Using Azure Authenticator to search for each user by their Authenticator username. If the username is missing, using their in PowerUI saved email address instead. Then, sync roles based on Azure groups or disable them if no active Azure user is found.');
-        $logbook->addLine('Strategy for missing active Azure account: `' . ($this->getDisableUsersWithoutAzureAccount() ? 'DISABLING' : 'SKIP DISABLING') . '`');
+        $logbook->addLine('Strategy for missing active Azure account: `' . ($this->getDisabledAzureAuthenticatedUsers() ? 'DISABLING' : 'SKIP DISABLING') . '`');
         $logbook->addLine('Syncing roles for `' . $usersCount . '` users:');
         $logbook->addLine('| PowerUI Username | Auth. Username / PowerUI Email | Active Azure account ID | Action |');
         $logbook->continueLine("\n" . '| -------- | ----- | ------------- | ------ |');
@@ -201,7 +201,7 @@ class SyncEntraIdRoles extends AbstractAction
                 if ($row['DISABLED_FLAG']) {
                     $logbook->continueLine(' disabled previously |');
                 } else {
-                    if ($this->getDisableUsersWithoutAzureAccount()) {
+                    if ($this->getDisabledAzureAuthenticatedUsers()) {
                         $logbook->continueLine(' **DISABLING** |');
                         $disableSheet = DataSheetFactory::createFromObject($usersData->getMetaObject());
                         $disableSheet->addRow([
@@ -247,9 +247,9 @@ class SyncEntraIdRoles extends AbstractAction
             $usersSynced++;
         }
         $logbook->addLine('Synchronized roles for `' . $usersSynced . ' / ' . $usersCount . '` users.');
-        $logbook->addLine(($this->getDisableUsersWithoutAzureAccount() ? 'Disabled' : 'Disabling was skipped for') . ' `' . $usersDisabledOrSkippedDisabling . '` of the users.');
+        $logbook->addLine(($this->getDisabledAzureAuthenticatedUsers() ? 'Disabled' : 'Disabling was skipped for') . ' `' . $usersDisabledOrSkippedDisabling . '` of the users.');
         return ResultFactory::createDataResult($task, $usersData, 'Synchronized roles for ' . $usersSynced . ' / ' . $usersCount . ' users.' 
-            . ($this->getDisableUsersWithoutAzureAccount() ? ' Disabled' : ' Disabling was skipped for') . ' ' . $usersDisabledOrSkippedDisabling . ' of the users.'
+            . ($this->getDisabledAzureAuthenticatedUsers() ? ' Disabled' : ' Disabling was skipped for') . ' ' . $usersDisabledOrSkippedDisabling . ' of the users.'
         );
     }
 
@@ -279,24 +279,26 @@ class SyncEntraIdRoles extends AbstractAction
     /**
      * @return bool
      */
-    protected function getDisableUsersWithoutAzureAccount() : bool
+    protected function getDisabledAzureAuthenticatedUsers() : bool
     {
-        return $this->disableUsersWithoutAzureAccount;
+        return $this->disabledAzureAuthenticatedUsers;
     }
 
     /**
-     * Set to TRUE to disabled workbench users if no Azure account could be found!
+     * Set to TRUE to disable workbench users with Azure Authenticator if no active Azure account could be found!
+     * Set to FALSE to just skip disabling in PowerUI. In this case, PowerUI users with present authentication entries, that can not be found in Azure or are disabled in Azure will remain active in PowerUI.
+     * You can also set this property to false for testing purposes to see which users would be affected without actually disabling them.
      * 
-     * @uxon-property disable_users_without_azure_account
+     * @uxon-property disabled_azure_authenticated_users
      * @uxon-type boolean
      * @uxon-default false
      * 
      * @param bool $trueOrFalse
      * @return $this
      */
-    protected function setDisableUsersWithoutAzureAccount(bool $trueOrFalse) : SyncEntraIdRoles
+    protected function setDisabledAzureAuthenticatedUsers(bool $trueOrFalse) : SyncEntraIdRoles
     {
-        $this->disableUsersWithoutAzureAccount = $trueOrFalse;
+        $this->disabledAzureAuthenticatedUsers = $trueOrFalse;
         return $this;
     }
 
