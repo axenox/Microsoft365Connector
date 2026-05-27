@@ -2,6 +2,7 @@
 namespace axenox\Microsoft365Connector\Actions;
 
 use axenox\Microsoft365Connector\CommonLogic\Security\Authenticators\MicrosoftOAuth2Authenticator;
+use Exception;
 use exface\Core\CommonLogic\AbstractAction;
 use exface\Core\CommonLogic\DataSheets\DataCollector;
 use exface\Core\CommonLogic\DataSheets\DataSheet;
@@ -19,7 +20,8 @@ use exface\Core\Interfaces\Tasks\ResultInterface;
 use exface\Core\Interfaces\Tasks\TaskInterface;
 
 /**
- * It synchronizes the Azure EntraID roles of given users with the PowerUI.
+ * It synchronizes the Azure EntraID roles and the mail of given users with the PowerUI.
+ * If the user is not found or has the flag "accountEnabled" set to false in Azure, the action can either disable the user in PowerUI or just skip disabling.
  * 
  * This is important if you are using single-sign-on with Azure via OAuth2 and syncing user roles with Azure groups
  * via MS Graph API as described [in the docs](https://github.com/axenox/Microsoft365Connector/blob/1.x-dev/Docs/Synchronizing_roles_via_Graph_API.md).
@@ -88,6 +90,7 @@ class SyncEntraIdRoles extends AbstractAction
 {
     private ?string $authenticatorId = null;
     private bool $disabledAzureAuthenticatedUsers = false;
+    private bool $useUserMailAsFallback = false;
 
     /**
      * @inheritDoc
@@ -118,15 +121,18 @@ class SyncEntraIdRoles extends AbstractAction
         $usersSynced = 0;
         $usersDisabledOrSkippedDisabling = 0;
         
+        $useUserMailAsFallback = $this->getUseUserMailAsFallback();
+        
         // Authenticator username is used for authentication in Azure and is stored as userPrincipalName in Graph.
         $userAzureAuthUsernameCol = $usersData->getColumns()->getByExpression('USER_AUTHENTICATOR__AUTHENTICATOR_USERNAME:MAX_OF(LAST_AUTHENTICATED_ON)')->getName();
         $userAzureAuthCol = $usersData->getColumns()->getByExpression('USER_AUTHENTICATOR__AUTHENTICATOR:LIST_DISTINCT')->getName();
         
         $logbook = $this->getLogBook($task);
-        $logbook->addLine('Using Azure Authenticator to search for each user by their Authenticator username. If the username is missing, using their in PowerUI saved email address instead. Then, sync roles based on Azure groups or disable them if no active Azure user is found.');
+        $logbook->addLine('Using Azure Authenticator to search for each user by their Authenticator username.' . ($useUserMailAsFallback ? ' If the username is missing or not found, using their in PowerUI saved email address as fallback.' : '') . ' Then, sync roles and email based on Azure groups or disable them if no active Azure user is found.');
+        $logbook->addLine('Using PowerUI Email as fallback: `' . ($useUserMailAsFallback ? 'TRUE' : 'FALSE') . '`');
         $logbook->addLine('Strategy for missing active Azure account: `' . ($this->getDisabledAzureAuthenticatedUsers() ? 'DISABLING' : 'SKIP DISABLING') . '`');
         $logbook->addLine('Syncing roles for `' . $usersCount . '` users:');
-        $logbook->addLine('| PowerUI Username | Auth. Username / PowerUI Email | Active Azure account ID | Action |');
+        $logbook->addLine('| PowerUI Username | Auth. Username'. ($useUserMailAsFallback ? ' / PowerUI Email' : '') . ' | Active Azure account ID | Action |');
         $logbook->continueLine("\n" . '| -------- | ----- | ------------- | ------ |');
         
         foreach ($usersData->getRows() as $row) {
@@ -166,24 +172,27 @@ class SyncEntraIdRoles extends AbstractAction
                 continue;
             }
 
-            // If no Authenticator Username (called userPrincipalName in Azure) AND no email (workbench email) is given,
-            // we have no way to find the user in Azure. Skip syncing in this case.
-            if (empty($userAzureAuthUsername) && empty($userMails)) {
-                $logbook->continueLine('no Email address | | skipping |');
+            // If no Authenticator Username (called userPrincipalName in Azure) is given and mail fallback is disabled,
+            // we have no way to find the user in Azure.
+            // With mail fallback enabled, at least one mail address is needed or the sync will be skipped.
+            if (empty($userAzureAuthUsername) && (! $useUserMailAsFallback || empty($userMails))) {
+                $logbook->continueLine(($useUserMailAsFallback ? 'no Auth. Username or Email address' : 'no Auth. Username') . ' | | skipping |');
                 continue;
             }
 
             // Auth. Username / PowerUI Email
             $userLookupValue = !empty($userAzureAuthUsername) ? '`' . $userAzureAuthUsername . '`' : '';
-            $userLookupValue .= !empty($userMails) ? ' / `' . implode(', ', $userMails) . '`' : '';
+            $userLookupValue .= ($useUserMailAsFallback && !empty($userMails)) ? ' / `' . implode(', ', $userMails) . '`' : '';
             $logbook->continueLine($userLookupValue . ' |');
 
             // First, we need to find the user in Azure Graph.
             // We will search for the user by their Authenticator Username (userPrincipalName) in Graph.
-            // If nothing is found, we try again with the user email.
-            $this->readActiveAzureUserDataByFilterCondition($azureUserSheet,'userPrincipalName', $userAzureAuthUsername, false);
+            if (! empty($userAzureAuthUsername)) {
+                $this->readActiveAzureUserDataByFilterCondition($azureUserSheet,'userPrincipalName', $userAzureAuthUsername, false);
+            }
             
-            if (($azureUserSheet->countRows() <= 0) && !empty($userMails)) {
+            // If nothing is found, we try again with the user email (if $useUserMailAsFallback set to true).
+            if ($useUserMailAsFallback && ($azureUserSheet->countRows() <= 0) && !empty($userMails)) {
                 // Trying again with the mail:
                 $this->readActiveAzureUserDataByFilterCondition($azureUserSheet,'mail', $userMails, true);
 
@@ -221,6 +230,11 @@ class SyncEntraIdRoles extends AbstractAction
                 $logbook->continueLine(' ' . $azureUserId . ' |');
             }
             
+            // Syncing user mail with the mail in Azure.
+            if ($this->syncUserMail($usersData, $azureUserSheet, $row)) {
+                $logbook->continueLine(' **mail & **');
+            }
+            
             // azureUserId can now be used to fetch the user roles and sync them.
             $authenticator->importUxonObject(new UxonObject([
                 "sync_roles_with_data_sheet" => [
@@ -251,6 +265,60 @@ class SyncEntraIdRoles extends AbstractAction
         return ResultFactory::createDataResult($task, $usersData, 'Synchronized roles for ' . $usersSynced . ' / ' . $usersCount . ' users.' 
             . ($this->getDisabledAzureAuthenticatedUsers() ? ' Disabled' : ' Disabling was skipped for') . ' ' . $usersDisabledOrSkippedDisabling . ' of the users.'
         );
+    }
+
+    /**
+     * Reads active Azure user data with given search values and flush filter if needed.
+     *
+     * @param DataSheet $azureUserSheet
+     * @param string $azureValue
+     * @param array|string $searchValueList
+     * @param bool $flushFilter
+     */
+    private function readActiveAzureUserDataByFilterCondition(
+        DataSheet $azureUserSheet,
+        string $azureValue,
+        array | string $searchValueList,
+        bool $flushFilter
+    ) : void
+    {
+        if ($flushFilter) {
+            $azureUserSheet->getFilters()->removeAll();
+        }
+
+        $conditionGroup = $azureUserSheet->getFilters()->addNestedAND();
+        $conditionGroup->addConditionFromString('accountEnabled', 'true', ComparatorDataType::EQUALS);
+        $conditionGroup->addConditionFromValueArray($azureValue, $searchValueList);
+        $azureUserSheet->dataRead();
+    }
+
+    /**
+     * Syncs powerUI Email with the Azure mail.
+     * Returns TRUE, if sync happen
+     *
+     * @param $usersData
+     * @param $azureUserSheet
+     * @param $row
+     * @return bool
+     * @throws Exception
+     */
+    private function syncUserMail($usersData, $azureUserSheet, $row) : bool
+    {
+        $azureUserMail = $azureUserSheet->getCellValue('mail', 0);
+        $userMailsRaw = $row['EMAIL'];
+        $userMails = is_array($userMailsRaw) ? $userMailsRaw : [$userMailsRaw];
+
+        if (!in_array($azureUserMail, $userMails)) {
+            $userMailUpdateSheet = DataSheetFactory::createFromObject($usersData->getMetaObject());
+            $userMailUpdateSheet->addRow([
+                'UID' => $row['UID'],
+                'EMAIL' => $azureUserMail,
+                'MODIFIED_ON' => $row['MODIFIED_ON']
+            ]);
+            $userMailUpdateSheet->dataUpdate(false);
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -303,27 +371,26 @@ class SyncEntraIdRoles extends AbstractAction
     }
 
     /**
-     * Reads active Azure user data with given search values and flush filter if needed.
-     *
-     * @param DataSheet $azureUserSheet
-     * @param string $azureValue
-     * @param array|string $searchValueList
-     * @param bool $flushFilter
+     * @return bool
      */
-    private function readActiveAzureUserDataByFilterCondition(
-        DataSheet $azureUserSheet, 
-        string $azureValue, 
-        array | string $searchValueList, 
-        bool $flushFilter
-    ) : void
+    protected function getUseUserMailAsFallback() : bool
     {
-        if ($flushFilter) {
-            $azureUserSheet->getFilters()->removeAll();
-        }
-        
-        $conditionGroup = $azureUserSheet->getFilters()->addNestedAND();
-        $conditionGroup->addConditionFromString('accountEnabled', 'true', ComparatorDataType::EQUALS);
-        $conditionGroup->addConditionFromValueArray($azureValue, $searchValueList);
-        $azureUserSheet->dataRead();
+        return $this->useUserMailAsFallback;
+    }
+
+    /**
+     * Set to TRUE to use the workbench user mail as fallback to find the user in Azure if the Authenticator Username (userPrincipalName) is missing or not found in Azure.
+     * 
+     * @uxon-property use_user_mail_as_fallback
+     * @uxon-type boolean
+     * @uxon-default false
+     * 
+     * @param bool $trueOrFalse
+     * @return $this
+     */
+    protected function setUseUserMailAsFallback(bool $trueOrFalse) : SyncEntraIdRoles
+    {
+        $this->useUserMailAsFallback = $trueOrFalse;
+        return $this;
     }
 }
