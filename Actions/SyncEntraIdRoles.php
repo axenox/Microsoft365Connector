@@ -91,6 +91,7 @@ class SyncEntraIdRoles extends AbstractAction
     private ?string $authenticatorId = null;
     private bool $disabledAzureAuthenticatedUsers = false;
     private bool $useUserMailAsFallback = false;
+    private bool $syncUserMail = false;
 
     /**
      * @inheritDoc
@@ -119,6 +120,7 @@ class SyncEntraIdRoles extends AbstractAction
         
         $usersCount = $usersData->countRows();
         $usersSynced = 0;
+        $userMailSyncedOrSkipped = 0;
         $usersDisabledOrSkippedDisabling = 0;
         
         $useUserMailAsFallback = $this->getUseUserMailAsFallback();
@@ -128,11 +130,19 @@ class SyncEntraIdRoles extends AbstractAction
         $userAzureAuthCol = $usersData->getColumns()->getByExpression('USER_AUTHENTICATOR__AUTHENTICATOR:LIST_DISTINCT')->getName();
         
         $logbook = $this->getLogBook($task);
-        $logbook->addLine('Using Azure Authenticator to search for each user by their Authenticator username.' . ($useUserMailAsFallback ? ' If the username is missing or not found, using their in PowerUI saved email address as fallback.' : '') . ' Then, sync roles and email based on Azure groups or disable them if no active Azure user is found.');
+        $logbook->addLine('Using Azure Authenticator to search for each user by their Authenticator username.' 
+            . ($useUserMailAsFallback ? ' If the username is missing or not found, using their in PowerUI saved email address as fallback.' : '') 
+            . ' Then, sync roles' . ($this->getSyncUserMail() ? ' and email' : '') . ' based on Azure groups or disable them if no active Azure user is found.');
+
+        $logbook->addLine('Used settings:');
+        $logbook->addIndent(1);
         $logbook->addLine('Using PowerUI Email as fallback: `' . ($useUserMailAsFallback ? 'TRUE' : 'FALSE') . '`');
+        $logbook->addLine('Syncing PowerUI Email with Azure: `' . ($this->getSyncUserMail() ? 'TRUE' : 'FALSE') . '`');
         $logbook->addLine('Strategy for missing active Azure account: `' . ($this->getDisabledAzureAuthenticatedUsers() ? 'DISABLING' : 'SKIP DISABLING') . '`');
+        $logbook->addIndent(-1);
+        
         $logbook->addLine('Syncing roles for `' . $usersCount . '` users:');
-        $logbook->addLine('| PowerUI Username | Auth. Username'. ($useUserMailAsFallback ? ' / PowerUI Email' : '') . ' | Active Azure account ID | Action |');
+        $logbook->addLine('| PowerUI Username | Auth. Username'. (($useUserMailAsFallback || $this->getSyncUserMail())? ' / PowerUI Email' : '') . ' | Active Azure account ID | Action |');
         $logbook->continueLine("\n" . '| -------- | ----- | ------------- | ------ |');
         
         foreach ($usersData->getRows() as $row) {
@@ -182,7 +192,7 @@ class SyncEntraIdRoles extends AbstractAction
 
             // Auth. Username / PowerUI Email
             $userLookupValue = !empty($userAzureAuthUsername) ? '`' . $userAzureAuthUsername . '`' : '';
-            $userLookupValue .= ($useUserMailAsFallback && !empty($userMails)) ? ' / `' . implode(', ', $userMails) . '`' : '';
+            $userLookupValue .= (($useUserMailAsFallback || $this->getSyncUserMail()) && !empty($userMails)) ? ' / `' . implode(', ', $userMails) . '`' : '';
             $logbook->continueLine($userLookupValue . ' |');
 
             // First, we need to find the user in Azure Graph.
@@ -230,9 +240,17 @@ class SyncEntraIdRoles extends AbstractAction
                 $logbook->continueLine(' ' . $azureUserId . ' |');
             }
             
-            // Syncing user mail with the mail in Azure.
-            if ($this->syncUserMail($usersData, $azureUserSheet, $row)) {
-                $logbook->continueLine(' **mail & **');
+            // If the user mail sync is enabled, syncing user mail with the mail in Azure.
+            $azureUserMail = $azureUserSheet->getCellValue('mail', 0);
+            if (!in_array($azureUserMail, $userMails)) {
+                if ($this->getSyncUserMail()) { 
+                    
+                    $this->syncUserMail($usersData, $azureUserMail, $row);
+                    $logbook->continueLine(' **mail & **');
+                } else {
+                    $logbook->continueLine(' mail sync skipped, ');
+                }
+                $userMailSyncedOrSkipped++;
             }
             
             // azureUserId can now be used to fetch the user roles and sync them.
@@ -261,8 +279,10 @@ class SyncEntraIdRoles extends AbstractAction
             $usersSynced++;
         }
         $logbook->addLine('Synchronized roles for `' . $usersSynced . ' / ' . $usersCount . '` users.');
+        $logbook->addLine(($this->getSyncUserMail() ? 'Synchronized mails' : 'Email synchronisation was skipped') . ' for `' . $userMailSyncedOrSkipped . '` users.');
         $logbook->addLine(($this->getDisabledAzureAuthenticatedUsers() ? 'Disabled' : 'Disabling was skipped for') . ' `' . $usersDisabledOrSkippedDisabling . '` of the users.');
         return ResultFactory::createDataResult($task, $usersData, 'Synchronized roles for ' . $usersSynced . ' / ' . $usersCount . ' users.' 
+            . ($this->getSyncUserMail() ? ' Synchronized mails' : 'Email sync was skipped') . ' for ' . $userMailSyncedOrSkipped . ' users.'
             . ($this->getDisabledAzureAuthenticatedUsers() ? ' Disabled' : ' Disabling was skipped for') . ' ' . $usersDisabledOrSkippedDisabling . ' of the users.'
         );
     }
@@ -294,31 +314,22 @@ class SyncEntraIdRoles extends AbstractAction
 
     /**
      * Syncs powerUI Email with the Azure mail.
-     * Returns TRUE, if sync happen
      *
      * @param $usersData
-     * @param $azureUserSheet
+     * @param $azureUserMail
      * @param $row
-     * @return bool
+     * @return void
      * @throws Exception
      */
-    private function syncUserMail($usersData, $azureUserSheet, $row) : bool
+    private function syncUserMail($usersData, $azureUserMail, $row) : void
     {
-        $azureUserMail = $azureUserSheet->getCellValue('mail', 0);
-        $userMailsRaw = $row['EMAIL'];
-        $userMails = is_array($userMailsRaw) ? $userMailsRaw : [$userMailsRaw];
-
-        if (!in_array($azureUserMail, $userMails)) {
-            $userMailUpdateSheet = DataSheetFactory::createFromObject($usersData->getMetaObject());
-            $userMailUpdateSheet->addRow([
-                'UID' => $row['UID'],
-                'EMAIL' => $azureUserMail,
-                'MODIFIED_ON' => $row['MODIFIED_ON']
-            ]);
-            $userMailUpdateSheet->dataUpdate(false);
-            return true;
-        }
-        return false;
+        $userMailUpdateSheet = DataSheetFactory::createFromObject($usersData->getMetaObject());
+        $userMailUpdateSheet->addRow([
+            'UID' => $row['UID'],
+            'EMAIL' => $azureUserMail,
+            'MODIFIED_ON' => $row['MODIFIED_ON']
+        ]);
+        $userMailUpdateSheet->dataUpdate(false);
     }
 
     /**
@@ -391,6 +402,31 @@ class SyncEntraIdRoles extends AbstractAction
     protected function setUseUserMailAsFallback(bool $trueOrFalse) : SyncEntraIdRoles
     {
         $this->useUserMailAsFallback = $trueOrFalse;
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    protected function getSyncUserMail() : bool
+    {
+        return $this->syncUserMail;
+    }
+
+    /**
+     * Set to TRUE to sync the user mail in PowerUI with the mail in Azure. 
+     * If the mail in Azure is different from the one in PowerUI, it will be updated in PowerUI.
+     * 
+     * @uxon-property sync_user_mail
+     * @uxon-type boolean
+     * @uxon-default false
+     * 
+     * @param bool $trueOrFalse
+     * @return $this
+     */
+    protected function setSyncUserMail(bool $trueOrFalse) : SyncEntraIdRoles
+    {
+        $this->syncUserMail = $trueOrFalse;
         return $this;
     }
 }
