@@ -282,7 +282,7 @@ class SyncEntraIdRoles extends AbstractAction
         $logbook->addLine(($this->getSyncUserMail() ? 'Synchronized mails' : 'Email synchronisation was skipped') . ' for `' . $userMailSyncedOrSkipped . '` users.');
         $logbook->addLine(($this->getDisabledAzureAuthenticatedUsers() ? 'Disabled' : 'Disabling was skipped for') . ' `' . $usersDisabledOrSkippedDisabling . '` of the users.');
         return ResultFactory::createDataResult($task, $usersData, 'Synchronized roles for ' . $usersSynced . ' / ' . $usersCount . ' users.' 
-            . ($this->getSyncUserMail() ? ' Synchronized mails' : 'Email sync was skipped') . ' for ' . $userMailSyncedOrSkipped . ' users.'
+            . ($this->getSyncUserMail() ? ' Synchronized mails' : ' Email sync was skipped') . ' for ' . $userMailSyncedOrSkipped . ' users.'
             . ($this->getDisabledAzureAuthenticatedUsers() ? ' Disabled' : ' Disabling was skipped for') . ' ' . $usersDisabledOrSkippedDisabling . ' of the users.'
         );
     }
