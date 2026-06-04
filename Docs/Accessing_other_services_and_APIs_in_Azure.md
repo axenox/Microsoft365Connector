@@ -46,8 +46,3 @@ flowchart LR
     
     style EntraID fill:#FFF,stroke:#104581
 ```
-
-## Access API as a human user via OAuth
-
-The AppService needs to get a token to access a foreign server using the existing OAuth token of the currently logged
-in users. The AppService will call the other service "on behalf" of the logged on user.

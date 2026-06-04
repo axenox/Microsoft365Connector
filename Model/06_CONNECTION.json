@@ -57,15 +57,15 @@
     ],
     "rows": [
         {
-            "_EXPORT_SUMMARY": "Microsoft Graph",
+            "_EXPORT_SUMMARY": "Microsoft Graph (template)",
             "CREATED_ON": "2021-01-22 15:55:30",
-            "MODIFIED_ON": "2021-01-27 11:22:04",
+            "MODIFIED_ON": "2026-04-28 12:21:39",
             "CREATED_BY_USER": "0x31000000000000000000000000000000",
             "MODIFIED_BY_USER": "0x31000000000000000000000000000000",
             "UID": "0x11eb8a60df22c5a08a60847beb4a5184",
             "APP": "0x11eb8233a3d3443c8233847beb4a5184",
             "TIME_ZONE": null,
-            "LABEL": "Microsoft Graph",
+            "LABEL": "Microsoft Graph (template)",
             "CONNECTOR": "exface/urldataconnector/DataConnectors/OData4Connector.php",
             "CONFIG": {
                 "url": "https:\/\/graph.microsoft.com\/v1.0\/",
@@ -80,8 +80,9 @@
                         "~.*\/\\$metadata~"
                     ]
                 }
-            },            "READONLY": 0,
-            "ALIAS": "MICROSOFT_GRAPH"
+            },
+            "READONLY": 0,
+            "ALIAS": "MICROSOFT_GRAPH_TEMPLATE"
         },
         {
             "_EXPORT_SUMMARY": "Microsoft OpenID",
@@ -101,7 +102,8 @@
                     "client_id": "",
                     "client_secret": ""
                 }
-            },            "READONLY": 1,
+            },            
+            "READONLY": 1,
             "ALIAS": "MICROSOFT_OPENID"
         }
     ],
