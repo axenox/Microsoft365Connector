@@ -1,0 +1,127 @@
+{
+    "uid": "0x11f1882f2eb1b4f4882f002248e6305d",
+    "alias_with_namespace": "axenox.microsoft365connector.my-azure-groups",
+    "menu_parent_page_selector": "0x11ea648437c38ffea2e30205857feb80",
+    "menu_index": 0,
+    "menu_visible": true,
+    "name": "My Azure Groups",
+    "description": "",
+    "intro": "",
+    "replaces_page_selector": null,
+    "created_by_user_selector": "0x11ea7e29e1126ef3a7eb0050568905af",
+    "created_on": "2026-06-08 17:17:37",
+    "modified_by_user_selector": "0x11ea7e29e1126ef3a7eb0050568905af",
+    "modified_on": "2026-06-09 08:25:50",
+    "contents": {
+        "widget_type": "SplitHorizontal",
+        "object_alias": "exface.Core.DUMMY",
+        "panels": [
+            {
+                "caption": "Role sync settings",
+                "width": "40%",
+                "widgets": [
+                    {
+                        "widget_type": "DataTable",
+                        "object_alias": "exface.Core.USER_ROLE_EXTERNAL",
+                        "id": "sync_table",
+                        "filters": [
+                            {
+                                "attribute_alias": "NAME"
+                            },
+                            {
+                                "attribute_alias": "ALIAS"
+                            }
+                        ],
+                        "columns": [
+                            {
+                                "attribute_alias": "USER_ROLE__LABEL"
+                            },
+                            {
+                                "attribute_alias": "LABEL"
+                            },
+                            {
+                                "attribute_alias": "ACTIVE_FLAG"
+                            },
+                            {
+                                "attribute_alias": "KEEP_MANUAL_ASSIGNMENTS_FLAG"
+                            },
+                            {
+                                "attribute_alias": "ALIAS"
+                            },
+                            {
+                                "attribute_alias": "AUTHENTICATOR"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "caption": "Current Azure Groups in EntryID",
+                "width": "30%",
+                "widgets": [
+                    {
+                        "widget_type": "DataTable",
+                        "object_alias": "axenox.Microsoft365Connector.meGroups",
+                        "filters": [
+                            {
+                                "attribute_alias": "id",
+                                "value": "=sync_table!ALIAS",
+                                "apply_on_change": true,
+                                "comparator": "=="
+                            }
+                        ],
+                        "columns": [
+                            {
+                                "attribute_alias": "id"
+                            },
+                            {
+                                "attribute_alias": "displayName"
+                            },
+                            {
+                                "attribute_alias": "description"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "caption": "Current roles in Workbench",
+                "width": "30%",
+                "widgets": [
+                    {
+                        "widget_type": "DataTable",
+                        "object_alias": "exface.Core.USER_ROLE_USERS",
+                        "filters": [
+                            {
+                                "attribute_alias": "USER",
+                                "value": "=USER('UID')",
+                                "required": true,
+                                "hidden": true
+                            },
+                            {
+                                "attribute_alias": "USER_ROLE__USER_ROLE_EXTERNAL__ALIAS",
+                                "comparator": "==",
+                                "value": "=sync_table!ALIAS",
+                                "apply_on_change": true
+                            },
+                            {
+                                "attribute_alias": "USER_ROLE__APP"
+                            }
+                        ],
+                        "columns": [
+                            {
+                                "attribute_alias": "USER_ROLE__LABEL"
+                            },
+                            {
+                                "attribute_alias": "AUTHENTICATOR_ID"
+                            },
+                            {
+                                "attribute_alias": "USER_ROLE__DESCRIPTION"
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    }
+}
