@@ -87,13 +87,13 @@
         {
             "_EXPORT_SUMMARY": "My Azure group [axenox.Microsoft365Connector.meGroups]",
             "CREATED_ON": "2023-06-14 14:04:35",
-            "MODIFIED_ON": "2023-11-30 14:28:37",
+            "MODIFIED_ON": "2026-06-09 12:31:56",
             "CREATED_BY_USER": "0x31000000000000000000000000000000",
-            "MODIFIED_BY_USER": "0x11edb424effd2980b424025041000001",
+            "MODIFIED_BY_USER": "0x11ea7e29e1126ef3a7eb0050568905af",
             "UID": "0x11eeb55aa17a7ba4b55a025041000001",
             "READABLE_FLAG": 1,
             "WRITABLE_FLAG": 1,
-            "COMMENTS": "",
+            "COMMENTS": "Pagination is off because only $top is supported, not $skip. Instead, MS uses $skiptoken, which we do not support.",
             "DOCS": "",
             "NAME": "My Azure group",
             "INHERIT_DATA_SOURCE_BASE_OBJECT": 1,
@@ -104,7 +104,7 @@
             "DATA_ADDRESS_PROPS": {
                 "odata_entitytype": "group",
                 "odata_namespace": "microsoft.graph",
-                "request_remote_pagination": true,
+                "request_remote_pagination": false,
                 "request_offset_parameter": ""
             },
             "DEFAULT_EDITOR_UXON": null,

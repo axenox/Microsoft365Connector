@@ -22,69 +22,10 @@ use exface\Core\Interfaces\Tasks\TaskInterface;
 /**
  * It synchronizes the Azure EntraID roles and the mail of given users with the PowerUI.
  * If the user is not found or has the flag "accountEnabled" set to false in Azure, the action can either disable the user in PowerUI or just skip disabling.
+ *
+ * For detailed documentation please visit the [SyncEntraIdRoles documentation](https://github.com/axenox/Microsoft365Connector/blob/1.x-dev/Docs/SyncEntraIdRoles_documentation.md).
  * 
- * This is important if you are using single-sign-on with Azure via OAuth2 and syncing user roles with Azure groups
- * via MS Graph API as described [in the docs](https://github.com/axenox/Microsoft365Connector/blob/1.x-dev/Docs/Synchronizing_roles_via_Graph_API.md).
- * In this case, you will have a `MicrosoftOAuth2Autenticator` in your `System.config.json` with a configured
- * `sync_roles_with_data_sheet`. 
- * 
- * Roles are synced every time a user logs on. However, if the user does not, there is no sync. In particular, if a 
- * user is offboarded, his user roles would remain, although he will probably not be able to log on with SSO. This 
- * action allows to force-sync roles for any selected user even without a log-in process. Syncing will be done exactly 
- * the same way as when logging in.
- * 
- * To make this work, the action should know which authenticator it should sync: place the id of the `MicrosoftOAuth2Autenticator` 
- * authenticator from `System.config.json` into the actions `authenticator_id` property. When the action is triggered,
- * it will read user data from the metaobjects `axenox.Microsoft365Connector.users` and `axenox.Microsoft365Connector.userGroups`
- * and will use the authenticator sync logic with this data.
- * 
- * ## Requirements
- * 
- * - `MicrosoftOAuth2Autenticator` authenticator with configured `sync_roles_with_data_sheet` in `System.config.json`.
- * - "Synchronized external user roles/groups" configured in `Administration > Users&Security > User Roles `
- * - If you want to sync roles in background: "app-only access" configured in the Azure App Registration for 
- * MS Graph API with permission `Directory.Read.All`.
- * 
- * ## Azure Graph API authorization
- * 
- * **NOTE:** reading the above Graph API object requires MS Graph authorization. When the regular on-login sync happens,
- * this authorization is done via "delegated access" with the same token the user just received through the 
- * single-sign-on process. However, if syncing with this action, the user who presses the button needs to be able to 
- * access MS Graph API.
- * 
- * Read more about [different access scenarios here](https://github.com/axenox/Microsoft365Connector/blob/1.x-dev/Docs/Authentication_and_authorization_basics_with_Azure.md).
- * 
- * ### Syncing user roles manually
- * 
- * If it is a human user, who presses the button it should not be a problem as long as this user has logged in using
- * single-sign-on. Graph API will be called using "delegated access". At the time of logging in, the user was already 
- * authenticated in MS Graph to perform the regular sync. Now this authorization will be reused automatically. 
- * 
- * The corresponding Azure app registration needs the permission `User.Read.All` for the regular sync to work and this 
- * should also be enough to sync the roles of a different user with this action.
- * 
- * ### Syncing roles in a background process
- * 
- * When syncing with this action from a background process there is no single-sign-on user active, so we must have
- * a connection configuration for "app-only" access to MS Graph. The data source `axenox.Microsoft365Connector.MICROSOFT_GRAPH`
- * must then have a connection with `AzureAppRegistrationAuth` authentication configured:
- * 
- * ```
- *  {
- *      "authentication": {
- *          "class": "\\axenox\\Microsoft365Connector\\DataConnectors\\Authentication\\AzureAppRegistrationAuth",
- *          "client_id": "...",
- *          "client_secret": ".",
- *          "tenant": "...",
- *          "scope": "https://graph.microsoft.com/.default"
- *      }
- *  }
- * 
- * ```
- * 
- * The `client_id`, `client_secret`, etc. are to be found in your app registration. You can use the same app registration
- * for single-sign-on and this app-only authentication. However, the app-only authentication requires a different
- * permission: `Directory.Read.All`. The permission `User.Read.All` is not enough here.
+ * @author Andrej Kabachnik and Sergej Riel
  */
 class SyncEntraIdRoles extends AbstractAction
 {
@@ -115,34 +56,39 @@ class SyncEntraIdRoles extends AbstractAction
         $collector->addAttributeAlias('COMMENTS');
         $collector->addAttributeAlias('USER_AUTHENTICATOR__AUTHENTICATOR_USERNAME:LIST_DISTINCT');
         $collector->addAttributeAlias('USER_AUTHENTICATOR__AUTHENTICATOR_USERNAME:MAX_OF(LAST_AUTHENTICATED_ON)');
+        $collector->addAttributeAlias('USER_AUTHENTICATOR__SYNC_MAIL_FLAG:MAX_OF(LAST_AUTHENTICATED_ON)');
         $collector->addAttributeAlias('USER_AUTHENTICATOR__AUTHENTICATOR:LIST_DISTINCT');
         $collector->enrich($usersData);
         
         $usersCount = $usersData->countRows();
         $usersSynced = 0;
-        $userMailSyncedOrSkipped = 0;
+        $userMailSynced = 0;
+        $userMailSyncSkipped = 0;
+        
         $usersDisabledOrSkippedDisabling = 0;
         
         $useUserMailAsFallback = $this->getUseUserMailAsFallback();
+        $trySyncUserMail = $this->getSyncUserMail();
         
         // Authenticator username is used for authentication in Azure and is stored as userPrincipalName in Graph.
         $userAzureAuthUsernameCol = $usersData->getColumns()->getByExpression('USER_AUTHENTICATOR__AUTHENTICATOR_USERNAME:MAX_OF(LAST_AUTHENTICATED_ON)')->getName();
         $userAzureAuthCol = $usersData->getColumns()->getByExpression('USER_AUTHENTICATOR__AUTHENTICATOR:LIST_DISTINCT')->getName();
+        $userAzureAuthSyncMailFlagCol = $usersData->getColumns()->getByExpression('USER_AUTHENTICATOR__SYNC_MAIL_FLAG:MAX_OF(LAST_AUTHENTICATED_ON)')->getName();
         
         $logbook = $this->getLogBook($task);
         $logbook->addLine('Using Azure Authenticator to search for each user by their Authenticator username.' 
             . ($useUserMailAsFallback ? ' If the username is missing or not found, using their in PowerUI saved email address as fallback.' : '') 
-            . ' Then, sync roles' . ($this->getSyncUserMail() ? ' and email' : '') . ' based on Azure groups or disable them if no active Azure user is found.');
+            . ' Then, sync roles' . ($trySyncUserMail ? ' and email (if the sync_mail_flag at the user authenticator is set to true' : '') . ' based on Azure groups or disable them if no active Azure user is found.');
 
         $logbook->addLine('Used settings:');
         $logbook->addIndent(1);
         $logbook->addLine('Using PowerUI Email as fallback: `' . ($useUserMailAsFallback ? 'TRUE' : 'FALSE') . '`');
-        $logbook->addLine('Syncing PowerUI Email with Azure: `' . ($this->getSyncUserMail() ? 'TRUE' : 'FALSE') . '`');
+        $logbook->addLine('Syncing PowerUI Email with Azure: `' . ($trySyncUserMail ? 'TRUE' : 'FALSE') . '`');
         $logbook->addLine('Strategy for missing active Azure account: `' . ($this->getDisabledAzureAuthenticatedUsers() ? 'DISABLING' : 'SKIP DISABLING') . '`');
         $logbook->addIndent(-1);
         
         $logbook->addLine('Syncing roles for `' . $usersCount . '` users:');
-        $logbook->addLine('| PowerUI Username | Auth. Username'. (($useUserMailAsFallback || $this->getSyncUserMail())? ' / PowerUI Email' : '') . ' | Active Azure account ID | Action |');
+        $logbook->addLine('| PowerUI Username | Auth. Username'. (($useUserMailAsFallback || $trySyncUserMail)? ' / PowerUI Email' : '') . ' | Active Azure account ID | Action |');
         $logbook->continueLine("\n" . '| -------- | ----- | ------------- | ------ |');
         
         foreach ($usersData->getRows() as $row) {
@@ -158,6 +104,7 @@ class SyncEntraIdRoles extends AbstractAction
             $fakeToken = new RememberMeAuthToken($username);
             
             $azureUserSheet = DataSheetFactory::createFromObjectIdOrAlias($this->getWorkbench(), 'axenox.Microsoft365Connector.users');
+            $azureUserSheet->getColumns()->addFromExpression('id');
             $azureUserSheet->getColumns()->addFromExpression('userPrincipalName');
             $azureUserSheet->getColumns()->addFromExpression('mail');
             $azureUserSheet->getColumns()->addFromExpression('accountEnabled');
@@ -166,6 +113,8 @@ class SyncEntraIdRoles extends AbstractAction
             $userMails = is_array($userMailsRaw) ? $userMailsRaw : [$userMailsRaw];
 
             $userAzureAuthUsername = $row[$userAzureAuthUsernameCol];
+            $userAzureAuthSyncMailFlag = $row[$userAzureAuthSyncMailFlagCol];
+            
             $userAuthenticators = explode(',',$row[$userAzureAuthCol]);
             
             $userMails = array_filter($userMails, function($userMail) {
@@ -192,7 +141,7 @@ class SyncEntraIdRoles extends AbstractAction
 
             // Auth. Username / PowerUI Email
             $userLookupValue = !empty($userAzureAuthUsername) ? '`' . $userAzureAuthUsername . '`' : '';
-            $userLookupValue .= (($useUserMailAsFallback || $this->getSyncUserMail()) && !empty($userMails)) ? ' / `' . implode(', ', $userMails) . '`' : '';
+            $userLookupValue .= (($useUserMailAsFallback || $trySyncUserMail) && !empty($userMails)) ? ' / `' . implode(', ', $userMails) . '`' : '';
             $logbook->continueLine($userLookupValue . ' |');
 
             // First, we need to find the user in Azure Graph.
@@ -240,17 +189,19 @@ class SyncEntraIdRoles extends AbstractAction
                 $logbook->continueLine(' ' . $azureUserId . ' |');
             }
             
-            // If the user mail sync is enabled, syncing user mail with the mail in Azure.
+            // If the sync_user_mail (uxon property here) and the sync_mail_flag (attribute oh the exface.Core.USER_AUTHENTICATOR) is enabled,
+            // syncing user mail with the mail in Azure.
             $azureUserMail = $azureUserSheet->getCellValue('mail', 0);
             if (!in_array($azureUserMail, $userMails)) {
-                if ($this->getSyncUserMail()) { 
+                if ($trySyncUserMail && $userAzureAuthSyncMailFlag) {
                     
                     $this->syncUserMail($usersData, $azureUserMail, $row);
                     $logbook->continueLine(' **mail & **');
+                    $userMailSynced++;
                 } else {
                     $logbook->continueLine(' mail sync skipped, ');
+                    $userMailSyncSkipped++;
                 }
-                $userMailSyncedOrSkipped++;
             }
             
             // azureUserId can now be used to fetch the user roles and sync them.
@@ -278,13 +229,22 @@ class SyncEntraIdRoles extends AbstractAction
             $logbook->continueLine(' **roles synced** |');
             $usersSynced++;
         }
+        // Logbook and Result Summary
         $logbook->addLine('Synchronized roles for `' . $usersSynced . ' / ' . $usersCount . '` users.');
-        $logbook->addLine(($this->getSyncUserMail() ? 'Synchronized mails' : 'Email synchronisation was skipped') . ' for `' . $userMailSyncedOrSkipped . '` users.');
+        $resultSummary = 'Synchronized roles for ' . $usersSynced . ' / ' . $usersCount . ' users. ';
+        
+        if ($userMailSynced > 0) {
+            $logbook->addLine('Synchronized mails for `' . $userMailSynced . '` users.');
+            $resultSummary .= 'Synchronized mails for ' . $userMailSynced . ' users. ';
+        }
+        if ($userMailSyncSkipped > 0) {
+            $logbook->addLine('Email synchronisation was skipped for `' . $userMailSyncSkipped . '` users.');
+            $resultSummary .= 'Email synchronisation was skipped for ' . $userMailSyncSkipped . ' users. ';
+        }
         $logbook->addLine(($this->getDisabledAzureAuthenticatedUsers() ? 'Disabled' : 'Disabling was skipped for') . ' `' . $usersDisabledOrSkippedDisabling . '` of the users.');
-        return ResultFactory::createDataResult($task, $usersData, 'Synchronized roles for ' . $usersSynced . ' / ' . $usersCount . ' users.' 
-            . ($this->getSyncUserMail() ? ' Synchronized mails' : ' Email sync was skipped') . ' for ' . $userMailSyncedOrSkipped . ' users.'
-            . ($this->getDisabledAzureAuthenticatedUsers() ? ' Disabled' : ' Disabling was skipped for') . ' ' . $usersDisabledOrSkippedDisabling . ' of the users.'
-        );
+        $resultSummary .= ($this->getDisabledAzureAuthenticatedUsers() ? 'Disabled ' : 'Disabling was skipped for ') . $usersDisabledOrSkippedDisabling . ' of the users.';
+        
+        return ResultFactory::createDataResult($task, $usersData, $resultSummary);
     }
 
     /**

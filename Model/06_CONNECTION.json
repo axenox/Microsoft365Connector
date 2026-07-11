@@ -73,8 +73,14 @@
                     "class": "\\axenox\\Microsoft365Connector\\DataConnectors\\Authentication\\MicrosoftOAuth2",
                     "client_id": "",
                     "client_secret": "",
+                    "tenant": "",
                     "scopes": [
-                        ""
+                        "// Adjust scopes as needed. These are the ones typically required for a role sync via Graph API",
+                        "openid",
+                        "profile",
+                        "email",
+                        "User.Read",
+                        "Group.Read.All"
                     ],
                     "exclude_urls": [
                         "~.*\/\\$metadata~"
@@ -95,14 +101,7 @@
             "TIME_ZONE": null,
             "LABEL": "Microsoft OpenID",
             "CONNECTOR": "exface/urldataconnector/DataConnectors/HttpConnector.php",
-            "CONFIG": {
-                "url": "https:\/\/graph.microsoft.com",
-                "authentication": {
-                    "class": "\\axenox\\Microsoft365Connector\\DataConnectors\\Authentication\\MicrosoftOAuth2",
-                    "client_id": "",
-                    "client_secret": ""
-                }
-            },            
+            "CONFIG": "$$~~M3A2XlgTrZFzGBByQKcDeUX7pPBeG7G6PoPsEfcxEEhkb14CbHlOYhlhmcM33lL1gE7iGnJLIJiYC7o+lt2uWWImcp9hTIBm/lnU8I7RjPQlJS9XkEG73lXKK53vun+v3EIYXbLmHDAJqsMpOvePRCDIDaJtmJnZ1TU6Mu5fIlS4Lhtx+xckfR1+s2woCZaM8xQhHw6J4Pkv1HfewwzLoTRbU6rCzlqPvD+iaLOvTsKEYmAfYPx8X2p7C6Of7MH6SGxyDRwAr4R+3KeZzRrKSNxbKwr7d0KoLo7H+Gr76A==",
             "READONLY": 1,
             "ALIAS": "MICROSOFT_OPENID"
         }

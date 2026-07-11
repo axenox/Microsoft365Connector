@@ -191,9 +191,9 @@
         {
             "_EXPORT_SUMMARY": "ID [id]",
             "CREATED_ON": "2021-01-25 09:39:33",
-            "MODIFIED_ON": "2021-01-27 11:44:15",
+            "MODIFIED_ON": "2026-06-09 13:06:56",
             "CREATED_BY_USER": "0x31000000000000000000000000000000",
-            "MODIFIED_BY_USER": "0x31000000000000000000000000000000",
+            "MODIFIED_BY_USER": "0x11ea7e29e1126ef3a7eb0050568905af",
             "UID": "0x11eb9a93d9980bee9a93025041000001",
             "SORTABLEFLAG": 1,
             "FILTERABLEFLAG": 1,
@@ -212,9 +212,9 @@
             "RELATION_CARDINALITY": "",
             "TYPE": "D",
             "COPYABLEFLAG": 0,
-            "ICON": null,
-            "ICON_SET": null,
-            "ABBREVIATION": null,
+            "ICON": "",
+            "ICON_SET": "",
+            "ABBREVIATION": "",
             "ALIAS": "id",
             "DATATYPE": "0x30000000000000000000000000000000",
             "DATA_ADDRESS": "id",
@@ -231,7 +231,9 @@
             "SORTERDIR": "",
             "RELATED_OBJ_ATTR": null,
             "SHORT_DESCRIPTION": "",
-            "DATA_ADDRESS_PROPS": null,
+            "DATA_ADDRESS_PROPS": {
+                "odata_type": "Edm.Guid"
+            },
             "DEFAULT_VALUE": "",
             "FIXED_VALUE": "",
             "CUSTOM_DATA_TYPE": null
