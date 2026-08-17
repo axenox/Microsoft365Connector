@@ -54,10 +54,6 @@ class SyncEntraIdRoles extends AbstractAction
         $collector->addAttributeAlias('EMAIL');
         $collector->addAttributeAlias('DISABLED_FLAG');
         $collector->addAttributeAlias('COMMENTS');
-        $collector->addAttributeAlias('USER_AUTHENTICATOR__AUTHENTICATOR_USERNAME:LIST_DISTINCT');
-        $collector->addAttributeAlias('USER_AUTHENTICATOR__AUTHENTICATOR_USERNAME:MAX_OF(LAST_AUTHENTICATED_ON)');
-        $collector->addAttributeAlias('USER_AUTHENTICATOR__SYNC_MAIL_FLAG:MAX_OF(LAST_AUTHENTICATED_ON)');
-        $collector->addAttributeAlias('USER_AUTHENTICATOR__AUTHENTICATOR:LIST_DISTINCT');
         $collector->enrich($usersData);
         
         $usersCount = $usersData->countRows();
@@ -70,10 +66,10 @@ class SyncEntraIdRoles extends AbstractAction
         $useUserMailAsFallback = $this->getUseUserMailAsFallback();
         $trySyncUserMail = $this->getSyncUserMail();
         
-        // Authenticator username is used for authentication in Azure and is stored as userPrincipalName in Graph.
-        $userAzureAuthUsernameCol = $usersData->getColumns()->getByExpression('USER_AUTHENTICATOR__AUTHENTICATOR_USERNAME:MAX_OF(LAST_AUTHENTICATED_ON)')->getName();
-        $userAzureAuthCol = $usersData->getColumns()->getByExpression('USER_AUTHENTICATOR__AUTHENTICATOR:LIST_DISTINCT')->getName();
-        $userAzureAuthSyncMailFlagCol = $usersData->getColumns()->getByExpression('USER_AUTHENTICATOR__SYNC_MAIL_FLAG:MAX_OF(LAST_AUTHENTICATED_ON)')->getName();
+        // Read USER_AUTHENTICATOR entries directly, filtered to the authenticator configured for this
+        // action. This makes sure information like the Azure username or the sync_mail_flag is never
+        // taken from a different authenticator the user might have used more recently.
+        $userAuthByUserUid = $this->getUserAuthenticatorDataByUserUid($usersData->getUidColumn()->getValues());
         
         $logbook = $this->getLogBook($task);
         $logbook->addLine('Using Azure Authenticator to search for each user by their Authenticator username.' 
@@ -111,25 +107,24 @@ class SyncEntraIdRoles extends AbstractAction
 
             $userMailsRaw = $row['EMAIL'];
             $userMails = is_array($userMailsRaw) ? $userMailsRaw : [$userMailsRaw];
-
-            $userAzureAuthUsername = $row[$userAzureAuthUsernameCol];
-            $userAzureAuthSyncMailFlag = $row[$userAzureAuthSyncMailFlagCol];
-            
-            $userAuthenticators = explode(',',$row[$userAzureAuthCol]);
             
             $userMails = array_filter($userMails, function($userMail) {
                 return !empty($userMail);
             });
 
-            // Sync only users, that have the authenticator of this action as of their authentication ways.
+            // Sync only users, that have a USER_AUTHENTICATOR entry for the authenticator of this action.
             // This will give us ONLY users, that are remote-controlled by EntraID. Any user, that was created locally
-            // (= does not have a corresponding USER_AUTHENTICATOR entry) will be ignored because these users are
-            // controlled by the workbench. In particular, users, that were created automatically when logging in via
-            // Azure will always have the USER_AUTHENTICATOR entry with the authenticator id, that created them.
-            if(!in_array($this->getAuthenticatorId(), $userAuthenticators)) {
+            // (= does not have a corresponding USER_AUTHENTICATOR entry for this authenticator) will be ignored
+            // because these users are controlled by the workbench or another authenticator. In particular, users,
+            // that were created automatically when logging in via Azure will always have the USER_AUTHENTICATOR
+            // entry with the authenticator id, that created them.
+            $userAuthRow = $userAuthByUserUid[$row['UID']] ?? null;
+            if ($userAuthRow === null) {
                 $logbook->continueLine(' | no Azure Authenticator | skipping |');
                 continue;
             }
+            $userAzureAuthUsername = $userAuthRow['AUTHENTICATOR_USERNAME'];
+            $userAzureAuthSyncMailFlag = $userAuthRow['SYNC_MAIL_FLAG'];
 
             // If no Authenticator Username (called userPrincipalName in Azure) is given and mail fallback is disabled,
             // we have no way to find the user in Azure.
@@ -245,6 +240,35 @@ class SyncEntraIdRoles extends AbstractAction
         $resultSummary .= ($this->getDisabledAzureAuthenticatedUsers() ? 'Disabled ' : 'Disabling was skipped for ') . $usersDisabledOrSkippedDisabling . ' of the users.';
         
         return ResultFactory::createDataResult($task, $usersData, $resultSummary);
+    }
+
+    /**
+     * Reads USER_AUTHENTICATOR entries for the given users, filtered to the authenticator of this action,
+     * and returns them indexed by the USER uid, keeping only the most recently used entry per user.
+     *
+     * @param string[] $userUids
+     * @return array<string, array<string, mixed>>
+     */
+    private function getUserAuthenticatorDataByUserUid(array $userUids) : array
+    {
+        $userAuthSheet = DataSheetFactory::createFromObjectIdOrAlias($this->getWorkbench(), 'exface.Core.USER_AUTHENTICATOR');
+        $userAuthSheet->getColumns()->addFromExpression('USER');
+        $userAuthSheet->getColumns()->addFromExpression('AUTHENTICATOR_USERNAME');
+        $userAuthSheet->getColumns()->addFromExpression('SYNC_MAIL_FLAG');
+        $userAuthSheet->getColumns()->addFromExpression('LAST_AUTHENTICATED_ON');
+        $userAuthSheet->getFilters()->addConditionFromValueArray('USER', $userUids);
+        $userAuthSheet->getFilters()->addConditionFromString('AUTHENTICATOR', $this->getAuthenticatorId(), ComparatorDataType::EQUALS);
+        $userAuthSheet->dataRead();
+        
+        $userAuthByUserUid = [];
+        foreach ($userAuthSheet->getRows() as $authRow) {
+            $userUid = $authRow['USER'];
+            $existingRow = $userAuthByUserUid[$userUid] ?? null;
+            if ($existingRow === null || $authRow['LAST_AUTHENTICATED_ON'] > $existingRow['LAST_AUTHENTICATED_ON']) {
+                $userAuthByUserUid[$userUid] = $authRow;
+            }
+        }
+        return $userAuthByUserUid;
     }
 
     /**
